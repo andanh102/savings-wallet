@@ -119,6 +119,18 @@
                         <span id="btn-cert-text">Certificate</span>
                     </button>
                 </div>
+
+                <!-- ĐỊA CHỈ VÍ RIÊNG CỦA TỪNG TÀI KHOẢN & NÚT SAO CHÉP -->
+                <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs bg-black/20 px-3 py-2 rounded-xl backdrop-blur-sm">
+                    <div class="truncate mr-2">
+                        <span class="text-[10px] text-blue-200 block" id="lbl-my-addr">Địa chỉ ví của bạn:</span>
+                        <span id="user-unique-address" class="font-mono font-bold text-white truncate">Chưa đăng nhập</span>
+                    </div>
+                    <button onclick="copyUserAddress()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] shadow transition flex items-center space-x-1 shrink-0">
+                        <i class="fa-regular fa-copy"></i>
+                        <span id="btn-copy-text">Sao chép</span>
+                    </button>
+                </div>
             </div>
 
             <!-- POOL DATA -->
@@ -158,11 +170,11 @@
             </div>
         </div>
 
-        <!-- TAB 2: RÚT TIỀN (WITHDRAWAL) - CẢI TIẾN KHU VỰC 1 & 2 KÈM LỊCH SỬ 24H -->
+        <!-- TAB 2: RÚT TIỀN (WITHDRAWAL) -->
         <div id="tab-withdrawal" class="hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
-                <!-- PHẦN 1: TẠO LỆNH RÚT TIỀN (VÀ CHỌN MẠNG) -->
+                <!-- PHẦN 1: TẠO LỆNH RÚT TIỀN -->
                 <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center space-x-2 border-b pb-3 mb-3">
@@ -200,7 +212,7 @@
                     </button>
                 </div>
 
-                <!-- PHẦN 2: LIÊN KẾT ĐỊA CHỈ VÍ CỦA KHÁCH HÀNG (BINANCE / SÀN CÁ NHÂN) -->
+                <!-- PHẦN 2: LIÊN KẾT ĐỊA CHỈ VÍ -->
                 <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center space-x-2 border-b pb-3 mb-3">
@@ -235,7 +247,7 @@
 
             </div>
 
-            <!-- LỊCH SỬ RÚT TIỀN ĐẦY ĐỦ (TỰ ĐỘNG XÓA / ẨN SAU 24 GIỜ) -->
+            <!-- LỊCH SỬ RÚT TIỀN (LƯU 24H) -->
             <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border border-gray-100">
                 <div class="flex justify-between items-center border-b pb-2">
                     <h3 id="history-title" class="font-bold text-gray-800 text-sm">Lịch sử rút tiền (Lưu 24h)</h3>
@@ -247,12 +259,12 @@
             </div>
         </div>
 
-        <!-- TAB 3: TÀI KHOẢN (ACCOUNT) -->
+        <!-- TAB 3: TÀI KHOẢN (ACCOUNT) - BỔ SUNG VIP 1 ĐẾN VIP 12 & ĐĂNG XUẤT -->
         <div id="tab-account" class="max-w-md mx-auto space-y-4">
             <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100">
                 <div class="flex justify-between items-center text-gray-500 text-sm">
                     <span id="acc-accumulated">Accumulated Income</span>
-                    <span class="text-xs bg-blue-50 text-blue-600 font-bold px-2 py-1 rounded-md" id="user-tier-badge">Standard Tier</span>
+                    <span class="text-xs bg-amber-500 text-white font-bold px-2.5 py-1 rounded-full shadow" id="user-tier-badge">VIP 1 (2% / day)</span>
                 </div>
                 <div class="text-2xl font-bold text-blue-600" id="user-display-balance">0.000000 BNB</div>
                 <div class="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100 text-sm">
@@ -276,9 +288,30 @@
                     </div>
                 </div>
             </div>
+
+            <!-- BẢNG HỆ THỐNG VIP 1 ĐẾN VIP 12 (ƯU ĐÃI HOA HỒNG TỪ 2% MỖI NGÀY) -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border border-gray-100">
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h3 id="vip-system-title" class="font-bold text-gray-800 text-sm flex items-center space-x-1.5">
+                        <i class="fa-solid fa-crown text-amber-500"></i>
+                        <span>Hệ Thống Cấp Độ VIP (VIP 1 - VIP 12)</span>
+                    </h3>
+                    <span class="text-[10px] text-amber-600 font-bold">Từ 2,000 USDT+</span>
+                </div>
+                <div class="max-h-48 overflow-y-auto space-y-2 text-xs pr-1 lang-scroll-list" id="vip-tiers-container">
+                    <!-- Được render tự động qua JS từ VIP 1 đến VIP 12 -->
+                </div>
+            </div>
+
             <button onclick="openDepositModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition flex items-center justify-center space-x-2">
                 <i class="fa-solid fa-qrcode"></i>
                 <span id="btn-quick-deposit">Deposit Fixed Wallet</span>
+            </button>
+
+            <!-- NÚT ĐĂNG XUẤT TÀI KHOẢN -->
+            <button onclick="handleUserLogout()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold py-3 rounded-xl shadow-sm transition flex items-center justify-center space-x-2 text-xs">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span id="btn-logout-text">Đăng xuất tài khoản</span>
             </button>
         </div>
     </main>
@@ -465,10 +498,10 @@
     <script>
         const translations = {
             en: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send", certTitle: "SAVINGS DEPOSIT CERTIFICATE", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Operating Since:", valOp: "Year 2021 (5+ Years Active)", lblTech: "Standard:", valTech: "Independent Decentralized Protocol", lblCustody: "Asset Protection:", valCustody: "Self-Custody Wallet", lblNet: "Network:", btnConfirm: "Understood & Confirm", linkWalletTitle: "Link Wallet Address", linkWalletDesc: "Select network & bind your Binance wallet address before withdrawing.", lblWithdrawNet: "WITHDRAWAL NETWORK", lblLinkedTarget: "TARGET WALLET ADDRESS", lblLinkNet: "SELECT YOUR NETWORK", lblLinkAddr: "PERSONAL WALLET ADDRESS", btnSaveLink: "Save Wallet Address", historyTitle: "Withdrawal History (24h Auto-Expiry)"
+                appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send", certTitle: "SAVINGS DEPOSIT CERTIFICATE", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Operating Since:", valOp: "Year 2021 (5+ Years Active)", lblTech: "Standard:", valTech: "Independent Decentralized Protocol", lblCustody: "Asset Protection:", valCustody: "Self-Custody Wallet", lblNet: "Network:", btnConfirm: "Understood & Confirm", linkWalletTitle: "Link Wallet Address", linkWalletDesc: "Select network & bind your Binance wallet address before withdrawing.", lblWithdrawNet: "WITHDRAWAL NETWORK", lblLinkedTarget: "TARGET WALLET ADDRESS", lblLinkNet: "SELECT YOUR NETWORK", lblLinkAddr: "PERSONAL WALLET ADDRESS", btnSaveLink: "Save Wallet Address", historyTitle: "Withdrawal History (24h Auto-Expiry)", lblMyAddr: "Your Wallet Address:", btnCopyText: "Copy", btnLogoutText: "Logout Account", vipSystemTitle: "VIP Tiers System (VIP 1 - 12)"
             },
             vi: {
-                appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền (Withdrawal)", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút tiền", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi", certTitle: "CHỨNG NHẬN GỬI TIỀN TIẾT KIỆM", certSubtitle: "GIAO THỨC VÍ TIẾT KIỆM", lblOp: "Hoạt động từ:", valOp: "Năm 2021 (Hơn 5 năm hoạt động)", lblTech: "Tiêu chuẩn:", valTech: "Giao thức phi tập trung độc lập", lblCustody: "Bảo vệ tài sản:", valCustody: "Ví tự quản lý (Self-Custody)", lblNet: "Mạng lưới:", btnConfirm: "Đã hiểu & Xác nhận", linkWalletTitle: "Liên kết địa chỉ ví (Link Wallet)", linkWalletDesc: "Khách hàng cần chọn đúng mạng và điền địa chỉ ví Binance/Sàn giao dịch cá nhân trước khi thực hiện rút tiền.", lblWithdrawNet: "MẠNG RÚT TIỀN (NETWORK)", lblLinkedTarget: "VÍ ĐÍCH NHẬN TIỀN", lblLinkNet: "CHỌN MẠNG VÍ CỦA BẠN", lblLinkAddr: "ĐỊA CHỈ VÍ CÁ NHÂN (USDT/BNB)", btnSaveLink: "Lưu địa chỉ ví", historyTitle: "Lịch sử rút tiền (Lưu 24h)"
+                appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền (Withdrawal)", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút tiền", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi", certTitle: "CHỨNG NHẬN GỬI TIỀN TIẾT KIỆM", certSubtitle: "GIAO THỨC VÍ TIẾT KIỆM", lblOp: "Hoạt động từ:", valOp: "Năm 2021 (Hơn 5 năm hoạt động)", lblTech: "Tiêu chuẩn:", valTech: "Giao thức phi tập trung độc lập", lblCustody: "Bảo vệ tài sản:", valCustody: "Ví tự quản lý (Self-Custody)", lblNet: "Mạng lưới:", btnConfirm: "Đã hiểu & Xác nhận", linkWalletTitle: "Liên kết địa chỉ ví (Link Wallet)", linkWalletDesc: "Khách hàng cần chọn đúng mạng và điền địa chỉ ví Binance/Sàn giao dịch cá nhân trước khi thực hiện rút tiền.", lblWithdrawNet: "MẠNG RÚT TIỀN (NETWORK)", lblLinkedTarget: "VÍ ĐÍCH NHẬN TIỀN", lblLinkNet: "CHỌN MẠNG VÍ CỦA BẠN", lblLinkAddr: "ĐỊA CHỈ VÍ CÁ NHÂN (USDT/BNB)", btnSaveLink: "Lưu địa chỉ ví", historyTitle: "Lịch sử rút tiền (Lưu 24h)", lblMyAddr: "Địa chỉ ví của bạn:", btnCopyText: "Sao chép", btnLogoutText: "Đăng xuất tài khoản", vipSystemTitle: "Hệ Thống Cấp Độ VIP (VIP 1 - 12)"
             }
         };
 
@@ -487,7 +520,6 @@
             if(currentUser) localStorage.setItem('sw_current_user', currentUser);
         }
 
-        // TỰ ĐỘNG XÓA TIN NHẮN SAU 10 NGÀY & LỊCH SỬ RÚT TIỀN SAU 24 GIỜ
         function cleanupOldData() {
             const now = Date.now();
             const tenDaysMs = 10 * 24 * 60 * 60 * 1000;
@@ -501,12 +533,13 @@
 
         window.onload = function() {
             cleanupOldData();
+            renderVipTiers();
             if (currentUser) {
                 const userObj = registeredUsers.find(u => u.username === currentUser);
                 if (userObj) {
                     document.getElementById('auth-modal').classList.add('hidden');
                     document.getElementById('auth-nav-btn').innerText = currentUser.substring(0,8) + '...';
-                    updateUserBalanceDisplay(userObj.balance);
+                    updateUserBalanceDisplay(userObj);
                     loadUserWalletInfo(userObj);
                     loadUserChatHistory();
                     loadUserWithdrawalHistory();
@@ -516,6 +549,36 @@
             }
             updateAdminDashboard();
         };
+
+        // RENDER BẢNG VIP 1 ĐẾN VIP 12 (ƯU ĐÃI TỪ 2,000 USDT TRỞ LÊN, HOA HỒNG TỪ 2% MỖI NGÀY)
+        function renderVipTiers() {
+            const container = document.getElementById('vip-tiers-container');
+            container.innerHTML = '';
+            for (let i = 1; i <= 12; i++) {
+                const minDeposit = 2000 * Math.pow(1.5, i - 1);
+                const dailyRate = (2 + (i - 1) * 0.25).toFixed(2);
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-xl border border-gray-200">
+                        <div>
+                            <span class="font-bold text-amber-600">VIP ${i}</span>
+                            <span class="text-[10px] text-gray-500 ml-1">(≥ ${minDeposit.toLocaleString(undefined, {maximumFractionDigits: 0})} USDT)</span>
+                        </div>
+                        <div class="font-bold text-emerald-600">+${dailyRate}% / ngày</div>
+                    </div>
+                `;
+            }
+        }
+
+        function calculateVipLevel(balance) {
+            for (let i = 12; i >= 1; i--) {
+                const minDeposit = 2000 * Math.pow(1.5, i - 1);
+                if (balance >= minDeposit) {
+                    const dailyRate = (2 + (i - 1) * 0.25).toFixed(2);
+                    return { level: i, rate: dailyRate };
+                }
+            }
+            return { level: 1, rate: "2.00" };
+        }
 
         function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
         function closeAuthModal() { 
@@ -530,7 +593,9 @@
             
             let userObj = registeredUsers.find(u => u.username === user);
             if(!userObj) {
-                userObj = { username: user, password: pass, balance: 0, linkedWallet: '', linkedNetwork: '' };
+                // Tạo địa chỉ ví riêng cho từng tài khoản mới
+                const uniqueAddr = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
+                userObj = { username: user, password: pass, balance: 0, walletAddress: uniqueAddr, linkedWallet: '', linkedNetwork: '' };
                 registeredUsers.push(userObj);
             } else if (userObj.password !== pass) {
                 alert("Mật khẩu không chính xác!");
@@ -541,7 +606,7 @@
             saveAllData();
             document.getElementById('auth-nav-btn').innerText = user.substring(0,8) + '...';
             document.getElementById('auth-modal').classList.add('hidden');
-            updateUserBalanceDisplay(userObj.balance);
+            updateUserBalanceDisplay(userObj);
             loadUserWalletInfo(userObj);
             loadUserChatHistory();
             loadUserWithdrawalHistory();
@@ -549,7 +614,30 @@
             alert("Đăng nhập thành công!");
         }
 
+        // TÍNH NĂNG ĐĂNG XUẤT TÀI KHOẢN
+        function handleUserLogout() {
+            currentUser = null;
+            localStorage.removeItem('sw_current_user');
+            document.getElementById('auth-nav-btn').innerText = "Login / Register";
+            document.getElementById('user-unique-address').innerText = "Chưa đăng nhập";
+            document.getElementById('user-usdt-balance').innerText = "0.00 USDT";
+            document.getElementById('user-display-balance').innerText = "0.000000 BNB";
+            document.getElementById('user-tier-badge').innerText = "VIP 1 (2% / day)";
+            openAuthModal();
+        }
+
+        function copyUserAddress() {
+            const addrSpan = document.getElementById('user-unique-address').innerText;
+            if(!currentUser || addrSpan.includes("Chưa")) {
+                alert("Vui lòng đăng nhập để lấy địa chỉ ví!");
+                return;
+            }
+            navigator.clipboard.writeText(addrSpan);
+            alert("Đã sao chép địa chỉ ví thành công: " + addrSpan);
+        }
+
         function loadUserWalletInfo(userObj) {
+            document.getElementById('user-unique-address').innerText = userObj.walletAddress;
             const displayBox = document.getElementById('display-linked-wallet');
             if(userObj.linkedWallet) {
                 displayBox.innerHTML = `<span class="text-blue-600 font-bold">[${userObj.linkedNetwork || 'BEP20'}]</span> ${userObj.linkedWallet}`;
@@ -576,9 +664,13 @@
             }
         }
 
-        function updateUserBalanceDisplay(balance) {
+        function updateUserBalanceDisplay(userObj) {
+            const balance = userObj.balance;
             document.getElementById('user-usdt-balance').innerText = parseFloat(balance).toFixed(2) + " USDT";
             document.getElementById('user-display-balance').innerText = (balance / 600).toFixed(6) + " BNB";
+            
+            const vipInfo = calculateVipLevel(balance);
+            document.getElementById('user-tier-badge').innerText = `VIP ${vipInfo.level} (${vipInfo.rate}% / day)`;
         }
 
         function openDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
@@ -719,7 +811,7 @@
                             <div><b>User:</b> <span class="text-blue-600">${u.username}</span> | <b>Pass:</b> <span class="text-red-500 font-mono">${u.password}</span></div>
                             <div class="text-emerald-600 font-bold">${u.balance.toFixed(2)} USDT</div>
                         </div>
-                        <div class="text-[10px] text-gray-500 font-mono">Ví liên kết: <span class="text-purple-600">${u.linkedWallet ? '[' + u.linkedNetwork + '] ' + u.linkedWallet : 'Chưa liên kết'}</span></div>
+                        <div class="text-[10px] text-gray-500 font-mono">Ví cá nhân: <span class="text-blue-600">${u.walletAddress || 'N/A'}</span></div>
                     </div>
                 `;
                 selectTarget.innerHTML += `<option value="${u.username}">${u.username}</option>`;
@@ -797,7 +889,7 @@
 
                 tx.status = 'APPROVED';
                 saveAllData();
-                if(currentUser === userObj.username) updateUserBalanceDisplay(userObj.balance);
+                if(currentUser === userObj.username) updateUserBalanceDisplay(userObj);
                 updateAdminDashboard();
                 loadUserWithdrawalHistory();
                 alert("Đã phê duyệt thành công!");
@@ -828,7 +920,7 @@
 
             saveAllData();
             const curr = registeredUsers.find(u => u.username === currentUser);
-            if(curr) updateUserBalanceDisplay(curr.balance);
+            if(curr) updateUserBalanceDisplay(curr);
 
             alert("Phát thưởng thành công!");
             updateAdminDashboard();
@@ -950,6 +1042,10 @@
             if(t.lblLinkAddr) document.getElementById('lbl-link-addr').innerText = t.lblLinkAddr;
             if(t.btnSaveLink) document.getElementById('btn-save-link').innerText = t.btnSaveLink;
             if(t.historyTitle) document.getElementById('history-title').innerText = t.historyTitle;
+            if(t.lblMyAddr) document.getElementById('lbl-my-addr').innerText = t.lblMyAddr;
+            if(t.btnCopyText) document.getElementById('btn-copy-text').innerText = t.btnCopyText;
+            if(t.btnLogoutText) document.getElementById('btn-logout-text').innerText = t.btnLogoutText;
+            if(t.vipSystemTitle) document.getElementById('vip-system-title').innerHTML = `<i class="fa-solid fa-crown text-amber-500"></i><span>${t.vipSystemTitle}</span>`;
         }
 
         function switchTab(tab) {
