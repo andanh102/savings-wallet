@@ -37,7 +37,7 @@
     <!-- TOP BAR -->
     <header class="bg-white shadow-sm p-3 flex justify-between items-center sticky top-0 z-40">
         
-        <!-- MENU ĐỔ NGÔN NGỮ TOÀN CẦU (ĐẦY ĐỦ 20+ NGÔN NGỮ) -->
+        <!-- MENU ĐỔ NGÔN NGỮ TOÀN CẦU -->
         <div class="relative inline-block text-left">
             <button onclick="toggleLangMenu()" id="lang-btn" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1 hover:bg-gray-100">
                 <span id="current-lang-text">English</span>
@@ -116,7 +116,7 @@
                     </button>
                     <button onclick="openCertificateModal()" id="btn-cert" class="bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-bold px-4 py-2 rounded-xl shadow-lg hover:bg-white transition border border-gray-100 flex items-center space-x-1.5">
                         <i class="fa-solid fa-shield-halved text-blue-600"></i>
-                        <span>Certificate</span>
+                        <span id="btn-cert-text">Certificate</span>
                     </button>
                 </div>
             </div>
@@ -295,7 +295,7 @@
                 <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-user-list-container"></div>
             </div>
 
-            <!-- TAB 2: PHÊ DUYỆT NẠP / RÚT TIỀN (NGĂN CHẶN LỢI DỤNG) -->
+            <!-- TAB 2: PHÊ DUYỆT NẠP / RÚT TIỀN -->
             <div id="adm-content-approval" class="hidden space-y-2 text-xs">
                 <p class="text-gray-500 font-medium">Danh sách yêu cầu Nạp/Rút chờ ADM phê duyệt:</p>
                 <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-approval-container"></div>
@@ -314,9 +314,10 @@
                 <button onclick="adminExecuteReward()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-xl transition shadow">Xác Nhận Phát Thưởng</button>
             </div>
 
-            <!-- TAB 4: HỖ TRỢ CSKH KHÁCH HÀNG (HIỂN THỊ TÊN TÀI KHOẢN) -->
+            <!-- TAB 4: HỖ TRỢ CSKH (CÓ KHUNG GÕ VÀ GỬI PHẢN HỒI TRỰC TIẾP CHO KHÁCH) -->
             <div id="adm-content-chats" class="hidden space-y-3 text-xs">
-                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-chat-container"></div>
+                <p class="text-gray-500 font-medium">Danh sách tin nhắn khách hàng gửi đến (lưu 10 ngày):</p>
+                <div class="max-h-60 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-3" id="admin-chat-container"></div>
             </div>
         </div>
     </div>
@@ -336,8 +337,8 @@
                     <p id="chat-status" class="text-[10px] text-emerald-600 font-semibold">● ADM Online</p>
                 </div>
             </div>
-            <div id="chat-messages-box" class="h-40 overflow-y-auto border rounded-xl p-2 bg-gray-50 text-xs space-y-2">
-                <div id="chat-welcome-msg" class="bg-blue-50 text-blue-800 p-2 rounded-lg">Hello! How can ADM assist your savings wallet transactions today?</div>
+            <div id="chat-messages-box" class="h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 text-xs space-y-2">
+                <div class="bg-blue-50 text-blue-800 p-2 rounded-lg">Hello! How can ADM assist your savings wallet transactions today?</div>
             </div>
             <div class="flex space-x-2">
                 <input type="text" id="user-chat-input" placeholder="Type your message..." class="flex-1 border rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -357,10 +358,10 @@
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <h3 id="modal-cert-title" class="text-lg font-bold text-gray-800">SAVINGS DEPOSIT CERTIFICATE</h3>
-                <p class="text-xs text-blue-600 font-semibold tracking-wide">SAVINGS WALLET PROTOCOL</p>
+                <p id="modal-cert-subtitle" class="text-xs text-blue-600 font-semibold tracking-wide">SAVINGS WALLET PROTOCOL</p>
             </div>
             <div class="border-t border-b border-gray-100 py-3 space-y-2 text-xs">
-                <div class="flex justify-between"><span id="modal-lbl-op" class="text-gray-500">Operating Since:</span><span class="font-bold text-gray-800">Year 2021 (5+ Years Active)</span></div>
+                <div class="flex justify-between"><span id="modal-lbl-op" class="text-gray-500">Operating Since:</span><span id="modal-val-op" class="font-bold text-gray-800">Year 2021 (5+ Years Active)</span></div>
                 <div class="flex justify-between"><span id="modal-lbl-tech" class="text-gray-500">Standard:</span><span id="modal-val-tech" class="font-semibold text-gray-800">Independent Decentralized Protocol</span></div>
                 <div class="flex justify-between"><span id="modal-lbl-custody" class="text-gray-500">Asset Protection:</span><span id="modal-val-custody" class="font-semibold text-blue-600">Self-Custody Wallet</span></div>
                 <div class="flex justify-between"><span id="modal-lbl-net" class="text-gray-500">Network:</span><span class="font-semibold text-green-600">BNB Chain (BEP-20)</span></div>
@@ -385,35 +386,35 @@
         </button>
     </nav>
 
-    <!-- JAVASCRIPT LOGIC DỮ LIỆU BỀN VỮNG & PHÊ DUYỆT ADM -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
         const translations = {
             en: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send"
+                appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send", certTitle: "SAVINGS DEPOSIT CERTIFICATE", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Operating Since:", valOp: "Year 2021 (5+ Years Active)", lblTech: "Standard:", valTech: "Independent Decentralized Protocol", lblCustody: "Asset Protection:", valCustody: "Self-Custody Wallet", lblNet: "Network:", btnConfirm: "Understood & Confirm"
             },
             vi: {
-                appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi"
+                appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi", certTitle: "CHỨNG NHẬN GỬI TIỀN TIẾT KIỆM", certSubtitle: "GIAO THỨC VÍ TIẾT KIỆM", lblOp: "Hoạt động từ:", valOp: "Năm 2021 (Hơn 5 năm hoạt động)", lblTech: "Tiêu chuẩn:", valTech: "Giao thức phi tập trung độc lập", lblCustody: "Bảo vệ tài sản:", valCustody: "Ví tự quản lý (Self-Custody)", lblNet: "Mạng lưới:", btnConfirm: "Đã hiểu & Xác nhận"
             },
             zh: {
-                appTitle: "储蓄钱包", bannerTitle: "领取优惠券", bannerSubtitle: "无质押", bannerDesc: "加入节点并开始挖矿", btnCert: "证书", btnDepositHub: "充值中心", poolDataTitle: "池数据", totalOutput: "总产出", validNodes: "有效节点", participants: "参与者", userRevenue: "用户收益", outputDetailsTitle: "产出详情", tableAddr: "地址", tableQty: "数量", withdrawalTitle: "提现", withdrawalLabel: "提现金额 (USDT)", withdrawalBtn: "确认提现", accAccumulated: "累计收入", accToday: "今日收入", accYield: "市场收益率", accPoolWallet: "矿池钱包", accWalletBal: "钱包余额", navHome: "首页", navWithdrawal: "提现", navAccount: "账户", btnQuickDeposit: "充值到固定钱包", tooltipSupport: "24/7 在线客服！", chatTitle: "24/7 在线客服", chatStatus: "● 管理员在线", chatWelcomeMsg: "您好！请问管理员今天能为您的储蓄钱包交易提供什么帮助？", chatPlaceholder: "输入您的消息...", btnChatSend: "发送"
+                appTitle: "储蓄钱包", bannerTitle: "领取优惠券", bannerSubtitle: "无质押", bannerDesc: "加入节点并开始挖矿", btnCert: "证书", btnDepositHub: "充值中心", poolDataTitle: "池数据", totalOutput: "总产出", validNodes: "有效节点", participants: "参与者", userRevenue: "用户收益", outputDetailsTitle: "产出详情", tableAddr: "地址", tableQty: "数量", withdrawalTitle: "提现", withdrawalLabel: "提现金额 (USDT)", withdrawalBtn: "确认提现", accAccumulated: "累计收入", accToday: "今日收入", accYield: "市场收益率", accPoolWallet: "矿池钱包", accWalletBal: "钱包余额", navHome: "首页", navWithdrawal: "提现", navAccount: "账户", btnQuickDeposit: "充值到固定钱包", tooltipSupport: "24/7 在线客服！", chatTitle: "24/7 在线客服", chatStatus: "● 管理员在线", chatWelcomeMsg: "您好！请问管理员今天能为您的储蓄钱包交易提供什么帮助？", chatPlaceholder: "输入您的消息...", btnChatSend: "发送", certTitle: "储蓄存款证书", certSubtitle: "储蓄钱包协议", lblOp: "运营时间:", valOp: "2021年起 (5年以上活跃)", lblTech: "标准:", valTech: "独立去中心化协议", lblCustody: "资产保护:", valCustody: "自托管钱包", lblNet: "网络:", btnConfirm: "已了解并确认"
             },
             ja: {
-                appTitle: "セーブウォレット", bannerTitle: "バウチャー受取", bannerSubtitle: "誓約なし", bannerDesc: "ノードに参加してマイニング開始", btnCert: "証明書", btnDepositHub: "入金ハブ", poolDataTitle: "プールデータ", totalOutput: "総出力", validNodes: "有効ノード", participants: "参加者", userRevenue: "ユーザー収益", outputDetailsTitle: "出力詳細", tableAddr: "アドレス", tableQty: "数量", withdrawalTitle: "出金", withdrawalLabel: "出金額 (USDT)", withdrawalBtn: "出金を確認", accAccumulated: "累計収益", accToday: "本日の収益", accYield: "市場利回り", accPoolWallet: "プールウォレット", accWalletBal: "ウォレット残高", navHome: "ホーム", navWithdrawal: "出金", navAccount: "アカウント", btnQuickDeposit: "固定ウォレットに入金", tooltipSupport: "24/7 ライブサポート！", chatTitle: "24/7 ライブサポート", chatStatus: "● 管理者オンライン", chatWelcomeMsg: "こんにちは！セーブウォレットのお取引についてサポートいたします。", chatPlaceholder: "メッセージを入力...", btnChatSend: "送信"
+                appTitle: "セーブウォレット", bannerTitle: "バウチャー受取", bannerSubtitle: "誓約なし", bannerDesc: "ノードに参加してマイニング開始", btnCert: "証明書", btnDepositHub: "入金ハブ", poolDataTitle: "プールデータ", totalOutput: "総出力", validNodes: "有効ノード", participants: "参加者", userRevenue: "ユーザー収益", outputDetailsTitle: "出力詳細", tableAddr: "アドレス", tableQty: "数量", withdrawalTitle: "出金", withdrawalLabel: "出金額 (USDT)", withdrawalBtn: "出金を確認", accAccumulated: "累計収益", accToday: "本日の収益", accYield: "市場利回り", accPoolWallet: "プールウォレット", accWalletBal: "ウォレット残高", navHome: "ホーム", navWithdrawal: "出金", navAccount: "アカウント", btnQuickDeposit: "固定ウォレットに入金", tooltipSupport: "24/7 ライブサポート！", chatTitle: "24/7 ライブサポート", chatStatus: "● 管理者オンライン", chatWelcomeMsg: "こんにちは！セーブウォレットのお取引についてサポートいたします。", chatPlaceholder: "メッセージを入力...", btnChatSend: "送信", certTitle: "定期預金証明書", certSubtitle: "セーブウォレットプロトコル", lblOp: "稼働開始:", valOp: "2021年 (5年以上稼働)", lblTech: "標準:", valTech: "独立分散型プロトコル", lblCustody: "資産保護:", valCustody: "セルフカストディウォレット", lblNet: "ネットワーク:", btnConfirm: "理解して確認"
             },
             ko: {
-                appTitle: "저축 지갑", bannerTitle: "바우처 받기", bannerSubtitle: "서약 없음", bannerDesc: "노드에 참여하고 채굴 시작", btnCert: "증명서", btnDepositHub: "입금 센터", poolDataTitle: "풀 데이터", totalOutput: "총 출력", validNodes: "유효 노드", participants: "참여자", userRevenue: "사용자 수익", outputDetailsTitle: "출력 세부 정보", tableAddr: "주소", tableQty: "수량", withdrawalTitle: "출금", withdrawalLabel: "출금 금액 (USDT)", withdrawalBtn: "출금 확인", accAccumulated: "누적 수익", accToday: "오늘의 수익", accYield: "시장 수익률", accPoolWallet: "풀 지갑", accWalletBal: "지갑 잔액", navHome: "홈", navWithdrawal: "출금", navAccount: "계정", btnQuickDeposit: "고정 지갑에 입금", tooltipSupport: "24/7 실시간 지원!", chatTitle: "24/7 실시간 지원", chatStatus: "● 관리자 온라인", chatWelcomeMsg: "안녕하세요! 저축 지갑 거래에 대해 도움을 드리겠습니다.", chatPlaceholder: "메시지 입력...", btnChatSend: "전송"
+                appTitle: "저축 지갑", bannerTitle: "바우처 받기", bannerSubtitle: "서약 없음", bannerDesc: "노드에 참여하고 채굴 시작", btnCert: "증명서", btnDepositHub: "입금 센터", poolDataTitle: "풀 데이터", totalOutput: "총 출력", validNodes: "유효 노드", participants: "참여자", userRevenue: "사용자 수익", outputDetailsTitle: "출력 세부 정보", tableAddr: "주소", tableQty: "수량", withdrawalTitle: "출금", withdrawalLabel: "출금 금액 (USDT)", withdrawalBtn: "출금 확인", accAccumulated: "누적 수익", accToday: "오늘의 수익", accYield: "시장 수익률", accPoolWallet: "풀 지갑", accWalletBal: "지갑 잔액", navHome: "홈", navWithdrawal: "출금", navAccount: "계정", btnQuickDeposit: "고정 지갑에 입금", tooltipSupport: "24/7 실시간 지원!", chatTitle: "24/7 실시간 지원", chatStatus: "● 관리자 온라인", chatWelcomeMsg: "안녕하세요! 저축 지갑 거래에 대해 도움을 드리겠습니다.", chatPlaceholder: "메시지 입력...", btnChatSend: "전송", certTitle: "저축 예금 증명서", certSubtitle: "저축 지갑 프로토콜", lblOp: "운영 시작:", valOp: "2021년 (5년 이상 활성)", lblTech: "표준:", valTech: "독립 탈중앙화 프로토콜", lblCustody: "자산 보호:", valCustody: "셀프 커스터디 지갑", lblNet: "네트워크:", btnConfirm: "이해 및 확인"
             },
             es: {
-                appTitle: "CARTERA DE AHORROS", bannerTitle: "Recibir Cupón", bannerSubtitle: "Sin compromiso", bannerDesc: "Únete al nodo y comienza a minar", btnCert: "Certificado", btnDepositHub: "Centro de Depósito", poolDataTitle: "Datos del Pool", totalOutput: "Producción Total", validNodes: "Nodos Válidos", participants: "Participantes", userRevenue: "Ingresos de Usuarios", outputDetailsTitle: "Detalles de Salida", tableAddr: "Dirección", tableQty: "Cantidad", withdrawalTitle: "Retiro", withdrawalLabel: "MONTO A RETIRAR (USDT)", withdrawalBtn: "Confirmar Retiro", accAccumulated: "Ingresos Acumulados", accToday: "Ingresos de Hoy", accYield: "Rendimiento de Mercado", accPoolWallet: "Billetera Pool", accWalletBal: "Saldo de Billetera", navHome: "Inicio", navWithdrawal: "Retiro", navAccount: "Cuenta", btnQuickDeposit: "Depositar en Billetera Fija", tooltipSupport: "¡Soporte 24/7!", chatTitle: "Soporte en Vivo 24/7", chatStatus: "● ADM En Línea", chatWelcomeMsg: "¡Hola! ¿En qué puede ayudarle el administrador hoy?", chatPlaceholder: "Escribe tu mensaje...", btnChatSend: "Enviar"
+                appTitle: "CARTERA DE AHORROS", bannerTitle: "Recibir Cupón", bannerSubtitle: "Sin compromiso", bannerDesc: "Únete al nodo y comienza a minar", btnCert: "Certificado", btnDepositHub: "Centro de Depósito", poolDataTitle: "Datos del Pool", totalOutput: "Producción Total", validNodes: "Nodos Válidos", participants: "Participantes", userRevenue: "Ingresos de Usuarios", outputDetailsTitle: "Detalles de Salida", tableAddr: "Dirección", tableQty: "Cantidad", withdrawalTitle: "Retiro", withdrawalLabel: "MONTO A RETIRAR (USDT)", withdrawalBtn: "Confirmar Retiro", accAccumulated: "Ingresos Acumulados", accToday: "Ingresos de Hoy", accYield: "Rendimiento de Mercado", accPoolWallet: "Billetera Pool", accWalletBal: "Saldo de Billetera", navHome: "Inicio", navWithdrawal: "Retiro", navAccount: "Cuenta", btnQuickDeposit: "Depositar en Billetera Fija", tooltipSupport: "¡Soporte 24/7!", chatTitle: "Soporte en Vivo 24/7", chatStatus: "● ADM En Línea", chatWelcomeMsg: "¡Hola! ¿En qué puede ayudarle el administrador hoy?", chatPlaceholder: "Escribe tu mensaje...", btnChatSend: "Enviar", certTitle: "CERTIFICADO DE DEPÓSITO", certSubtitle: "PROTOCOLO DE CARTERA DE AHORROS", lblOp: "Operando Desde:", valOp: "Año 2021 (5+ años activo)", lblTech: "Estándar:", valTech: "Protocolo Descentralizado Independiente", lblCustody: "Protección de Activos:", valCustody: "Billetera de Autocustodia", lblNet: "Red:", btnConfirm: "Entendido y Confirmar"
             },
             fr: {
-                appTitle: "PORTEFEUILLE D'ÉPARGNE", bannerTitle: "Recevoir un Bon", bannerSubtitle: "Sans engagement", bannerDesc: "Rejoignez le nœud et minez", btnCert: "Certificat", btnDepositHub: "Centre de Dépôt", poolDataTitle: "Données du Pool", totalOutput: "Production Totale", validNodes: "Nœuds Valides", participants: "Participants", userRevenue: "Revenus des Utilisateurs", outputDetailsTitle: "Détails de Sortie", tableAddr: "Adresse", tableQty: "Quantité", withdrawalTitle: "Retrait", withdrawalLabel: "MONTANT DU RETRAIT (USDT)", withdrawalBtn: "Confirmer le Retrait", accAccumulated: "Revenu Accumulé", accToday: "Revenu du Jour", accYield: "Rendement du Marché", accPoolWallet: "Portefeuille Pool", accWalletBal: "Solde du Portefeuille", navHome: "Accueil", navWithdrawal: "Retrait", navAccount: "Compte", btnQuickDeposit: "Déposer sur le Portefeuille", tooltipSupport: "Support 24/7 !", chatTitle: "Support en Direct 24/7", chatStatus: "● ADM En Ligne", chatWelcomeMsg: "Bonjour ! Comment l'administrateur peut-il vous aider aujourd'hui ?", chatPlaceholder: "Écrivez votre message...", btnChatSend: "Envoyer"
+                appTitle: "PORTEFEUILLE D'ÉPARGNE", bannerTitle: "Recevoir un Bon", bannerSubtitle: "Sans engagement", bannerDesc: "Rejoignez le nœud et minez", btnCert: "Certificat", btnDepositHub: "Centre de Dépôt", poolDataTitle: "Données du Pool", totalOutput: "Production Totale", validNodes: "Nœuds Valides", participants: "Participants", userRevenue: "Revenus des Utilisateurs", outputDetailsTitle: "Détails de Sortie", tableAddr: "Adresse", tableQty: "Quantité", withdrawalTitle: "Retrait", withdrawalLabel: "MONTANT DU RETRAIT (USDT)", withdrawalBtn: "Confirmer le Retrait", accAccumulated: "Revenu Accumulé", accToday: "Revenu du Jour", accYield: "Rendement du Marché", accPoolWallet: "Portefeuille Pool", accWalletBal: "Solde du Portefeuille", navHome: "Accueil", navWithdrawal: "Retrait", navAccount: "Compte", btnQuickDeposit: "Déposer sur le Portefeuille", tooltipSupport: "Support 24/7 !", chatTitle: "Support en Direct 24/7", chatStatus: "● ADM En Ligne", chatWelcomeMsg: "Bonjour ! Comment l'administrateur peut-il vous aider aujourd'hui ?", chatPlaceholder: "Écrivez votre message...", btnChatSend: "Envoyer", certTitle: "CERTIFICAT DE DÉPÔT D'ÉPARGNE", certSubtitle: "PROTOCOLE DE PORTEFEUILLE", lblOp: "En Service Depuis :", valOp: "Année 2021 (5+ ans d'activité)", lblTech: "Standard :", valTech: "Protocole Décentralisé Indépendant", lblCustody: "Protection des Actifs :", valCustody: "Portefeuille Autogéré", lblNet: "Réseau :", btnConfirm: "Compris et Confirmer"
             },
             de: {
-                appTitle: "SPARWALLET", bannerTitle: "Gutschein Erhalten", bannerSubtitle: "Keine Verpfändung", bannerDesc: "Trete dem Node bei und maximiere", btnCert: "Zertifikat", btnDepositHub: "Einzahlungszentrum", poolDataTitle: "Pool-Daten", totalOutput: "Gesamtleistung", validNodes: "Gültige Nodes", participants: "Teilnehmer", userRevenue: "Benutzerumsatz", outputDetailsTitle: "Ausgabedetails", tableAddr: "Adresse", tableQty: "Menge", withdrawalTitle: "Auszahlung", withdrawalLabel: "AUSZAHLUNGSBETRAG (USDT)", withdrawalBtn: "Auszahlung Bestätigen", accAccumulated: "Kumuliertes Einkommen", accToday: "Heutiges Einkommen", accYield: "Marktrendite", accPoolWallet: "Pool-Wallet", accWalletBal: "Wallet-Guthaben", navHome: "Startseite", navWithdrawal: "Auszahlung", navAccount: "Konto", btnQuickDeposit: "Einzahlung auf Wallet", tooltipSupport: "24/7 Live-Support!", chatTitle: "24/7 Live-Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hallo! Wie kann der Administrator Ihnen heute helfen?", chatPlaceholder: "Nachricht eingeben...", btnChatSend: "Senden"
+                appTitle: "SPARWALLET", bannerTitle: "Gutschein Erhalten", bannerSubtitle: "Keine Verpfändung", bannerDesc: "Trete dem Node bei und maximiere", btnCert: "Zertifikat", btnDepositHub: "Einzahlungszentrum", poolDataTitle: "Pool-Daten", totalOutput: "Gesamtleistung", validNodes: "Gültige Nodes", participants: "Teilnehmer", userRevenue: "Benutzerumsatz", outputDetailsTitle: "Ausgabedetails", tableAddr: "Adresse", tableQty: "Menge", withdrawalTitle: "Auszahlung", withdrawalLabel: "AUSZAHLUNGSBETRAG (USDT)", withdrawalBtn: "Auszahlung Bestätigen", accAccumulated: "Kumuliertes Einkommen", accToday: "Heutiges Einkommen", accYield: "Marktrendite", accPoolWallet: "Pool-Wallet", accWalletBal: "Wallet-Guthaben", navHome: "Startseite", navWithdrawal: "Auszahlung", navAccount: "Konto", btnQuickDeposit: "Einzahlung auf Wallet", tooltipSupport: "24/7 Live-Support!", chatTitle: "24/7 Live-Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hallo! Wie kann der Administrator Ihnen heute helfen?", chatPlaceholder: "Nachricht eingeben...", btnChatSend: "Senden", certTitle: "SPAREINLAGEN-ZERTIFIKAT", certSubtitle: "SPARWALLET-PROTOKOLL", lblOp: "In Betrieb Seit:", valOp: "Jahr 2021 (5+ Jahre aktiv)", lblTech: "Standard:", valTech: "Unabhängiges Dezentrales Protokoll", lblCustody: "Vermögensschutz:", valCustody: "Selbstverwahrte Wallet", lblNet: "Netzwerk:", btnConfirm: "Verstanden & Bestätigen"
             },
             ru: {
-                appTitle: "НАКОПИТЕЛЬНЫЙ КОШЕЛЕК", bannerTitle: "Получить Ваучер", bannerSubtitle: "Без залога", bannerDesc: "Присоединяйтесь к узлу и майните", btnCert: "Сертификат", btnDepositHub: "Центр Пополнения", poolDataTitle: "Данные Пула", totalOutput: "Общий Выпуск", validNodes: "Валидные Узлы", participants: "Участники", userRevenue: "Доход Пользователей", outputDetailsTitle: "Детали Вывода", tableAddr: "Адрес", tableQty: "Количество", withdrawalTitle: "Вывод", withdrawalLabel: "СУММА ВЫВОДА (USDT)", withdrawalBtn: "Подтвердить Вывод", accAccumulated: "Накопленный Доход", accToday: "Доход За Сегодня", accYield: "Доходность Рынка", accPoolWallet: "Пул Кошелек", accWalletBal: "Баланс Кошелька", navHome: "Главная", navWithdrawal: "Вывод", navAccount: "Аккаунт", btnQuickDeposit: "Пополнить Кошелек", tooltipSupport: "Поддержка 24/7!", chatTitle: "Онлайн Поддержка 24/7", chatStatus: "● АДМ В Сети", chatWelcomeMsg: "Здравствуйте! Чем администратор может вам помочь сегодня?", chatPlaceholder: "Введите сообщение...", btnChatSend: "Отправить"
+                appTitle: "НАКОПИТЕЛЬНЫЙ КОШЕЛЕК", bannerTitle: "Получить Ваучер", bannerSubtitle: "Без залога", bannerDesc: "Присоединяйтесь к узлу и майните", btnCert: "Сертификат", btnDepositHub: "Центр Пополнения", poolDataTitle: "Данные Пула", totalOutput: "Общий Выпуск", validNodes: "Валидные Узлы", participants: "Участники", userRevenue: "Доход Пользователей", outputDetailsTitle: "Детали Вывода", tableAddr: "Адрес", tableQty: "Количество", withdrawalTitle: "Вывод", withdrawalLabel: "СУММА ВЫВОДА (USDT)", withdrawalBtn: "Подтвердить Вывод", accAccumulated: "Накопленный Доход", accToday: "Доход За Сегодня", accYield: "Доходность Рынка", accPoolWallet: "Пул Кошелек", accWalletBal: "Баланс Кошелька", navHome: "Главная", navWithdrawal: "Вывод", navAccount: "Аккаунт", btnQuickDeposit: "Пополнить Кошелек", tooltipSupport: "Поддержка 24/7!", chatTitle: "Онлайн Поддержка 24/7", chatStatus: "● АДМ В Сети", chatWelcomeMsg: "Здравствуйте! Чем администратор может вам помочь сегодня?", chatPlaceholder: "Введите сообщение...", btnChatSend: "Отправить", certTitle: "СЕРТИФИКАТ СБЕРЕГАТЕЛЬНОГО ВКЛАДА", certSubtitle: "ПРОТОКОЛ НАКОПИТЕЛЬНОГО КОШЕЛЬКА", lblOp: "Работает С:", valOp: "2021 год (активен 5+ лет)", lblTech: "Стандарт:", valTech: "Независимый Децентрализованный Протокол", lblCustody: "Защита Активов:", valCustody: "Некастодиальный Кошелек", lblNet: "Сеть:", btnConfirm: "Понятно и Подтвердить"
             }
         };
 
@@ -432,13 +433,23 @@
             if(currentUser) localStorage.setItem('sw_current_user', currentUser);
         }
 
+        // TỰ ĐỘNG XÓA TIN NHẮN SAU 10 NGÀY NẾU KHÔNG CÓ TƯƠNG TÁC
+        function cleanupOldChats() {
+            const now = Date.now();
+            const tenDaysMs = 10 * 24 * 60 * 60 * 1000;
+            chatMessages = chatMessages.filter(m => (now - (m.timestamp || now)) < tenDaysMs);
+            saveAllData();
+        }
+
         window.onload = function() {
+            cleanupOldChats();
             if (currentUser) {
                 const userObj = registeredUsers.find(u => u.username === currentUser);
                 if (userObj) {
                     document.getElementById('auth-modal').classList.add('hidden');
                     document.getElementById('auth-nav-btn').innerText = currentUser.substring(0,8) + '...';
                     updateUserBalanceDisplay(userObj.balance);
+                    loadUserChatHistory();
                 }
             } else {
                 openAuthModal();
@@ -471,6 +482,7 @@
             document.getElementById('auth-nav-btn').innerText = user.substring(0,8) + '...';
             document.getElementById('auth-modal').classList.add('hidden');
             updateUserBalanceDisplay(userObj.balance);
+            loadUserChatHistory();
             updateAdminDashboard();
             alert("Đăng nhập thành công!");
         }
@@ -606,11 +618,32 @@
             if(chatMessages.length === 0) {
                 chatContainer.innerHTML = '<div class="text-gray-400 text-center py-4">Chưa có tin nhắn hỗ trợ nào.</div>';
             } else {
-                chatContainer.innerHTML = chatMessages.map(m => `
-                    <div class="bg-purple-50 p-2 rounded border">
-                        💬 <b class="text-blue-600">${m.username}</b>: <span>${m.text}</span>
-                    </div>
-                `).join('');
+                chatContainer.innerHTML = '';
+                // Gom nhóm theo từng khách hàng để ADM dễ trả lời
+                const grouped = {};
+                chatMessages.forEach(m => {
+                    if(!grouped[m.username]) grouped[m.username] = [];
+                    grouped[m.username].push(m);
+                });
+
+                for(let uname in grouped) {
+                    let historyHTML = grouped[uname].map(msg => `
+                        <div class="text-[11px] ${msg.isAdmin ? 'text-purple-700 font-semibold text-right bg-purple-50 p-1 rounded' : 'text-gray-700 text-left bg-white p-1 rounded border'}">
+                            <b>${msg.isAdmin ? 'ADM' : uname}:</b> ${msg.text}
+                        </div>
+                    `).join('');
+
+                    chatContainer.innerHTML += `
+                        <div class="bg-white p-3 rounded-xl border shadow-sm space-y-2">
+                            <div class="font-bold text-blue-600 border-b pb-1">Khách hàng: ${uname}</div>
+                            <div class="space-y-1 max-h-32 overflow-y-auto bg-gray-50 p-2 rounded">${historyHTML}</div>
+                            <div class="flex space-x-1 pt-1">
+                                <input type="text" id="adm-reply-${uname}" placeholder="Nhập câu trả lời của ADM..." class="flex-1 border rounded px-2 py-1 text-xs">
+                                <button onclick="adminSendReply('${uname}')" class="bg-purple-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-purple-700">Gửi phản hồi</button>
+                            </div>
+                        </div>
+                    `;
+                }
             }
         }
 
@@ -661,24 +694,64 @@
             closeAdminModal();
         }
 
-        function openSupportChat() { document.getElementById('support-chat-modal').classList.remove('hidden'); }
+        // ADM GỬI PHẢN HỒI CHO KHÁCH HÀNG
+        function adminSendReply(username) {
+            const inputEl = document.getElementById(`adm-reply-${username}`);
+            const text = inputEl.value.trim();
+            if(!text) return;
+
+            chatMessages.push({
+                username: username,
+                text: text,
+                isAdmin: true,
+                timestamp: Date.now()
+            });
+            saveAllData();
+            inputEl.value = '';
+            updateAdminDashboard();
+            loadUserChatHistory();
+            alert("Đã gửi câu trả lời đến khách hàng thành công!");
+        }
+
+        function openSupportChat() { document.getElementById('support-chat-modal').classList.remove('hidden'); loadUserChatHistory(); }
         function closeSupportChat() { document.getElementById('support-chat-modal').classList.add('hidden'); }
+
+        function loadUserChatHistory() {
+            const box = document.getElementById('chat-messages-box');
+            box.innerHTML = `<div class="bg-blue-50 text-blue-800 p-2 rounded-lg">Hello! How can ADM assist your savings wallet transactions today?</div>`;
+            
+            if(!currentUser) return;
+            const userChats = chatMessages.filter(m => m.username === currentUser);
+            userChats.forEach(m => {
+                if(m.isAdmin) {
+                    box.innerHTML += `<div class="bg-purple-100 text-purple-900 p-2 rounded-lg text-left"><b>ADM:</b> ${m.text}</div>`;
+                } else {
+                    box.innerHTML += `<div class="bg-gray-100 text-gray-800 p-2 rounded-lg text-right"><b>Bạn (${currentUser}):</b> ${m.text}</div>`;
+                }
+            });
+            box.scrollTop = box.scrollHeight;
+        }
 
         function sendUserMessage() {
             const txt = document.getElementById('user-chat-input').value.trim();
             if(!txt) return;
 
             const name = currentUser ? currentUser : 'Khách';
-            chatMessages.push({ username: name, text: txt });
+            chatMessages.push({
+                username: name,
+                text: txt,
+                isAdmin: false,
+                timestamp: Date.now()
+            });
             saveAllData();
 
-            const box = document.getElementById('chat-messages-box');
-            box.innerHTML += `<div class="bg-gray-100 text-gray-800 p-2 rounded-lg text-right"><b>Bạn (${name}):</b> ${txt}</div>`;
             document.getElementById('user-chat-input').value = '';
+            loadUserChatHistory();
             updateAdminDashboard();
         }
 
         function toggleLangMenu() { document.getElementById('lang-dropdown').classList.toggle('hidden'); }
+        
         function selectLanguage(code, name) {
             currentLang = code;
             document.getElementById('current-lang-text').innerText = name;
@@ -690,6 +763,7 @@
             document.getElementById('banner-subtitle').innerText = t.bannerSubtitle;
             document.getElementById('banner-desc').innerText = t.bannerDesc;
             document.getElementById('btn-deposit-hub').innerText = t.btnDepositHub;
+            document.getElementById('btn-cert-text').innerText = t.btnCert;
             document.getElementById('pool-data-title').innerText = t.poolDataTitle;
             document.getElementById('label-total-output').innerText = t.totalOutput;
             document.getElementById('label-valid-nodes').innerText = t.validNodes;
@@ -716,6 +790,17 @@
             document.getElementById('chat-welcome-msg').innerText = t.chatWelcomeMsg;
             document.getElementById('user-chat-input').placeholder = t.chatPlaceholder;
             document.getElementById('btn-chat-send').innerText = t.btnChatSend;
+
+            document.getElementById('modal-cert-title').innerText = t.certTitle;
+            document.getElementById('modal-cert-subtitle').innerText = t.certSubtitle;
+            document.getElementById('modal-lbl-op').innerText = t.lblOp;
+            document.getElementById('modal-val-op').innerText = t.valOp;
+            document.getElementById('modal-lbl-tech').innerText = t.lblTech;
+            document.getElementById('modal-val-tech').innerText = t.valTech;
+            document.getElementById('modal-lbl-custody').innerText = t.lblCustody;
+            document.getElementById('modal-val-custody').innerText = t.valCustody;
+            document.getElementById('modal-lbl-net').innerText = t.lblNet;
+            document.getElementById('modal-btn-confirm').innerText = t.btnConfirm;
         }
 
         function switchTab(tab) {
