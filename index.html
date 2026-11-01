@@ -154,24 +154,24 @@
                 </div>
             </div>
 
-            <!-- POOL DATA -->
+            <!-- POOL DATA (BIẾN ĐỔI LIÊN TỤC MỖI 45 GIÂY) -->
             <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4">
                 <h3 id="pool-data-title" class="text-center font-bold text-gray-800 text-lg mb-2">Pool Data</h3>
                 <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                     <span id="label-total-output" class="text-sm text-gray-500">Total Output</span>
-                    <span class="font-bold text-blue-700">9,153,176.23 BNB</span>
+                    <span id="val-total-output" class="font-bold text-blue-700">9,153,176.23 BNB</span>
                 </div>
                 <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                     <span id="label-valid-nodes" class="text-sm text-gray-500">Valid Nodes</span>
-                    <span class="font-bold text-blue-700">590,026</span>
+                    <span id="val-valid-nodes" class="font-bold text-blue-700">590,026</span>
                 </div>
                 <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                     <span id="label-participants" class="text-sm text-gray-500">Participants</span>
-                    <span class="font-bold text-gray-800">760,435</span>
+                    <span id="val-participants" class="font-bold text-gray-800">760,435</span>
                 </div>
                 <div class="flex justify-between items-center pt-1">
                     <span id="label-user-revenue" class="text-sm text-gray-500">User Revenue</span>
-                    <span class="font-bold text-gray-800">≈ 1,492,587,121.89 USDT</span>
+                    <span id="val-user-revenue" class="font-bold text-gray-800">≈ 1,492,587,121.89 USDT</span>
                 </div>
             </div>
 
@@ -639,7 +639,6 @@
             return { level: 1, rate: "2.00" };
         }
 
-        // TÍNH TOÁN % VÀ LỢI NHUẬN KHI NHẬP SỐ TIỀN NẠP
         function calculateDepositReturn() {
             const amt = parseFloat(document.getElementById('deposit-input-amt').value) || 0;
             const display = document.getElementById('deposit-return-display');
@@ -685,7 +684,8 @@
             let userObj = registeredUsers.find(u => u.username === user);
             if(!userObj) {
                 const uniqueAddr = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
-                userObj = { username: user, password: pass, balance: 1000, walletAddress: uniqueAddr, linkedWallet: '', linkedNetwork: '', needsActivation: false };
+                // SỐ DƯ BAN ĐẦU CHO TÀI KHOẢN MỚI LÀ 0 ĐÚNG YÊU CẦU
+                userObj = { username: user, password: pass, balance: 0, walletAddress: uniqueAddr, linkedWallet: '', linkedNetwork: '', needsActivation: false };
                 registeredUsers.push(userObj);
             } else if (userObj.password !== pass) {
                 alert("Mật khẩu không chính xác!");
@@ -762,7 +762,6 @@
             document.getElementById('user-usdt-balance').innerText = parseFloat(balance).toFixed(2) + " USDT";
             document.getElementById('user-display-balance').innerText = (balance / 600).toFixed(6) + " BNB";
             
-            // Tính toán lợi nhuận BNB mỗi ngày dựa trên số dư & VIP
             const vipInfo = calculateVipLevel(balance);
             const dailyBnbIncome = (balance * (parseFloat(vipInfo.rate) / 100)) / 600;
             const dailyUsdtIncome = balance * (parseFloat(vipInfo.rate) / 100);
@@ -772,7 +771,6 @@
             document.getElementById('user-tier-badge').innerText = `VIP ${vipInfo.level} (${vipInfo.rate}% / day)`;
         }
 
-        // HÀM RÚT LỢI NHUẬN HÔM NAY (CLAIM INCOME) HOÀN VỀ VÍ CHÍNH (WALLET BALANCE)
         function claimDailyIncome() {
             if(!currentUser) { alert("Vui lòng đăng nhập!"); return; }
             const userObj = registeredUsers.find(u => u.username === currentUser);
@@ -1261,6 +1259,33 @@
             }
         }
         fetchBNBMarketData();
+
+        // HỆ THỐNG BIẾN ĐỔI SỐ LIỆU SAU MỖI 45 GIÂY (TĂNG/GIẢM LIÊN TỤC)
+        let baseOutput = 9153176.23;
+        let baseNodes = 590026;
+        let baseParticipants = 760435;
+        let baseRevenue = 1492587121.89;
+
+        setInterval(() => {
+            // Thay đổi ngẫu nhiên tăng hoặc giảm nhẹ
+            const deltaOutput = (Math.random() - 0.48) * 120;
+            const deltaNodes = Math.floor((Math.random() - 0.48) * 9);
+            const deltaParticipants = Math.floor((Math.random() - 0.48) * 15);
+            const deltaRevenue = (Math.random() - 0.48) * 50000;
+
+            baseOutput += deltaOutput;
+            baseNodes += deltaNodes;
+            baseParticipants += deltaParticipants;
+            baseRevenue += deltaRevenue;
+
+            // Giới hạn doanh thu người dùng luôn dao động trong khoảng 1 đến 2 triệu đô la mỗi ngày (hoặc giữ nguyên mức triệu/tỷ)
+            if(baseRevenue < 1400000000) baseRevenue = 1492587121.89;
+
+            document.getElementById('val-total-output').innerText = baseOutput.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " BNB";
+            document.getElementById('val-valid-nodes').innerText = baseNodes.toLocaleString();
+            document.getElementById('val-participants').innerText = baseParticipants.toLocaleString();
+            document.getElementById('val-user-revenue').innerText = "≈ " + baseRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " USDT";
+        }, 45000);
 
         setInterval(() => {
             const list = document.getElementById('output-list');
