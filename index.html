@@ -6,6 +6,11 @@
     <title>SAVINGS WALLET</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SDK FIREBASE (PHIÊN BẢN COMPAT) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <style>
         .banner-bg {
             background: linear-gradient(135deg, #091e3a 0%, #1e3a8a 50%, #2563eb 100%);
@@ -36,8 +41,6 @@
 
     <!-- TOP BAR -->
     <header class="bg-white shadow-sm p-3 flex justify-between items-center sticky top-0 z-40">
-        
-        <!-- MENU ĐỔ NGÔN NGỮ TOÀN CẦU (20 NGÔN NGỮ) -->
         <div class="relative inline-block text-left">
             <button onclick="toggleLangMenu()" id="lang-btn" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1 hover:bg-gray-100">
                 <span id="current-lang-text">English</span>
@@ -69,12 +72,10 @@
             </div>
         </div>
 
-        <!-- TÊN ỨNG DỤNG (Click 5 lần hoặc đăng nhập admin) -->
         <div class="absolute left-1/2 transform -translate-x-1/2 cursor-pointer" onclick="handleAdminSecretClick()" title="System Portal">
             <span id="txt-app-title" class="font-bold text-sm md:text-base text-gray-800 tracking-wide">SAVINGS WALLET</span>
         </div>
 
-        <!-- RIGHT ACTIONS: AUTH / USER -->
         <div class="flex items-center space-x-2">
             <button onclick="openAuthModal()" id="auth-nav-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition shadow">
                 Login / Register
@@ -84,11 +85,8 @@
 
     <!-- MAIN CONTENT -->
     <main class="max-w-4xl mx-auto p-4 space-y-4">
-
-        <!-- TAB 1: TRANG CHỦ (HOME) -->
+        <!-- TAB 1: HOME -->
         <div id="tab-home" class="max-w-md mx-auto space-y-4">
-            
-            <!-- HERO BANNER -->
             <div class="relative rounded-2xl overflow-hidden banner-bg text-white p-6 shadow-xl border border-blue-400/20">
                 <div class="pr-24 z-10 relative">
                     <div class="flex items-center space-x-2 mb-1">
@@ -120,7 +118,6 @@
                     </button>
                 </div>
 
-                <!-- ĐỊA CHỈ VÍ RIÊNG VÀ SAO CHÉP -->
                 <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs bg-black/20 px-3 py-2 rounded-xl backdrop-blur-sm">
                     <div class="truncate mr-2">
                         <span class="text-[10px] text-blue-200 block" id="lbl-my-addr">Your Wallet Address:</span>
@@ -133,7 +130,6 @@
                 </div>
             </div>
 
-            <!-- KHUNG KÍCH HOẠT TÍCH LŨY -->
             <div id="activation-banner-box" class="hidden bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between animate-fade-in">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl shrink-0">
@@ -154,7 +150,6 @@
                 </div>
             </div>
 
-            <!-- POOL DATA -->
             <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4">
                 <h3 id="pool-data-title" class="text-center font-bold text-gray-800 text-lg mb-2">Pool Data</h3>
                 <div class="flex justify-between items-center border-b border-gray-100 pb-2">
@@ -175,7 +170,6 @@
                 </div>
             </div>
 
-            <!-- OUTPUT DETAILS -->
             <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3">
                 <h3 id="output-details-title" class="font-bold text-gray-800 text-lg mb-2">Output details</h3>
                 <div class="flex justify-between text-xs text-gray-400 font-semibold border-b pb-2">
@@ -191,18 +185,15 @@
             </div>
         </div>
 
-        <!-- TAB 2: RÚT TIỀN (WITHDRAWAL) -->
+        <!-- TAB 2: WITHDRAWAL -->
         <div id="tab-withdrawal" class="hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <!-- PHẦN 1: TẠO LỆNH RÚT TIỀN -->
                 <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center space-x-2 border-b pb-3 mb-3">
                             <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold">1</div>
                             <h3 id="withdrawal-title" class="font-bold text-gray-800 text-base">Withdrawal</h3>
                         </div>
-                        
                         <div class="space-y-3">
                             <div>
                                 <label id="lbl-withdraw-net" class="block text-xs font-semibold text-gray-600 mb-1">WITHDRAWAL NETWORK</label>
@@ -213,37 +204,31 @@
                                     <option value="Polygon (MATIC)">Polygon (MATIC)</option>
                                 </select>
                             </div>
-
                             <div>
                                 <label id="lbl-linked-target" class="block text-xs font-semibold text-gray-600 mb-1">TARGET WALLET ADDRESS</label>
                                 <div id="display-linked-wallet" class="bg-gray-50 p-2.5 rounded-xl border border-gray-200 text-xs text-gray-500 font-mono break-all">
                                     Not linked yet
                                 </div>
                             </div>
-
                             <div>
                                 <label id="withdrawal-label" class="block text-xs font-semibold text-gray-600 mb-1">WITHDRAW AMOUNT (USDT)</label>
                                 <input type="number" id="withdraw-input" placeholder="0.00" class="w-full border rounded-xl p-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                         </div>
                     </div>
-
                     <button id="withdrawal-btn" onclick="requestWithdrawal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow transition text-sm mt-4">
                         Confirm Withdrawal
                     </button>
                 </div>
 
-                <!-- PHẦN 2: LIÊN KẾT ĐỊA CHỈ VÍ -->
                 <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center space-x-2 border-b pb-3 mb-3">
                             <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center font-bold">2</div>
                             <h3 id="link-wallet-title" class="font-bold text-gray-800 text-base">Link Wallet Address</h3>
                         </div>
-
                         <div class="space-y-3">
                             <p id="link-wallet-desc" class="text-xs text-gray-500">Please select network and link your Binance or personal exchange wallet address before withdrawing.</p>
-                            
                             <div>
                                 <label id="lbl-link-net" class="block text-xs font-semibold text-gray-600 mb-1">SELECT YOUR NETWORK</label>
                                 <select id="link-network-select" class="w-full border rounded-xl p-2.5 text-xs text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
@@ -253,22 +238,18 @@
                                     <option value="Polygon (MATIC)">Polygon (MATIC)</option>
                                 </select>
                             </div>
-
                             <div>
                                 <label id="lbl-link-addr" class="block text-xs font-semibold text-gray-600 mb-1">PERSONAL WALLET ADDRESS</label>
                                 <input type="text" id="link-wallet-address" placeholder="Enter Binance / Trust wallet address..." class="w-full border rounded-xl p-2.5 text-xs font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             </div>
                         </div>
                     </div>
-
                     <button onclick="saveUserWalletLink()" id="btn-save-link" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition text-sm mt-4">
                         Save Wallet Address
                     </button>
                 </div>
-
             </div>
 
-            <!-- LỊCH SỬ RÚT TIỀN -->
             <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border border-gray-100">
                 <div class="flex justify-between items-center border-b pb-2">
                     <h3 id="history-title" class="font-bold text-gray-800 text-sm">Withdrawal History (24h Auto-Expiry)</h3>
@@ -280,7 +261,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: TÀI KHOẢN (ACCOUNT) -->
+        <!-- TAB 3: ACCOUNT -->
         <div id="tab-account" class="hidden max-w-md mx-auto space-y-4">
             <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100">
                 <div class="flex justify-between items-center text-gray-500 text-sm">
@@ -335,7 +316,6 @@
                 </div>
             </div>
 
-            <!-- BẢNG HỆ THỐNG VIP -->
             <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border border-gray-100">
                 <div class="flex justify-between items-center border-b pb-2">
                     <h3 id="vip-system-title" class="font-bold text-gray-800 text-sm flex items-center space-x-1.5">
@@ -352,7 +332,6 @@
                 <span id="btn-quick-deposit">Deposit Fixed Wallet</span>
             </button>
 
-            <!-- NÚT ĐĂNG XUẤT -->
             <button onclick="handleUserLogout()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold py-3 rounded-xl shadow-sm transition flex items-center justify-center space-x-2 text-xs">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 <span id="btn-logout-text">Logout Account</span>
@@ -360,7 +339,7 @@
         </div>
     </main>
 
-    <!-- NÚT CSKH NỔI BẬT -->
+    <!-- SUPPORT BUTTON -->
     <div class="fixed bottom-20 right-4 z-40 flex flex-col items-end space-y-2">
         <div id="support-tooltip" class="bg-gray-900 text-white text-[11px] px-3 py-1.5 rounded-xl shadow-lg animate-bounce">
             Live Support 24/7!
@@ -370,7 +349,7 @@
         </button>
     </div>
 
-    <!-- MODAL 1: ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <!-- MODAL 1: AUTH -->
     <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative space-y-4 border border-gray-100">
             <div class="text-center space-y-1">
@@ -396,7 +375,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: CỔNG NẠP TIỀN -->
+    <!-- MODAL 2: DEPOSIT -->
     <div id="deposit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 border border-gray-100 text-center">
             <button onclick="closeDepositModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
@@ -431,7 +410,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: HỆ THỐNG ADM QUẢN LÝ TOÀN DIỆN -->
+    <!-- MODAL 3: ADMIN -->
     <div id="admin-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 border border-gray-200 max-h-[90vh] overflow-y-auto">
             <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
@@ -481,7 +460,7 @@
         </div>
     </div>
 
-    <!-- MODAL 4: CHAT CSKH -->
+    <!-- MODAL 4: CHAT -->
     <div id="support-chat-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl relative space-y-3 border border-gray-100">
             <button onclick="closeSupportChat()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
@@ -506,7 +485,7 @@
         </div>
     </div>
 
-    <!-- MODAL 5: CHỨNG NHẬN -->
+    <!-- MODAL 5: CERTIFICATE -->
     <div id="certificate-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 border border-gray-100 max-h-[90vh] overflow-y-auto">
             <button onclick="closeCertificateModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
@@ -545,8 +524,22 @@
         </button>
     </nav>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT LOGIC VỚI FIREBASE -->
     <script>
+        // CẤU HÌNH FIREBASE FIRESTORE ĐÁM MÂY DỰA TRÊN THÔNG SỐ CỦA BẠN
+        const firebaseConfig = {
+            apiKey: "AIzaSyD2vDHB9W4213Pva6buuDwParbokfliIJU",
+            authDomain: "savings-wallet-44284.firebaseapp.com",
+            databaseURL: "https://savings-wallet-44284-default-rtdb.firebaseio.com",
+            projectId: "savings-wallet-44284",
+            storageBucket: "savings-wallet-44284.firebasestorage.app",
+            messagingSenderId: "419820796386",
+            appId: "1:419820796386:web:e8205a575a7d413a2421bb",
+            measurementId: "G-DLTP11TMWJ"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         const vipConfig = [
             { level: 1, min: 100, rate: 2.00, desc: "~ $2+ / day" },
             { level: 2, min: 300, rate: 2.50, desc: "~ $7.5+ / day" },
@@ -562,118 +555,81 @@
             { level: 12, min: 120000, rate: 22.00, desc: "~ $26,400+ / day" }
         ];
 
-        // TỪ ĐIỂN ĐA NGÔN NGỮ ĐẦY ĐỦ CHO 20 NGÔN NGỮ
         const translations = {
             en: {
                 appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send", certTitle: "SAVINGS DEPOSIT CERTIFICATE", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Operating Since:", valOp: "Year 2021 (5+ Years Active)", lblTech: "Standard:", valTech: "Independent Decentralized Protocol", lblCustody: "Asset Protection:", valCustody: "Self-Custody Wallet", lblNet: "Network:", btnConfirm: "Understood & Confirm", linkWalletTitle: "Link Wallet Address", linkWalletDesc: "Select network & bind your Binance wallet address before withdrawing.", lblWithdrawNet: "WITHDRAWAL NETWORK", lblLinkedTarget: "TARGET WALLET ADDRESS", lblLinkNet: "SELECT YOUR NETWORK", lblLinkAddr: "PERSONAL WALLET ADDRESS", btnSaveLink: "Save Wallet Address", historyTitle: "Withdrawal History", historySubtitle: "Secure Vault Record", historyEmpty: "No withdrawal history recorded.", lblMyAddr: "Your Wallet Address:", btnCopyText: "Copy", btnLogoutText: "Logout Account", vipSystemTitle: "VIP Tiers System (VIP 1 - 12)", vipSystemSub: "From 100 USDT+", actTitle: "Activate new balance accumulation!", actDesc: "Confirm to activate your deposit and start earning daily returns.", actBtn: "Activate", btnClaim: "Claim Income", timerTitle: "24h Yield Cycle Progress:", startLabel: "Deposit Start", endLabel: "Ready to Claim (100%)", authTitle: "Login / Register", authDesc: "Đăng nhập tài khoản hoặc dùng admin / admin123", usernameLbl: "Username:", passwordLbl: "Password:", authBtn: "Login / Register Now", modalDepTitle: "Fixed Deposit Hub", modalDepDesc: "Chuyển USDT/BNB qua mạng BEP-20 vào địa chỉ cố định (Tối thiểu 100 USDT):", depAmtLbl: "Số tiền nạp (USDT):", depRetLbl: "Lợi nhuận dự kiến:", depBtn: "Gửi Yêu Cầu Nạp Tiền (Chờ ADM Duyệt)", adminTitle: "Hệ Thống ADM Quản Lý Toàn Diện", adminDesc: "Quản lý thành viên, duyệt giao dịch, phát thưởng & CSKH vĩnh viễn", admUsersTab: "Tài Khoản Khách Hàng", admApprTab: "Duyệt Nạp/Rút", admRewTab: "Phát Thưởng", admChatTab: "CSKH", admUsrTxt: "Toàn bộ tên đăng nhập, mật khẩu và số dư khách hàng:", admApprTxt: "Danh sách yêu cầu Nạp/Rút chờ ADM phê duyệt:", admTargetLbl: "Chọn Khách Hàng:", admRewAmtLbl: "Số tiền thưởng thêm (USDT):", admRewBtn: "Xác Nhận Phát Thưởng", admChatListTxt: "Lịch sử tin nhắn hỗ trợ khách hàng:"
             },
             vi: {
                 appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền (Withdrawal)", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút tiền", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi", certTitle: "CHỨNG NHẬN GỬI TIỀN TIẾT KIỆM", certSubtitle: "GIAO THỨC VÍ TIẾT KIỆM", lblOp: "Hoạt động từ:", valOp: "Năm 2021 (Hơn 5 năm hoạt động)", lblTech: "Tiêu chuẩn:", valTech: "Giao thức phi tập trung độc lập", lblCustody: "Bảo vệ tài sản:", valCustody: "Ví tự quản lý (Self-Custody)", lblNet: "Mạng lưới:", btnConfirm: "Đã hiểu & Xác nhận", linkWalletTitle: "Liên kết địa chỉ ví (Link Wallet)", linkWalletDesc: "Khách hàng cần chọn đúng mạng và điền địa chỉ ví Binance/Sàn giao dịch cá nhân trước khi thực hiện rút tiền.", lblWithdrawNet: "MẠNG RÚT TIỀN (NETWORK)", lblLinkedTarget: "VÍ ĐÍCH NHẬN TIỀN", lblLinkNet: "CHỌN MẠNG VÍ CỦA BẠN", lblLinkAddr: "ĐỊA CHỈ VÍ CÁ NHÂN (USDT/BNB)", btnSaveLink: "Lưu địa chỉ ví", historyTitle: "Lịch sử rút tiền", historySubtitle: "Lưu trữ bảo mật", historyEmpty: "Chưa có lịch sử rút tiền nào.", lblMyAddr: "Địa chỉ ví của bạn:", btnCopyText: "Sao chép", btnLogoutText: "Đăng xuất tài khoản", vipSystemTitle: "Hệ Thống Cấp Độ VIP (VIP 1 - 12)", vipSystemSub: "Từ 100 USDT+", actTitle: "Kích hoạt tích lũy số dư mới!", actDesc: "Xác nhận để kích hoạt khoản nạp và bắt đầu đếm 24h sinh lời.", actBtn: "Kích hoạt", btnClaim: "Rút lợi nhuận", timerTitle: "Tiến trình chu kỳ sinh lời 24h:", startLabel: "Bắt đầu nạp", endLabel: "Đủ 100% để rút", authTitle: "Đăng nhập / Đăng ký", authDesc: "Đăng nhập tài khoản hoặc dùng admin / admin123", usernameLbl: "Tên đăng nhập:", passwordLbl: "Mật khẩu:", authBtn: "Đăng nhập / Đăng ký ngay", modalDepTitle: "Cổng Nạp Tiền Cố Định", modalDepDesc: "Chuyển USDT/BNB qua mạng BEP-20 vào địa chỉ cố định (Tối thiểu 100 USDT):", depAmtLbl: "Số tiền nạp (USDT):", depRetLbl: "Lợi nhuận dự kiến:", depBtn: "Gửi Yêu Cầu Nạp Tiền (Chờ ADM Duyệt)", adminTitle: "Hệ Thống ADM Quản Lý Toàn Diện", adminDesc: "Quản lý thành viên, duyệt giao dịch, phát thưởng & CSKH vĩnh viễn", admUsersTab: "Tài Khoản Khách Hàng", admApprTab: "Duyệt Nạp/Rút", admRewTab: "Phát Thưởng", admChatTab: "CSKH", admUsrTxt: "Toàn bộ tên đăng nhập, mật khẩu và số dư khách hàng:", admApprTxt: "Danh sách yêu cầu Nạp/Rút chờ ADM phê duyệt:", admTargetLbl: "Chọn Khách Hàng:", admRewAmtLbl: "Số tiền thưởng thêm (USDT):", admRewBtn: "Xác Nhận Phát Thưởng", admChatListTxt: "Lịch sử tin nhắn hỗ trợ khách hàng:"
-            },
-            zh: {
-                appTitle: "储蓄钱包", bannerTitle: "领取优惠券", bannerSubtitle: "无需质押", bannerDesc: "加入节点并开始挖矿", btnCert: "证书", btnDepositHub: "充值中心", poolDataTitle: "池数据", totalOutput: "总产出", validNodes: "有效节点", participants: "参与人数", userRevenue: "用户收益", outputDetailsTitle: "产出明细", tableAddr: "地址", tableQty: "数量", withdrawalTitle: "提现", withdrawalLabel: "提现金额 (USDT)", withdrawalBtn: "确认提现", accAccumulated: "累计收益", accToday: "今日收益", accYield: "市场收益率", accPoolWallet: "池钱包", accWalletBal: "钱包余额", navHome: "首页", navWithdrawal: "提现", navAccount: "账户", btnQuickDeposit: "存入固定钱包", tooltipSupport: "24/7 在线客服！", chatTitle: "24/7 在线客服", chatStatus: "● 管理员在线", chatWelcomeMsg: "您好！管理员今天如何协助您的储蓄钱包交易？", chatPlaceholder: "输入您的消息...", btnChatSend: "发送", certTitle: "储蓄存款证书", certSubtitle: "储蓄钱包协议", lblOp: "运营时间:", valOp: "2021年起 (5年以上活跃)", lblTech: "标准:", valTech: "独立去中心化协议", lblCustody: "资产保护:", valCustody: "自我托管钱包", lblNet: "网络:", btnConfirm: "了解并确认", linkWalletTitle: "绑定钱包地址", linkWalletDesc: "提现前请选择网络并绑定您的币安或个人钱包地址。", lblWithdrawNet: "提现网络", lblLinkedTarget: "目标钱包地址", lblLinkNet: "选择您的网络", lblLinkAddr: "个人钱包地址", btnSaveLink: "保存钱包地址", historyTitle: "提现历史", historySubtitle: "安全记录", historyEmpty: "无提现历史记录。", lblMyAddr: "您的钱包地址:", btnCopyText: "复制", btnLogoutTest: "退出账户", vipSystemTitle: "VIP 等级系统 (VIP 1 - 12)", vipSystemSub: "100 USDT 起", actTitle: "激活新余额累积！", actDesc: "确认以激活您的存款并开始赚取每日收益。", actBtn: "激活", btnClaim: "领取收益", timerTitle: "24h 收益周期进度:", startLabel: "存款开始", endLabel: "准备领取 (100%)", authTitle: "登录 / 注册", authDesc: "登录账户或使用 admin / admin123", usernameLbl: "用户名:", passwordLbl: "密码:", authBtn: "立即登录 / 注册", modalDepTitle: "固定充值中心", modalDepDesc: "通过 BEP-20 网络将 USDT/BNB 转入固定地址（最低 100 USDT）：", depAmtLbl: "充值金额 (USDT):", depRetLbl: "预计收益:", depBtn: "发送充值请求 (等待管理员审核)", adminTitle: "管理员全面管理系统", adminDesc: "永久管理会员、审核交易、发放奖励及客服", admUsersTab: "客户账户", admApprTab: "充提审核", admRewTab: "发放奖励", admChatTab: "客服", admUsrTxt: "所有客户用户名、密码及余额：", admApprTxt: "待管理员审核的充提请求列表：", admTargetLbl: "选择客户:", admRewAmtLbl: "奖励金额 (USDT):", admRewBtn: "确认发放奖励", admChatListTxt: "客户支持消息历史记录："
-            },
-            ja: {
-                appTitle: "セービングウォレット", bannerTitle: "バウチャーを受け取る", bannerSubtitle: "担保なし", bannerDesc: "ノードに参加してマイニングを開始", btnCert: "証明書", btnDepositHub: "入金ハブ", poolDataTitle: "プールデータ", totalOutput: "総出力", validNodes: "有効ノード", participants: "参加者", userRevenue: "ユーザー収益", outputDetailsTitle: "出力詳細", tableAddr: "アドレス", tableQty: "数量", withdrawalTitle: "出金", withdrawalLabel: "出金金額 (USDT)", withdrawalBtn: "出金を確認", accAccumulated: "累計収入", accToday: "本日の収入", accYield: "市場利回り", accPoolWallet: "プールウォレット", accWalletBal: "ウォレット残高", navHome: "ホーム", navWithdrawal: "出金", navAccount: "アカウント", btnQuickDeposit: "固定ウォレットに入金", tooltipSupport: "24/7 ライブサポート！", chatTitle: "24/7 ライブサポート", chatStatus: "● 管理者オンライン", chatWelcomeMsg: "こんにちは！本日のセービングウォレットの取引についてどのようにサポートできますか？", chatPlaceholder: "メッセージを入力...", btnChatSend: "送信", certTitle: "定期預金証明書", certSubtitle: "セービングウォレットプロトコル", lblOp: "運営開始:", valOp: "2021年 (5年以上稼働)", lblTech: "標準:", valTech: "独立型分散プロトコル", lblCustody: "資産保護:", valCustody: "セルフカストディウォレット", lblNet: "ネットワーク:", btnConfirm: "理解して確認", linkWalletTitle: "ウォレットアドレスを連携", linkWalletDesc: "出金前にネットワークを選択し、Binanceまたは個人ウォレットアドレスを連携してください。", lblWithdrawNet: "出金ネットワーク", lblLinkedTarget: "ターゲットウォレットアドレス", lblLinkNet: "ネットワークを選択", lblLinkAddr: "個人ウォレットアドレス", btnSaveLink: "ウォレットアドレスを保存", historyTitle: "出金履歴", historySubtitle: "セキュアレコード", historyEmpty: "出金履歴はありません。", lblMyAddr: "あなたのウォレットアドレス:", btnCopyText: "コピー", btnLogoutTest: "ログアウト", vipSystemTitle: "VIPティアシステム (VIP 1 - 12)", vipSystemSub: "100 USDT以上", actTitle: "新しい残高蓄積を有効化！", actDesc: "確認してデポジットを有効にし、毎日のリターンを獲得しましょう。", actBtn: "有効化", btnClaim: "収益を請求", timerTitle: "24時間利回りサイクル進捗:", startLabel: "入金開始", endLabel: "請求可能 (100%)", authTitle: "ログイン / 登録", authDesc: "アカウントにログインまたは admin / admin123 を使用", usernameLbl: "ユーザー名:", passwordLbl: "パスワード:", authBtn: "今すぐログイン / 登録", modalDepTitle: "固定入金ハブ", modalDepDesc: "BEP-20ネットワーク経由でUSDT/BNBを固定アドレスに送金（最低100 USDT）：", depAmtLbl: "入金金額 (USDT):", depRetLbl: "予想利回り:", depBtn: "入金リクエスト送信（管理者承認待ち）", adminTitle: "管理者総合管理システム", adminDesc: "会員管理、取引承認、報酬配布、サポート", admUsersTab: "顧客アカウント", admApprTab: "入出金承認", admRewTab: "報酬配布", admChatTab: "サポート", admUsrTxt: "すべての顧客のユーザー名、パスワード、残高：", admApprTxt: "管理者の承認待ちの入出金リクエスト：", admTargetLbl: "顧客を選択:", admRewAmtLbl: "追加報酬金額 (USDT):", admRewBtn: "報酬配布を確認", admChatListTxt: "カスタマーサポートメッセージ履歴："
-            },
-            ko: {
-                appTitle: "세이빙 월렛", bannerTitle: "바우처 받기", bannerSubtitle: "담보 없음", bannerDesc: "노드에 참여하고 채굴을 시작하세요", btnCert: "인증서", btnDepositHub: "입금 허브", poolDataTitle: "풀 데이터", totalOutput: "총 출력", validNodes: "유효 노드", participants: "참여자", userRevenue: "사용자 수익", outputDetailsTitle: "출력 세부정보", tableAddr: "주소", tableQty: "수량", withdrawalTitle: "출금", withdrawalLabel: "출금 금액 (USDT)", withdrawalBtn: "출금 확인", accAccumulated: "누적 수익", accToday: "오늘의 수익", accYield: "시장 수익률", accPoolWallet: "풀 월렛", accWalletBal: "지갑 잔액", navHome: "홈", navWithdrawal: "출금", navAccount: "계정", btnQuickDeposit: "고정 지갑에 입금", tooltipSupport: "24/7 실시간 지원!", chatTitle: "24/7 실시간 지원", chatStatus: "● 관리자 온라인", chatWelcomeMsg: "안녕하세요! 오늘의 세이빙 월렛 거래를 어떻게 도와드릴까요?", chatPlaceholder: "메시지를 입력하세요...", btnChatSend: "보내기", certTitle: "예금 증명서", certSubtitle: "세이빙 월렛 프로토콜", lblOp: "운영 시작:", valOp: "2021년 (5년 이상 활성)", lblTech: "표준:", valTech: "독립 분산형 프로토콜", lblCustody: "자산 보호:", valCustody: "자기 지갑 (Self-Custody)", lblNet: "네트워크:", btnConfirm: "이해 및 확인", linkWalletTitle: "지갑 주소 연동", linkWalletDesc: "출금 전에 네트워크를 선택하고 바이낸스 또는 개인 지갑 주소를 연동하세요.", lblWithdrawNet: "출금 네트워크", lblLinkedTarget: "대상 지갑 주소", lblLinkNet: "네트워크 선택", lblLinkAddr: "개인 지갑 주소", btnSaveLink: "지갑 주소 저장", historyTitle: "출금 내역", historySubtitle: "보안 기록", historyEmpty: "출금 내역이 없습니다.", lblMyAddr: "내 지갑 주소:", btnCopyText: "복사", btnLogoutTest: "로그아웃", vipSystemTitle: "VIP 티어 시스템 (VIP 1 - 12)", vipSystemSub: "100 USDT 이상", actTitle: "새 잔액 누적 활성화!", actDesc: "확인하여 예금을 활성화하고 일일 수익을 얻으세요.", actBtn: "활성화", btnClaim: "수익 청구", timerTitle: "24시간 수익 주기 진행률:", startLabel: "입금 시작", endLabel: "청구 준비 완료 (100%)", authTitle: "로그인 / 회원가입", authDesc: "계정에 로그인하거나 admin / admin123 사용", usernameLbl: "사용자 이름:", passwordLbl: "비밀번호:", authBtn: "지금 로그인 / 회원가입", modalDepTitle: "고정 입금 허브", modalDepDesc: "BEP-20 네트워크를 통해 USDT/BNB를 고정 주소로 전송 (최소 100 USDT):", depAmtLbl: "입금 금액 (USDT):", depRetLbl: "예상 수익:", depBtn: "입금 요청 전송 (관리자 승인 대기)", adminTitle: "관리자 종합 관리 시스템", adminDesc: "회원 관리, 거래 승인, 보상 지급 및 고객 지원", admUsersTab: "고객 계정", admApprTab: "입출금 승인", admRewTab: "보상 지급", admChatTab: "고객 지원", admUsrTxt: "모든 고객의 사용자 이름, 비밀번호 및 잔액:", admApprTxt: "관리자 승인 대기 중인 입출금 요청 목록:", admTargetLbl: "고객 선택:", admRewAmtLbl: "추가 보상 금액 (USDT):", admRewBtn: "보상 지급 확인", admChatListTxt: "고객 지원 메시지 기록:"
-            },
-            es: {
-                appTitle: "MONEDERO DE AHORRO", bannerTitle: "Recibir Cuón", bannerSubtitle: "Sin garantía", bannerDesc: "Únete al nodo y comienza a minar", btnCert: "Certificado", btnDepositHub: "Centro de Depósito", poolDataTitle: "Datos del Grupo", totalOutput: "Salida Total", validNodes: "Nodos Válidos", participants: "Participantes", userRevenue: "Ingresos de Usuarios", outputDetailsTitle: "Detalles de salida", tableAddr: "Dirección", tableQty: "Cantidad", withdrawalTitle: "Retiro", withdrawalLabel: "CANTIDAD A RETIRAR (USDT)", withdrawalBtn: "Confirmar Retiro", accAccumulated: "Ingresos Acumulados", accToday: "Ingresos de Hoy", accYield: "Rendimiento de Mercado", accPoolWallet: "Monedero Pool", accWalletBal: "Saldo del Monedero", navHome: "Inicio", navWithdrawal: "Retiro", navAccount: "Cuenta", btnQuickDeposit: "Depositar en Monedero Fijo", tooltipSupport: "¡Soporte en Vivo 24/7!", chatTitle: "Soporte en Vivo 24/7", chatStatus: "● Administrador en Línea", chatWelcomeMsg: "¡Hola! ¿Cómo puede el administrador ayudarle con sus transacciones hoy?", chatPlaceholder: "Escribe tu mensaje...", btnChatSend: "Enviar", certTitle: "CERTIFICADO DE DEPÓSITO", certSubtitle: "PROTOCOLO DE MONEDERO", lblOp: "Operando Desde:", valOp: "Año 2021 (Más de 5 años activo)", lblTech: "Estándar:", valTech: "Protocolo Descentralizado Independiente", lblCustody: "Protección de Activos:", valCustody: "Monedero de Autocustodia", lblNet: "Red:", btnConfirm: "Entendido y Confirmar", linkWalletTitle: "Vincular Dirección de Monedero", linkWalletDesc: "Seleccione la red y vincule su dirección de Binance antes de retirar.", lblWithdrawNet: "RED DE RETIRO", lblLinkedTarget: "DIRECCIÓN DE MONEDERO DESTINO", lblLinkNet: "SELECCIONE SU RED", lblLinkAddr: "DIRECCIÓN DE MONEDERO PERSONAL", btnSaveLink: "Guardar Dirección", historyTitle: "Historial de Retiros", historySubtitle: "Registro Seguro", historyEmpty: "No hay historial de retiros.", lblMyAddr: "Tu Dirección de Monedero:", btnCopyText: "Copiar", btnLogoutTest: "Cerrar Sesión", vipSystemTitle: "Sistema de Niveles VIP (VIP 1 - 12)", vipSystemSub: "Desde 100 USDT+", actTitle: "¡Activar nueva acumulación de saldo!", actDesc: "Confirme para activar su depósito y comenzar a ganar devoluciones diarias.", actBtn: "Activar", btnClaim: "Reclamar Ingresos", timerTitle: "Progreso del Ciclo de 24h:", startLabel: "Inicio de Depósito", endLabel: "Listo para Reclamar (100%)", authTitle: "Iniciar Sesión / Registrarse", authDesc: "Inicia sesión o usa admin / admin123", usernameLbl: "Usuario:", passwordLbl: "Contraseña:", authBtn: "Entrar / Registrarse", modalDepTitle: "Centro de Depósito Fijo", modalDepDesc: "Transfiere USDT/BNB por BEP-20 a la dirección fija (Mínimo 100 USDT):", depAmtLbl: "Cantidad (USDT):", depRetLbl: "Retorno Estimado:", depBtn: "Enviar Solicitud de Depósito", adminTitle: "Sistema de Gestión de Administrador", adminDesc: "Gestión de miembros, aprobación, recompensas y soporte", admUsersTab: "Cuentas de Clientes", admApprTab: "Aprobación", admRewTab: "Recompensas", admChatTab: "Soporte", admUsrTxt: "Lista de usuarios, contraseñas y saldos:", admApprTxt: "Solicitudes de depósito/retiro pendientes:", admTargetLbl: "Seleccionar Cliente:", admRewAmtLbl: "Monto de Recompensa (USDT):", admRewBtn: "Confirmar Recompensa", admChatListTxt: "Historial de mensajes de soporte:"
-            },
-            fr: {
-                appTitle: "PORTEFEUILLE D'ÉPARGNE", bannerTitle: "Recevoir un Bon", bannerSubtitle: "Sans gage", bannerDesc: "Rejoignez le nœud et commencez à miner", btnCert: "Certificat", btnDepositHub: "Centre de Dépôt", poolDataTitle: "Données du Pool", totalOutput: "Production Totale", validNodes: "Nœuds Valides", participants: "Participants", userRevenue: "Revenus Utilisateurs", outputDetailsTitle: "Détails de production", tableAddr: "Adresse", tableQty: "Quantité", withdrawalTitle: "Retrait", withdrawalLabel: "MONTANT DU RETRAIT (USDT)", withdrawalBtn: "Confirmer le Retrait", accAccumulated: "Revenus Cumulés", accToday: "Revenu du Jour", accYield: "Rendement du Marché", accPoolWallet: "Portefeuille Pool", accWalletBal: "Solde du Portefeuille", navHome: "Accueil", navWithdrawal: "Retrait", navAccount: "Compte", btnQuickDeposit: "Déposer dans le Portefeuille Fixe", tooltipSupport: "Support en direct 24/7 !", chatTitle: "Support en direct 24/7", chatStatus: "● Admin En Ligne", chatWelcomeMsg: "Bonjour ! Comment l'administrateur peut-il vous aider aujourd'hui ?", chatPlaceholder: "Tapez votre message...", btnChatSend: "Envoyer", certTitle: "CERTIFICAT DE DÉPÔT", certSubtitle: "PROTOCOLE DE PORTEFEUILLE", lblOp: "En Activité Depuis :", valOp: "Année 2021 (Plus de 5 ans)", lblTech: "Standard :", valTech: "Protocole Décentralisé Indépendant", lblCustody: "Protection des Actifs :", valCustody: "Portefeuille Auto-géré", lblNet: "Réseau :", btnConfirm: "Compris et Confirmer", linkWalletTitle: "Lier l'Adresse du Portefeuille", linkWalletDesc: "Sélectionnez le réseau et liez votre adresse Binance avant de retirer.", lblWithdrawNet: "RÉSEAU DE RETRAIT", lblLinkedTarget: "ADRESSE DU PORTEFEUILLE CIBLE", lblLinkNet: "SÉLECTIONNEZ VOTRE RÉSEAU", lblLinkAddr: "ADRESSE DE PORTEFEUILLE PERSONNEL", btnSaveLink: "Enregistrer l'Adresse", historyTitle: "Historique des Retraits", historySubtitle: "Enregistrement Sécurisé", historyEmpty: "Aucun historique de retrait.", lblMyAddr: "Votre Adresse de Portefeuille :", btnCopyText: "Copier", btnLogoutTest: "Se Déconnecter", vipSystemTitle: "Système de Niveaux VIP (VIP 1 - 12)", vipSystemSub: "À partir de 100 USDT+", actTitle: "Activer la nouvelle accumulation !", actDesc: "Confirmez pour activer votre dépôt et gagner des retours quotidiens.", actBtn: "Activer", btnClaim: "Réclamer les Revenus", timerTitle: "Progression du Cycle 24h :", startLabel: "Début du Dépôt", endLabel: "Prêt à Réclamer (100%)", authTitle: "Connexion / Inscription", authDesc: "Connectez-vous ou utilisez admin / admin123", usernameLbl: "Nom d'utilisateur :", passwordLbl: "Mot de passe :", authBtn: "Connexion / Inscription", modalDepTitle: "Centre de Dépôt Fixe", modalDepDesc: "Transférez USDT/BNB via BEP-20 vers l'adresse fixe (Min 100 USDT) :", depAmtLbl: "Montant (USDT) :", depRetLbl: "Rendement Estimé :", depBtn: "Envoyer la Demande de Dépôt", adminTitle: "Système de Gestion Administrateur", adminDesc: "Gestion des membres, approbation, récompenses et support", admUsersTab: "Comptes Clients", admApprTab: "Approbation", admRewTab: "Récompenses", admChatTab: "Support", admUsrTxt: "Liste des clients, mots de passe et soldes :", admApprTxt: "Demandes de dépôt/retrait en attente :", admTargetLbl: "Sélectionner un Client :", admRewAmtLbl: "Montant de la Récompense (USDT) :", admRewBtn: "Confirmer la Récompense", admChatListTxt: "Historique des messages de support :"
-            },
-            de: {
-                appTitle: "SPARWALLET", bannerTitle: "Gutschein Erhalten", bannerSubtitle: "Keine Verpfändung", bannerDesc: "Treten Sie dem Node bei und minen Sie", btnCert: "Zertifikat", btnDepositHub: "Einzahlungs-Hub", poolDataTitle: "Pool-Daten", totalOutput: "Gesamtausgabe", validNodes: "Gültige Nodes", participants: "Teilnehmer", userRevenue: "Benutzerumsatz", outputDetailsTitle: "Ausgabedetails", tableAddr: "Adresse", tableQty: "Menge", withdrawalTitle: "Auszahlung", withdrawalLabel: "AUSZAHLUNGSBETRAG (USDT)", withdrawalBtn: "Auszahlung Bestätigen", accAccumulated: "Kumuliertes Einkommen", accToday: "Heutiges Einkommen", accYield: "Marktrendite", accPoolWallet: "Pool-Wallet", accWalletBal: "Wallet-Guthaben", navHome: "Startseite", navWithdrawal: "Auszahlung", navAccount: "Konto", btnQuickDeposit: "In Feste Wallet Einzahlen", tooltipSupport: "Live-Support 24/7!", chatTitle: "24/7 Live-Support", chatStatus: "● Admin Online", chatWelcomeMsg: "Hallo! Wie kann der Admin Ihnen heute bei Ihren Transaktionen helfen?", chatPlaceholder: "Nachricht eingeben...", btnChatSend: "Senden", certTitle: "SPAREINLAGEN-ZERTIFIKAT", certSubtitle: "SPARWALLET-PROTOKOLL", lblOp: "In Betrieb Seit:", valOp: "Jahr 2021 (Über 5 Jahre aktiv)", lblTech: "Standard:", valTech: "Unabhängiges Dezentrales Protokoll", lblCustody: "Vermögensschutz:", valCustody: "Self-Custody Wallet", lblNet: "Netzwerk:", btnConfirm: "Verstanden & Bestätigen", linkWalletTitle: "Wallet-Adresse Verknüpfen", linkWalletDesc: "Wählen Sie das Netzwerk und verknüpfen Sie Ihre Binance-Adresse vor der Auszahlung.", lblWithdrawNet: "AUSZAHLUNGSNETZWERK", lblLinkedTarget: "ZIEL-WALLET-ADRESSE", lblLinkNet: "NETZWERK AUSWÄHLEN", lblLinkAddr: "PERSÖNLICHE WALLET-ADRESSE", btnSaveLink: "Adresse Speichern", historyTitle: "Auszahlungsverlauf", historySubtitle: "Sicherer Datensatz", historyEmpty: "Kein Auszahlungsverlauf aufgezeichnet.", lblMyAddr: "Ihre Wallet-Adresse:", btnCopyText: "Kopieren", btnLogoutTest: "Abmelden", vipSystemTitle: "VIP-Stufensystem (VIP 1 - 12)", vipSystemSub: "Ab 100 USDT+", actTitle: "Neue Guthabenansammlung aktivieren!", actDesc: "Bestätigen Sie, um Ihre Einzahlung zu aktivieren und tägliche Erträge zu erzielen.", actBtn: "Aktivieren", btnClaim: "Einkommen Beanspruchen", timerTitle: "24h-Ertragszyklus-Fortschritt:", startLabel: "Einzahlungsbeginn", endLabel: "Bereit zum Beanspruchen (100%)", authTitle: "Anmelden / Registrieren", authDesc: "Melden Sie sich an oder verwenden Sie admin / admin123", usernameLbl: "Benutzername:", passwordLbl: "Passwort:", authBtn: "Anmelden / Registrieren", modalDepTitle: "Fester Einzahlungs-Hub", modalDepDesc: "Überweisen Sie USDT/BNB über BEP-20 an die feste Adresse (Min. 100 USDT):", depAmtLbl: "Betrag (USDT):", depRetLbl: "Geschätzte Rendite:", depBtn: "Einzahlungsanfrage Senden", adminTitle: "Admin-Verwaltungssystem", adminDesc: "Mitgliederverwaltung, Transaktionsfreigabe, Prämien & Support", admUsersTab: "Kundenkonten", admApprTab: "Genehmigung", admRewTab: "Prämien", admChatTab: "Support", admUsrTxt: "Liste der Kundennamen, Passwörter und Guthaben:", admApprTxt: "Ausstehende Ein-/Auszahlungsanfragen:", admTargetLbl: "Kunden Auswählen:", admRewAmtLbl: "Prämienbetrag (USDT):", admRewBtn: "Prämie Bestätigen", admChatListTxt: "Verlauf der Support-Nachrichten:"
-            },
-            ru: {
-                appTitle: "СБЕРЕГАТЕЛЬНЫЙ КОШЕЛЕК", bannerTitle: "Получить Ваучер", bannerSubtitle: "Без залога", bannerDesc: "Присоединяйтесь к ноде и майните", btnCert: "Сертификат", btnDepositHub: "Центр Депозитов", poolDataTitle: "Данные Пула", totalOutput: "Общий Вывод", validNodes: "Активные Ноды", participants: "Участники", userRevenue: "Доход Пользователей", outputDetailsTitle: "Детали Вывода", tableAddr: "Адрес", tableQty: "Количество", withdrawalTitle: "Вывод", withdrawalLabel: "СУММА ВЫВОДА (USDT)", withdrawalBtn: "Подтвердить Вывод", accAccumulated: "Накопленный Доход", accToday: "Доход За Сегодня", accYield: "Рыночная Доходность", accPoolWallet: "Пул Кошелек", accWalletBal: "Баланс Кошелька", navHome: "Главная", navWithdrawal: "Вывод", navAccount: "Аккаунт", btnQuickDeposit: "Депозит в Фиксированный Кошелек", tooltipSupport: "Живая Поддержка 24/7!", chatTitle: "Поддержка 24/7", chatStatus: "● Админ Онлайн", chatWelcomeMsg: "Здравствуйте! Как администратор может помочь вам сегодня?", chatPlaceholder: "Введите сообщение...", btnChatSend: "Отправить", certTitle: "СЕРТИФИКАТ ДЕПОЗИТА", certSubtitle: "ПРОТОКОЛ СБЕРЕЖЕНИЙ", lblOp: "Работает С:", valOp: "2021 Год (Более 5 лет)", lblTech: "Стандарт:", valTech: "Независимый Децентрализованный Протокол", lblCustody: "Защита Активов:", valCustody: "Самоуправляемый Кошелек", lblNet: "Сеть:", btnConfirm: "Понятно и Подтвердить", linkWalletTitle: "Привязать Кошелек", linkWalletDesc: "Выберите сеть и привяжите адрес Binance перед выводом.", lblWithdrawNet: "СЕТЬ ВЫВОДА", lblLinkedTarget: "ЦЕЛЕВОЙ АДРЕС КОШЕЛЬКА", lblLinkNet: "ВЫБЕРИТЕ СЕТЬ", lblLinkAddr: "ЛИЧНЫЙ АДРЕС КОШЕЛЬКА", btnSaveLink: "Сохранить Адрес", historyTitle: "История Выводов", historySubtitle: "Безопасная Запись", historyEmpty: "История выводов пуста.", lblMyAddr: "Адрес Вашего Кошелька:", btnCopyText: "Копировать", btnLogoutTest: "Выйти", vipSystemTitle: "Система VIP Уровней (VIP 1 - 12)", vipSystemSub: "От 100 USDT+", actTitle: "Активировать новое накопление!", actDesc: "Подтвердите активацию депозита для получения ежедневного дохода.", actBtn: "Активировать", btnClaim: "Забрать Доход", timerTitle: "Прогресс Цикла 24ч:", startLabel: "Начало Депозита", endLabel: "Готово к Сбору (100%)", authTitle: "Вход / Регистрация", authDesc: "Войдите в аккаунт или используйте admin / admin123", usernameLbl: "Имя пользователя:", passwordLbl: "Пароль:", authBtn: "Войти / Зарегистрироваться", modalDepTitle: "Центр Фиксированных Депозитов", modalDepDesc: "Переведите USDT/BNB через сеть BEP-20 на адрес (Мин. 100 USDT):", depAmtLbl: "Сумма (USDT):", depRetLbl: "Ожидаемый Доход:", depBtn: "Отправить Запрос на Депозит", adminTitle: "Система Управления Администратора", adminDesc: "Управление участниками, одобрение, награды и поддержка", admUsersTab: "Клиенты", admApprTab: "Одобрение", admRewTab: "Награды", admChatTab: "Поддержка", admUsrTxt: "Список клиентов, паролей и балансов:", admApprTxt: "Ожидающие запросы на пополнение/вывод:", admTargetLbl: "Выбрать Клиента:", admRewAmtLbl: "Сумма Награды (USDT):", admRewBtn: "Подтвердить Награду", admChatListTxt: "История сообщений поддержки:"
-            },
-            pt: {
-                appTitle: "CARTEIRA DE POUPANÇA", bannerTitle: "Receber Voucher", bannerSubtitle: "Sem garantia", bannerDesc: "Junte-se ao nó e comece a minerar", btnCert: "Certificado", btnDepositHub: "Centro de Depósito", poolDataTitle: "Dados do Pool", totalOutput: "Saída Total", validNodes: "Nós Válidos", participants: "Participantes", userRevenue: "Receita dos Usuários", outputDetailsTitle: "Detalhes de saída", tableAddr: "Endereço", tableQty: "Quantidade", withdrawalTitle: "Saque", withdrawalLabel: "VALOR DO SAQUE (USDT)", withdrawalBtn: "Confirmar Saque", accAccumulated: "Renda Acumulada", accToday: "Renda de Hoje", accYield: "Rendimento de Mercado", accPoolWallet: "Carteira Pool", accWalletBal: "Saldo da Carteira", navHome: "Início", navWithdrawal: "Saque", navAccount: "Conta", btnQuickDeposit: "Depositar na Carteira Fixo", tooltipSupport: "Suporte 24/7!", chatTitle: "Suporte 24/7", chatStatus: "● Admin Online", chatWelcomeMsg: "Olá! Como o admin pode ajudar nas suas transações hoje?", chatPlaceholder: "Digite sua mensagem...", btnChatSend: "Enviar", certTitle: "CERTIFICADO DE DEPÓSITO", certSubtitle: "PROTOCOLO DE CARTEIRA", lblOp: "Operando Desde:", valOp: "Ano 2021 (Mais de 5 anos ativo)", lblTech: "Padrão:", valTech: "Protocolo Descentralizado Independente", lblCustody: "Proteção de Ativos:", valCustody: "Carteira de Autocustódia", lblNet: "Rede:", btnConfirm: "Entendido e Confirmar", linkWalletTitle: "Vincular Endereço de Carteira", linkWalletDesc: "Selecione a rede e vincule seu endereço da Binance antes de sacar.", lblWithdrawNet: "REDE DE SAQUE", lblLinkedTarget: "ENDEREÇO DE DESTINO", lblLinkNet: "SELECIONE SUA REDE", lblLinkAddr: "ENDEREÇO DE CARTEIRA PESSOAL", btnSaveLink: "Salvar Endereço", historyTitle: "Histórico de Saques", historySubtitle: "Registro Seguro", historyEmpty: "Sem histórico de saques.", lblMyAddr: "Seu Endereço de Carteira:", btnCopyText: "Copiar", btnLogoutTest: "Sair", vipSystemTitle: "Sistema de Níveis VIP (VIP 1 - 12)", vipSystemSub: "A partir de 100 USDT+", actTitle: "Ativar nova acumulação de saldo!", actDesc: "Confirme para ativar seu depósito e começar a ganhar retornos diários.", actBtn: "Ativar", btnClaim: "Resgatar Renda", timerTitle: "Progresso do Ciclo de 24h:", startLabel: "Início do Depósito", endLabel: "Pronto para Resgatar (100%)", authTitle: "Entrar / Registrar", authDesc: "Entre na conta ou use admin / admin123", usernameLbl: "Usuário:", passwordLbl: "Senha:", authBtn: "Entrar / Registrar Agora", modalDepTitle: "Centro de Depósito Fixo", modalDepDesc: "Transfira USDT/BNB via BEP-20 para o endereço fixo (Mínimo 100 USDT):", depAmtLbl: "Quantidade (USDT):", depRetLbl: "Retorno Estimado:", depBtn: "Enviar Solicitação de Depósito", adminTitle: "Sistema de Gestão Admin", adminDesc: "Gestão de membros, aprovação, recompensas e suporte", admUsersTab: "Contas de Clientes", admApprTab: "Aprovação", admRewTab: "Recompensas", admChatTab: "Suporte", admUsrTxt: "Lista de clientes, senhas e saldos:", admApprTxt: "Solicitações pendentes:", admTargetLbl: "Selecionar Cliente:", admRewAmtLbl: "Valor da Recompensa (USDT):", admRewBtn: "Confirmar Recompensa", admChatListTxt: "Histórico de mensagens de suporte:"
-            },
-            ar: {
-                appTitle: "محفظة التوفير", bannerTitle: "استلام قسيمة", bannerSubtitle: "بدون ضمان", bannerDesc: "انضم إلى العقدة وابدأ التعدين", btnCert: "شهادة", btnDepositHub: "مركز الإيداع", poolDataTitle: "بيانات المجمع", totalOutput: "إجمالي الإنتاج", validNodes: "العقد الصالحة", participants: "المشاركون", userRevenue: "إيرادات المستخدمين", outputDetailsTitle: "تفاصيل الإنتاج", tableAddr: "العنوان", tableQty: "الكمية", withdrawalTitle: "سحب", withdrawalLabel: "مبلغ السحب (USDT)", withdrawalBtn: "تأكيد السحب", accAccumulated: "الدخل المتراكم", accToday: "دخل اليوم", accYield: "عائد السوق", accPoolWallet: "محفظة المجمع", accWalletBal: "رصيد المحفظة", navHome: "الرئيسية", navWithdrawal: "سحب", navAccount: "الحساب", btnQuickDeposit: "إيداع في المحفظة الثابتة", tooltipSupport: "دعم مباشر 24/7!", chatTitle: "دعم مباشر 24/7", chatStatus: "● المشرف متصل", chatWelcomeMsg: "مرحباً! كيف يمكن للمشرف مساعدتك في معاملاتك اليوم؟", chatPlaceholder: "اكتب رسالتك...", btnChatSend: "إرسال", certTitle: "شهادة الإيداع", certSubtitle: "بروتوكول محفظة التوفير", lblOp: "تعمل منذ:", valOp: "عام 2021 (أكثر من 5 سنوات نشطة)", lblTech: "المعيار:", valTech: "بروتوكول لامركزي مستقل", lblCustody: "حماية الأصول:", valCustody: "محفظة ذاتية", lblNet: "الشبكة:", btnConfirm: "فهمت وتأكيد", linkWalletTitle: "ربط عنوان المحفظة", linkWalletDesc: "اختر الشبكة واربط عنوان محفظتك قبل إجراء أي سحب.", lblWithdrawNet: "شبكة السحب", lblLinkedTarget: "عنوان المحفظة المستهدفة", lblLinkNet: "اختر شبكتك", lblLinkAddr: "عنوان المحفظة الشخصية", btnSaveLink: "حفظ العنوان", historyTitle: "سجل السحب", historySubtitle: "سجل آمن", historyEmpty: "لا يوجد سجل سحب.", lblMyAddr: "عنوان محفظتك:", btnCopyText: "نسخ", btnLogoutTest: "تسجيل الخروج", vipSystemTitle: "نظام مستويات VIP (VIP 1 - 12)", vipSystemSub: "من 100 USDT+", actTitle: "تفعيل تراكم الرصيد الجديد!", actDesc: "أكد لتفعيل إيداعك والبدء في كسب العوائد اليومية.", actBtn: "تفعيل", btnClaim: "مطالبة الدخل", timerTitle: "تقدم دورة العائد 24 ساعة:", startLabel: "بداية الإيداع", endLabel: "جاهز للمطالبة (100%)", authTitle: "تسجيل الدخول / التسجيل", authDesc: "سجل الدخول أو استخدم admin / admin123", usernameLbl: "اسم المستخدم:", passwordLbl: "كلمة المرور:", authBtn: "تسجيل الدخول / التسجيل الآن", modalDepTitle: "مركز الإيداع الثابت", modalDepDesc: "تحويل USDT/BNB عبر شبكة BEP-20 إلى العنوان الثابت (الحد الأدنى 100 USDT):", depAmtLbl: "مبلغ الإيداع (USDT):", depRetLbl: "العائد المتوقع:", depBtn: "إرسال طلب الإيداع", adminTitle: "نظام إدارة المشرف", adminDesc: "إدارة الأعضاء، الموافقة، المكافآت والدعم", admUsersTab: "حسابات العملاء", admApprTab: "الموافقة", admRewTab: "المكافآت", admChatTab: "الدعم", admUsrTxt: "قائمة العملاء وكلمات المرور والأرصدة:", admApprTxt: "طلبات الإيداع/السحب المعلقة:", admTargetLbl: "اختر العميل:", admRewAmtLbl: "مبلغ المكافأة (USDT):", admRewBtn: "تأكيد المكافأة", admChatListTxt: "سجل رسائل الدعم:"
-            },
-            hi: {
-                appTitle: "सेavings वॉलेट", bannerTitle: "वाучер प्राप्त करें", bannerSubtitle: "कोई गिरवी नहीं", bannerDesc: "नोड से जुड़ें और माइनिंग शुरू करें", btnCert: "प्रमाण पत्र", btnDepositHub: "डिपॉजिट हब", poolDataTitle: "पूल डेटा", totalOutput: "कुल आउटपुट", validNodes: "मान्य नोड्स", participants: "प्रतिभागी", userRevenue: "उपयोगकर्ता राजस्व", outputDetailsTitle: "आउटपुट विवरण", tableAddr: "पत्ता", tableQty: "मात्रा", withdrawalTitle: "निकासी", withdrawalLabel: "निकासी राशि (USDT)", withdrawalBtn: "निकासी की पुष्टि करें", accAccumulated: "संचित आय", accToday: "आज की आय", accYield: "बाजार उपज", accPoolWallet: "पूल वॉलेट", accWalletBal: "वॉलेट शेष", navHome: "होम", navWithdrawal: "निकासी", navAccount: "खाता", btnQuickDeposit: "फिक्स वॉलेट में जमा करें", tooltipSupport: "लाइव सहायता 24/7!", chatTitle: "24/7 लाइव सहायता", chatStatus: "● एडमिन ऑनलाइन", chatWelcomeMsg: "नमस्ते! एडमिन आपके बचत वॉलेट लेनदेन में कैसे सहायता कर सकता है?", chatPlaceholder: "अपना संदेश टाइप करें...", btnChatSend: "भेजें", certTitle: "बचत जमा प्रमाण पत्र", certSubtitle: "सेविंग्स वॉलेट प्रोटोकॉल", lblOp: "संचालन:", valOp: "वर्ष 2021 (5+ वर्ष सक्रिय)", lblTech: "मानक:", valTech: "स्वतंत्र विकेंद्रीकृत प्रोटोकॉल", lblCustody: "संपत्ति सुरक्षा:", valCustody: "सेल्फ-कस्टडी वॉलेट", lblNet: "नेटवर्क:", btnConfirm: "समझ गया और पुष्टि करें", linkWalletTitle: "वॉलेट पता लिंक करें", linkWalletDesc: "कृपया निकासी से पहले नेटवर्क चुनें और अपना वॉलेट पता लिंक करें।", lblWithdrawNet: "निकासी नेटवर्क", lblLinkedTarget: "लक्ष्य वॉलेट पता", lblLinkNet: "अपना नेटवर्क चुनें", lblLinkAddr: "व्यक्तिगत वॉलेट पता", btnSaveLink: "वॉलेट पता सहेजें", historyTitle: "निकासी इतिहास", historySubtitle: "सुरक्षित रिकॉर्ड", historyEmpty: "कोई निकासी इतिहास नहीं है।", lblMyAddr: "आपका वॉलेट पता:", btnCopyText: "कॉपी करें", btnLogoutTest: "लॉग आउट", vipSystemTitle: "VIP टियर सिस्टम (VIP 1 - 12)", vipSystemSub: "100 USDT से अधिक", actTitle: "नई शेष राशि संचय सक्रिय करें!", actDesc: "अपनी जमा राशि सक्रिय करने और दैनिक रिटर्न अर्जित करने के लिए पुष्टि करें।", actBtn: "सक्रिय करें", btnClaim: "आय का दावा करें", timerTitle: "24h यील्ड चक्र प्रगति:", startLabel: "डिपॉजिट शुरू", endLabel: "दावा करने के लिए तैयार (100%)", authTitle: "लॉगिन / रजिस्टर", authDesc: "खाता लॉगिन करें या admin / admin123 का उपयोग करें", usernameLbl: "यूजरनेम:", passwordLbl: "पासवर्ड:", authBtn: "लॉगिन / रजिस्टर करें", modalDepTitle: "फिक्स्ड डिपॉजिट हब", modalDepDesc: "BEP-20 नेटवर्क के माध्यम से USDT/BNB ट्रांसफर करें (न्यूनतम 100 USDT):", depAmtLbl: "राशि (USDT):", depRetLbl: "अनुमानित रिटर्न:", depBtn: "डिपॉजिट अनुरोध भेजें", adminTitle: "एडमिन प्रबंधन प्रणाली", adminDesc: "सदस्य प्रबंधन, अनुमोदन, पुरस्कार और सहायता", admUsersTab: "ग्राहक खाते", admApprTab: "अनुмоद", admRewTab: "पुरस्कार", admChatTab: "सहायता", admUsrTxt: "ग्राहकों के नाम, पासवर्ड और शेष राशि:", admApprTxt: "लंबित डिपॉजिट/निकासी अनुरोध:", admTargetLbl: "ग्राहक चुनें:", admRewAmtLbl: "पुरस्कार राशि (USDT):", admRewBtn: "पुरस्कार की पुष्टि करें", admChatListTxt: "सहायता संदेश इतिहास:"
-            },
-            id: {
-                appTitle: "DOMPET TABUNGAN", bannerTitle: "Terima Voucher", bannerSubtitle: "Tanpa jaminan", bannerDesc: "Bergabunglah dengan node dan mulai menambang", btnCert: "Sertifikat", btnDepositHub: "Pusat Deposit", poolDataTitle: "Data Pool", totalOutput: "Total Output", validNodes: "Node Valid", participants: "Peserta", userRevenue: "Pendapatan Pengguna", outputDetailsTitle: "Detail Output", tableAddr: "Alamat", tableQty: "Jumlah", withdrawalTitle: "Penarikan", withdrawalLabel: "JUMLAH PENARIKAN (USDT)", withdrawalBtn: "Konfirmasi Penarikan", accAccumulated: "Pendapatan Akumulasi", accToday: "Pendapatan Hari Ini", accYield: "Hasil Pasar", accPoolWallet: "Dompet Pool", accWalletBal: "Saldo Dompet", navHome: "Beranda", navWithdrawal: "Penarikan", navAccount: "Akun", btnQuickDeposit: "Deposit Dompet Tetap", tooltipSupport: "Dukungan 24/7!", chatTitle: "Dukungan Langsung 24/7", chatStatus: "● Admin Online", chatWelcomeMsg: "Halo! Bagaimana Admin dapat membantu transaksi dompet tabungan Anda hari ini?", chatPlaceholder: "Ketik pesan Anda...", btnChatSend: "Kirim", certTitle: "SERTIFIKAT DEPOSITO TABUNGAN", certSubtitle: "PROTOKOL DOMPET TABUNGAN", lblOp: "Beroperasi Sejak:", valOp: "Tahun 2021 (Aktif 5+ Tahun)", lblTech: "Standar:", valTech: "Protokol Terdesentralisasi Independen", lblCustody: "Perlindungan Aset:", valCustody: "Dompet Mandiri (Self-Custody)", lblNet: "Jaringan:", btnConfirm: "Mengerti & Konfirmasi", linkWalletTitle: "Tautkan Alamat Dompet", linkWalletDesc: "Pilih jaringan dan tautkan alamat dompet Binance Anda sebelum menarik.", lblWithdrawNet: "JARINGAN PENARIKAN", lblLinkedTarget: "ALAMAT DOMPET TUJUAN", lblLinkNet: "PILIH JARINGAN ANDA", lblLinkAddr: "ALAMAT DOMPET PRIBADI", btnSaveLink: "Simpan Alamat Dompet", historyTitle: "Riwayat Penarikan", historySubtitle: "Catatan Aman", historyEmpty: "Tidak ada riwayat penarikan.", lblMyAddr: "Alamat Dompet Anda:", btnCopyText: "Salin", btnLogoutTest: "Keluar Akun", vipSystemTitle: "Sistem Tingkat VIP (VIP 1 - 12)", vipSystemSub: "Dari 100 USDT+", actTitle: "Aktifkan akumulasi saldo baru!", actDesc: "Konfirmasi untuk mengaktifkan deposit dan mulai mendapatkan keuntungan harian.", actBtn: "Aktifkan", btnClaim: "Klaim Penghasilan", timerTitle: "Kemajuan Siklus Hasil 24j:", startLabel: "Mulai Deposit", endLabel: "Siap Diklaim (100%)", authTitle: "Masuk / Daftar", authDesc: "Masuk akun atau gunakan admin / admin123", usernameLbl: "Nama Pengguna:", passwordLbl: "Kata Sandi:", authBtn: "Masuk / Daftar Sekarang", modalDepTitle: "Pusat Deposit Tetap", modalDepDesc: "Transfer USDT/BNB melalui BEP-20 ke alamat tetap (Min 100 USDT):", depAmtLbl: "Jumlah (USDT):", depRetLbl: "Perkiraan Hasil:", depBtn: "Kirim Permintaan Deposit", adminTitle: "Sistem Manajemen Admin", adminDesc: "Manajemen anggota, persetujuan, reward & dukungan", admUsersTab: "Akun Pelanggan", admApprTab: "Persetujuan", admRewTab: "Reward", admChatTab: "Dukungan", admUsrTxt: "Daftar nama pengguna, kata sandi, dan saldo:", admApprTxt: "Permintaan deposit/penarikan tertunda:", admTargetLbl: "Pilih Pelanggan:", admRewAmtLbl: "Jumlah Reward (USDT):", admRewBtn: "Konfirmasi Reward", admChatListTxt: "Riwayat pesan dukungan:"
-            },
-            th: {
-                appTitle: "กระเป๋าเงินออม", bannerTitle: "รับบัตรกำนัล", bannerSubtitle: "ไม่มีการค้ำประกัน", bannerDesc: "เข้าร่วมโหนดและเริ่มขุด", btnCert: "ใบรับรอง", btnDepositHub: "ศูนย์ฝากเงิน", poolDataTitle: "ข้อมูลพูล", totalOutput: "ผลผลิตรวม", validNodes: "โหนดที่ถูกต้อง", participants: "ผู้เข้าร่วม", userRevenue: "รายได้ผู้ใช้", outputDetailsTitle: "รายละเอียดผลผลิต", tableAddr: "ที่อยู่", tableQty: "จำนวน", withdrawalTitle: "ถอนเงิน", withdrawalLabel: "จำนวนเงินที่ถอน (USDT)", withdrawalBtn: "ยืนยันการถอน", accAccumulated: "รายได้สะสม", accToday: "รายได้วันนี้", accYield: "ผลตอบแทนตลาด", accPoolWallet: "กระเป๋าพูล", accWalletBal: "ยอดเงินในกระเป๋า", navHome: "หน้าแรก", navWithdrawal: "ถอนเงิน", navAccount: "บัญชี", btnQuickDeposit: "ฝากเข้ากระเป๋าถาวร", tooltipSupport: "ซัพพอร์ต 24/7!", chatTitle: "ซัพพอร์ตสด 24/7", chatStatus: "● แอดมินออนไลน์", chatWelcomeMsg: "สวัสดี! แอดมินจะช่วยเหลือธุรกรรมกระเป๋าเงินออมของคุณอย่างไรในวันนี้?", chatPlaceholder: "พิมพ์ข้อความของคุณ...", btnChatSend: "ส่ง", certTitle: "ใบรับรองการฝากเงินออม", certSubtitle: "โปรโตคอลกระเป๋าเงินออม", lblOp: "ดำเนินงานตั้งแต่:", valOp: "ปี 2021 (ใช้งานมากว่า 5 ปี)", lblTech: "มาตรฐาน:", valTech: "โปรโตคอลแบบกระจายอำนาจอิสระ", lblCustody: "การคุ้มครองทรัพย์สิน:", valCustody: "กระเป๋าเงินส่วนตัว", lblNet: "เครือข่าย:", btnConfirm: "เข้าใจและยืนยัน", linkWalletTitle: "เชื่อมโยงที่อยู่กระเป๋าเงิน", linkWalletDesc: "โปรดเลือกเครือข่ายและเชื่อมโยงที่อยู่กระเป๋าเงิน Binance ของคุณก่อนทำการถอน", lblWithdrawNet: "เครือข่ายการถอน", lblLinkedTarget: "ที่อยู่กระเป๋าเงินปลายทาง", lblLinkNet: "เลือกเครือข่ายของคุณ", lblLinkAddr: "ที่อยู่กระเป๋าเงินส่วนตัว", btnSaveLink: "บันทึกที่อยู่กระเป๋าเงิน", historyTitle: "ประวัติการถอนเงิน", historySubtitle: "บันทึกที่ปลอดภัย", historyEmpty: "ไม่มีประวัติการถอนเงิน", lblMyAddr: "ที่อยู่กระเป๋าเงินของคุณ:", btnCopyText: "คัดลอก", btnLogoutTest: "ออกจากระบบ", vipSystemTitle: "ระบบระดับ VIP (VIP 1 - 12)", vipSystemSub: "ตั้งแต่ 100 USDT+", actTitle: "เปิดใช้งานการสะสมยอดคงเหลือใหม่!", actDesc: "ยืนยันเพื่อเปิดใช้งานการฝากเงินและเริ่มรับผลตอบแทนรายวัน", actBtn: "เปิดใช้งาน", btnClaim: "รับรายได้", timerTitle: "ความคืบหน้ารอบผลตอบแทน 24 ชม.:", startLabel: "เริ่มฝากเงิน", endLabel: "พร้อมรับ (100%)", authTitle: "เข้าสู่ระบบ / ลงทะเบียน", authDesc: "เข้าสู่ระบบบัญชีหรือใช้ admin / admin123", usernameLbl: "ชื่อผู้ใช้:", passwordLbl: "รหัสผ่าน:", authBtn: "เข้าสู่ระบบ / ลงทะเบียนตอนนี้", modalDepTitle: "ศูนย์ฝากเงินถาวร", modalDepDesc: "โอน USDT/BNB ผ่านเครือข่าย BEP-20 ไปยังที่อยู่ถาวร (ขั้นต่ำ 100 USDT):", depAmtLbl: "จำนวนเงินฝาก (USDT):", depRetLbl: "ผลตอบแทนโดยประมาณ:", depBtn: "ส่งคำขอฝากเงิน", adminTitle: "ระบบจัดการแอดมิน", adminDesc: "จัดการสมาชิก อนุมัติธุรกรรม แจกรางวัล และซัพพอร์ต", admUsersTab: "บัญชีลูกค้า", admApprTab: "อนุมัติฝาก/ถอน", admRewTab: "แจกรางวัล", admChatTab: "ซัพพอร์ต", admUsrTxt: "รายชื่อชื่อผู้ใช้ รหัสผ่าน และยอดเงินของลูกค้า:", admApprTxt: "รายการคำขอฝาก/ถอนที่รอการอนุมัติ:", admTargetLbl: "เลือก 3 ลูกค้า:", admRewAmtLbl: "จำนวนเงินรางวัล (USDT):", admRewBtn: "ยืนยันการแจกรางวัล", admChatListTxt: "ประวัติข้อความสนับสนุนลูกค้า:"
-            },
-            it: {
-                appTitle: "WALLET DI RISPARMIO", bannerTitle: "Ricevi Voucher", bannerSubtitle: "Nessun pegno", bannerDesc: "Unisciti al nodo e inizia il mining", btnCert: "Certificato", btnDepositHub: "Centro Depositi", poolDataTitle: "Dati Pool", totalOutput: "Produzione Totale", validNodes: "Nodi Validi", participants: "Partecipanti", userRevenue: "Ricavi Utenti", outputDetailsTitle: "Dettagli produzione", tableAddr: "Indirizzo", tableQty: "Quantità", withdrawalTitle: "Prelievo", withdrawalLabel: "IMPORTO PRELIEVO (USDT)", withdrawalBtn: "Conferma Prelievo", accAccumulated: "Entrate Accumulate", accToday: "Entrate di Oggi", accYield: "Rendimento di Mercato", accPoolWallet: "Pool Wallet", accWalletBal: "Saldo Wallet", navHome: "Home", navWithdrawal: "Prelievo", navAccount: "Account", btnQuickDeposit: "Deposita nel Wallet Fisso", tooltipSupport: "Supporto Live 24/7!", chatTitle: "Supporto Live 24/7", chatStatus: "● Admin Online", chatWelcomeMsg: "Ciao! Come può l'amministratore assistere le tue transazioni oggi?", chatPlaceholder: "Scrivi il tuo messaggio...", btnChatSend: "Invia", certTitle: "CERTIFICATO DI DEPOSITO", certSubtitle: "PROTOCOLLO WALLET DI RISPARMIO", lblOp: "Operativo Dal:", valOp: "Anno 2021 (Oltre 5 anni attivo)", lblTech: "Standard:", valTech: "Protocollo Decentralizzato Indipendente", lblCustody: "Protezione Asset:", valCustody: "Wallet Self-Custody", lblNet: "Rete:", btnConfirm: "Comreso e Conferma", linkWalletTitle: "Collega Indirizzo Wallet", linkWalletDesc: "Seleziona la rete e collega il tuo indirizzo Binance prima di prelevare.", lblWithdrawNet: "RETE DI PRELIEVO", lblLinkedTarget: "INDIRIZZO WALLET DESTINAZIONE", lblLinkNet: "SELEZIONA LA RETE", lblLinkAddr: "INDIRIZZO WALLET PERSONALE", btnSaveLink: "Salva Indirizzo", historyTitle: "Cronologia Prelievi", historySubtitle: "Registro Sicuro", historyEmpty: "Nessuna cronologia prelievi.", lblMyAddr: "Il Tuo Indirizzo Wallet:", btnCopyText: "Copia", btnLogoutTest: "Disconnetti", vipSystemTitle: "Sistema Livelli VIP (VIP 1 - 12)", vipSystemSub: "Da 100 USDT+", actTitle: "Attiva la nuova accumulazione!", actDesc: "Conferma per attivare il deposito e iniziare a guadagnare.", actBtn: "Attiva", btnClaim: "Riscuoti Entrate", timerTitle: "Progresso Ciclo 24h:", startLabel: "Inizio Deposito", endLabel: "Pronto per la Riscossione (100%)", authTitle: "Accedi / Registrati", authDesc: "Accedi all'account o usa admin / admin123", usernameLbl: "Nome utente:", passwordLbl: "Password:", authBtn: "Accedi / Registrati Ora", modalDepTitle: "Centro Depositi Fissi", modalDepDesc: "Trasferisci USDT/BNB tramite BEP-20 all'indirizzo fisso (Min 100 USDT):", depAmtLbl: "Importo (USDT):", depRetLbl: "Rendimento Stimato:", depBtn: "Invia Richiesta di Deposito", adminTitle: "Sistema di Gestione Admin", adminDesc: "Gestione membri, approvazione, premi e supporto", admUsersTab: "Account Clienti", admApprTab: "Approvazione", admRewTab: "Premi", admChatTab: "Supporto", admUsrTxt: "Elenco utenti, password e saldi:", admApprTxt: "Richieste in sospeso:", admTargetLbl: "Seleziona Cliente:", admRewAmtLbl: "Importo Premio (USDT):", admRewBtn: "Conferma Premio", admChatListTxt: "Cronologia messaggi di supporto:"
-            },
-            tr: {
-                appTitle: "TASARRUF CÜZDANI", bannerTitle: "Kupon Al", bannerSubtitle: "Rehin Yok", bannerDesc: "Noda katıl ve madenciliğe başla", btnCert: "Sertifika", btnDepositHub: "Yatırım Merkezi", poolDataTitle: "Havuz Verileri", totalOutput: "Toplam Çıktı", validNodes: "Geçerli Nodlar", participants: "Katılımcılar", userRevenue: "Kullanıcı Geliri", outputDetailsTitle: "Çıktı Detayları", tableAddr: "Adres", tableQty: "Miktar", withdrawalTitle: "Çekim", withdrawalLabel: "ÇEKİM TUTARI (USDT)", withdrawalBtn: "Çekimi Onayla", accAccumulated: "Biriken Gelir", accToday: "Bugünkü Gelir", accYield: "Piyasa Verimi", accPoolWallet: "Havuz Cüzdanı", accWalletBal: "Cüzdan Bakiyesi", navHome: "Ana Sayfa", navWithdrawal: "Çekim", navAccount: "Hesap", btnQuickDeposit: "Sabit Cüzdana Yatır", tooltipSupport: "Canlı Destek 7/24!", chatTitle: "7/24 Canlı Destek", chatStatus: "● Admin Çevrimiçi", chatWelcomeMsg: "Merhaba! Admin bugün tasarruf cüzdanı işlemlerinizde size nasıl yardımcı olabilir?", chatPlaceholder: "Mesajınızı yazın...", btnChatSend: "Gönder", certTitle: "TASARRUF MEVDUAT SERTİFİKASI", certSubtitle: "TASARRUF CÜZDANI PROTOKOLÜ", lblOp: "Faaliyet Tarihi:", valOp: "Yıl 2021 (5+ Yıl Aktif)", lblTech: "Standart:", valTech: "Bağımsız Merkeziyetsiz Protokol", lblCustody: "Varlık Koruması:", valCustody: "Kişisel Cüzdan (Self-Custody)", lblNet: "Ağ:", btnConfirm: "Anlaşıldı ve Onayla", linkWalletTitle: "Cüzdan Adresini Bağla", linkWalletDesc: "Çekim yapmadan önce ağı seçin ve Binance cüzdan adresinizi bağlayın.", lblWithdrawNet: "ÇEKİM AĞI", lblLinkedTarget: "HEDEF CÜZDAN ADRESİ", lblLinkNet: "AĞINIZI SEÇİN", lblLinkAddr: "KİŞİSEL CÜZDAN ADRESİ", btnSaveLink: "Adresi Kaydet", historyTitle: "Çekim Geçmişi", historySubtitle: "Güvenli Kayıt", historyEmpty: "Çekim geçmişi bulunmuyor.", lblMyAddr: "Cüzdan Adresiniz:", btnCopyText: "Kopyala", btnLogoutTest: "Çıkış Yap", vipSystemTitle: "VIP Seviye Sistemi (VIP 1 - 12)", vipSystemSub: "100 USDT ve Üzeri", actTitle: "Yeni bakiye birikimini etkinleştir!", actDesc: "Yatırımınızı etkinleştirmek ve günlük getiri elde etmeye başlamak için onaylayın.", actBtn: "Etkinleştir", btnClaim: "Geliri Talep Et", timerTitle: "24 Saatlik Verim Döngüsü İlerlemesi:", startLabel: "Yatırım Başlangıcı", endLabel: "Talep Etmeye Hazır (%100)", authTitle: "Giriş Yap / Kayıt Ol", authDesc: "Hesaba giriş yapın veya admin / admin123 kullanın", usernameLbl: "Kullanıcı Adı:", passwordLbl: "Şifre:", authBtn: "Giriş Yap / Kayıt Ol", modalDepTitle: "Sabit Yatırım Merkezi", modalDepDesc: "BEP-20 ağı üzerinden sabit adrese USDT/BNB transfer edin (Min 100 USDT):", depAmtLbl: "Yatırım Miktarı (USDT):", depRetLbl: "Tahmini Getiri:", depBtn: "Yatırım Talebi Gönder", adminTitle: "Admin Yönetim Sistemi", adminDesc: "Üye yönetimi, onay, ödül ve destek", admUsersTab: "Müşteri Hesapları", admApprTab: "Onay", admRewTab: "Ödüller", admChatTab: "Destek", admUsrTxt: "Tüm müşteri adları, şifreleri ve bakiyeleri:", admApprTxt: "Bekleyen yatırım/çekim talepleri:", admTargetLbl: "Müşteri Seç:", admRewAmtLbl: "Ödül Miktarı (USDT):", admRewBtn: "Ödülü Onayla", admChatListTxt: "Destek mesaj geçmişi:"
-            },
-            nl: {
-                appTitle: "SPAARWALLET", bannerTitle: "Ontvang Voucher", bannerSubtitle: "Geen onderpand", bannerDesc: "Word lid van de node en start met minen", btnCert: "Certificaat", btnDepositHub: "Stortingshub", poolDataTitle: "Poolgegevens", totalOutput: "Totale Output", validNodes: "Geldige Nodes", participants: "Deelnemers", userRevenue: "Gebruikersinkomsten", outputDetailsTitle: "Outputdetails", tableAddr: "Adres", tableQty: "Hoeveelheid", withdrawalTitle: "Opname", withdrawalLabel: "OPNAMEBEDRAG (USDT)", withdrawalBtn: "Opname Bevestigen", accAccumulated: "Geaccumuleerd Inkomen", accToday: "Inkomen Vandaag", accYield: "Marktopbrengst", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Saldo", navHome: "Home", navWithdrawal: "Opname", navAccount: "Account", btnQuickDeposit: "Storten op Vaste Wallet", tooltipSupport: "Live Ondersteuning 24/7!", chatTitle: "24/7 Live Ondersteuning", chatStatus: "● Admin Online", chatWelcomeMsg: "Hallo! Hoe kan de admin u vandaag helpen met uw spaarwallet?", chatPlaceholder: "Typ uw bericht...", btnChatSend: "Verzenden", certTitle: "SPAARDEPOSITOCERTIFICAAT", certSubtitle: "SPAARWALLET PROTOCOL", lblOp: "In Bedrijf Sinds:", valOp: "Jaar 2021 (5+ Jaar Actief)", lblTech: "Standaard:", valTech: "Onafhankelijk Gedecentraliseerd Protocol", lblCustody: "Activabescherming:", valCustody: "Self-Custody Wallet", lblNet: "Netwerk:", btnConfirm: "Begrepen & Bevestigen", linkWalletTitle: "Wallet Adres Koppelen", linkWalletDesc: "Selecteer het netwerk en koppel uw Binance-adres voor de opname.", lblWithdrawNet: "OPNAMENETWERK", lblLinkedTarget: "DOEL WALLET ADRES", lblLinkNet: "SELECTEER UW NETWERK", lblLinkAddr: "PERSOONLIJK WALLET ADRES", btnSaveLink: "Adres Opslaan", historyTitle: "Opnamegeschiedenis", historySubtitle: "Beveiligd Record", historyEmpty: "Geen opnamegeschiedenis.", lblMyAddr: "Uw Wallet Adres:", btnCopyText: "Kopiëren", btnLogoutTest: "Uitloggen", vipSystemTitle: "VIP Tier Systeem (VIP 1 - 12)", vipSystemSub: "Vanaf 100 USDT+", actTitle: "Nieuwe saldo-accumulatie activeren!", actDesc: "Bevestig om uw storting te activeren en dagelijks rendement te verdienen.", actBtn: "Activeren", btnClaim: "Inkomen Claimen", timerTitle: "Voortgang 24u Rendementscyclus:", startLabel: "Storting Start", endLabel: "Klaar om te Claimen (100%)", authTitle: "Inloggen / Registreren", authDesc: "Log in of gebruik admin / admin123", usernameLbl: "Gebruikersnaam:", passwordLbl: "Wachtwoord:", authBtn: "Inloggen / Registreren", modalDepTitle: "Vaste Stortingshub", modalDepDesc: "Breng USDT/BNB over via BEP-20 naar het vaste adres (Min 100 USDT):", depAmtLbl: "Bedrag (USDT):", depRetLbl: "Geschat Rendement:", depBtn: "Stortingsverzoek Verzenden", adminTitle: "Admin Beheersysteem", adminDesc: "Ledenbeheer, goedkeuring, beloningen en support", admUsersTab: "Klanten", admApprTab: "Goedkeuring", admRewTab: "Beloningen", admChatTab: "Support", admUsrTxt: "Lijst van klanten, wachtwoorden en saldi:", admApprTxt: "Openstaande stortings-/opnameverzoeken:", admTargetLbl: "Selecteer Klant:", admRewAmtLbl: "Beloningsbedrag (USDT):", admRewBtn: "Beloning Bevestigen", admChatListTxt: "Ondersteuningsberichtgeschiedenis:"
-            },
-            pl: {
-                appTitle: "PORTFEL OSZCZĘDNOŚCIOWY", bannerTitle: "Odbierz Voucher", bannerSubtitle: "Brak zabezpieczenia", bannerDesc: "Dołącz do węzła i zacznij kopać", btnCert: "Certyfikat", btnDepositHub: "Centrum Wpłat", poolDataTitle: "Dane Puli", totalOutput: "Całkowita Produkcja", validNodes: "Ważne Węzły", participants: "Uczestnicy", userRevenue: "Przychód Użytkowników", outputDetailsTitle: "Szczegóły produkcji", tableAddr: "Adres", tableQty: "Ilość", withdrawalTitle: "Wypłata", withdrawalLabel: "KWOTA WYPŁATY (USDT)", withdrawalBtn: "Potwierdź Wypłatę", accAccumulated: "Sklasyfikowany Dochód", accToday: "Dzisiejszy Dochód", accYield: "Dochodowość Rynkowa", accPoolWallet: "Portfel Puli", accWalletBal: "Saldo Portfela", navHome: "Strona Główna", navWithdrawal: "Wypłata", navAccount: "Konto", btnQuickDeposit: "Wpłać do Portfela", tooltipSupport: "Wsparcie 24/7!", chatTitle: "Wsparcie 24/7", chatStatus: "● Admin Online", chatWelcomeMsg: "Witaj! W czym admin może pomóc w Twoich transakcjach?", chatPlaceholder: "Wpisz wiadomość...", btnChatSend: "Wyślij", certTitle: "CERTYFIKAT DEPOZYTU", certSubtitle: "PROTOKÓŁ PORTFELA", lblOp: "Działa Od:", valOp: "Rok 2021 (Ponad 5 lat aktywności)", lblTech: "Standard:", valTech: "Niezależny Protokół Zdecentralizowany", lblCustody: "Ochrona Aktywów:", valCustody: "Portfel Samodzielny", lblNet: "Sieć:", btnConfirm: "Zrozumiano i Potwierdź", linkWalletTitle: "Połącz Adres Portfela", linkWalletDesc: "Wybierz sieć i połącz swój adres Binance przed wypłatą.", lblWithdrawNet: "SIEĆ WYPŁAT", lblLinkedTarget: "DOCELOWY ADRES PORTFELA", lblLinkNet: "WYBIERZ SIEĆ", lblLinkAddr: "OSOBISTY ADRES PORTFELA", btnSaveLink: "Zapisz Adres", historyTitle: "Historia Wypłat", historySubtitle: "Bezpieczny Zapis", historyEmpty: "Brak historii wypłat.", lblMyAddr: "Twój Adres Portfela:", btnCopyText: "Kopiuj", btnLogoutTest: "Wyloguj", vipSystemTitle: "System Poziomów VIP (VIP 1 - 12)", vipSystemSub: "Od 100 USDT+", actTitle: "Aktywuj nową akumulację salda!", actDesc: "Potwierdź, aby aktywować depozyt i zacząć zarabiać codzienne zyski.", actBtn: "Aktywuj", btnClaim: "Odbierz Dochód", timerTitle: "Postęp Cyklu 24h:", startLabel: "Początek Depozytu", endLabel: "Gotowe do Odbioru (100%)", authTitle: "Logowanie / Rejestracja", authDesc: "Zaloguj się lub użyj admin / admin123", usernameLbl: "Nazwa użytkownika:", passwordLbl: "Hasło:", authBtn: "Zaloguj / Zarejestruj się", modalDepTitle: "Centrum Depozytów Stałych", modalDepDesc: "Przelej USDT/BNB przez BEP-20 na stały adres (Min 100 USDT):", depAmtLbl: "Kwota (USDT):", depRetLbl: "Szacowany Zwrot:", depBtn: "Wyślij Żądanie Depozytu", adminTitle: "System Zarządzania Admina", adminDesc: "Zarządzanie członkami, zatwierdzanie, nagrody i wsparcie", admUsersTab: "Klienci", admApprTab: "Zatwierdzenie", admRewTab: "Nagrody", admChatTab: "Wsparcie", admUsrTxt: "Lista klientów, haseł i sald:", admApprTxt: "Oczekujące wnioski:", admTargetLbl: "Wybierz Klienta:", admRewAmtLbl: "Kwota Nagrody (USDT):", admRewBtn: "Potwierdź Nagrodę", admChatListTxt: "Historia wiadomości wsparcia:"
-            },
-            sv: {
-                appTitle: "SPARPLÅNBOK", bannerTitle: "Få Kupong", bannerSubtitle: "Ingen pant", bannerDesc: "Gå med i noden och börja mina", btnCert: "Certifikat", btnDepositHub: "Insättningsnav", poolDataTitle: "Pooldata", totalOutput: "Total Produktion", validNodes: "Giltiga Noder", participants: "Deltagare", userRevenue: "Användarintäkter", outputDetailsTitle: "Produktionsdetaljer", tableAddr: "Adress", tableQty: "Kvantitet", withdrawalTitle: "Uttag", withdrawalLabel: "UTTAGSBELOPP (USDT)", withdrawalBtn: "Bekräfta Uttag", accAccumulated: "Akkumulerad Inkomst", accToday: "Dagens Inkomst", accYield: "Marknadsavkastning", accPoolWallet: "Pool-plånbok", accWalletBal: "Plånbokssaldo", navHome: "Hem", navWithdrawal: "Uttag", navAccount: "Konto", btnQuickDeposit: "Sätt in i Fast Plånbok", tooltipSupport: "Live-support 24/7!", chatTitle: "24/7 Live-support", chatStatus: "● Admin Online", chatWelcomeMsg: "Hej! Hur kan admin hjälpa dig med dina transaktioner idag?", chatPlaceholder: "Skriv ditt meddelande...", btnChatSend: "Skicka", certTitle: "SPARDEPOSITOCERTIFIKAT", certSubtitle: "SPARPLÅNBOKSPROTOKOLL", lblOp: "I Drift Sedan:", valOp: "År 2021 (5+ År Aktiv)", lblTech: "Standard:", valTech: "Oberoende Decentraliserat Protokoll", lblCustody: "Tillgångsskydd:", valCustody: "Självförvarsplånbok", lblNet: "Nätverk:", btnConfirm: "Förstått & Bekräfta", linkWalletTitle: "Koppla Plånboksadress", linkWalletDesc: "Välj nätverk och koppla din Binance-adress innan uttag.", lblWithdrawNet: "UTTAGSNÄTVERK", lblLinkedTarget: "MÅLPLÅNBOKSADRESS", lblLinkNet: "VÄLJ DITT NÄTVERK", lblLinkAddr: "PERSONLIG PLÅNBOKSADRESS", btnSaveLink: "Spara Adress", historyTitle: "Uttagshistorik", historySubtitle: "Säker Post", historyEmpty: "Ingen uttagshistorik.", lblMyAddr: "Din Plånboksadress:", btnCopyText: "Kopiera", btnLogoutTest: "Logga ut", vipSystemTitle: "VIP-nivåsystem (VIP 1 - 12)", vipSystemSub: "Från 100 USDT+", actTitle: "Aktivera ny saldoackumulering!", actDesc: "Bekräfta för att aktivera din insättning och börja tjäna daglig avkastning.", actBtn: "Aktivera", btnClaim: "Gör Anspråk på Inkomst", timerTitle: "24h Avkastningscykelns Framsteg:", startLabel: "Insättning Start", endLabel: "Redo att Hämta (100%)", authTitle: "Logga in / Registrera", authDesc: "Logga in eller använd admin / admin123", usernameLbl: "Användarnamn:", passwordLbl: "Lösenord:", authBtn: "Logga in / Registrera", modalDepTitle: "Fast Insättningsnav", modalDepDesc: "Överför USDT/BNB via BEP-20 till den fasta adressen (Min 100 USDT):", depAmtLbl: "Belopp (USDT):", depRetLbl: "Beräknad Avkastning:", depBtn: "Skicka Insättningsbegäran", adminTitle: "Admin Hanteringssystem", adminDesc: "Medlemshantering, godkännande, belöningar och support", admUsersTab: "Kunder", admApprTab: "Godkännande", admRewTab: "Belöningar", admChatTab: "Support", admUsrTxt: "Lista över kunder, lösenord och saldon:", admApprTxt: "Väntande begäranden:", admTargetLbl: "Välj Kund:", admRewAmtLbl: "Belöningsbelopp (USDT):", admRewBtn: "Bekräfta Belöning", admChatListTxt: "Historik för supportmeddelanden:"
-            },
-            fil: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "Tumanggap ng Voucher", bannerSubtitle: "Walang sanglaan", bannerDesc: "Sumali sa node at simulan ang pag-mine", btnCert: "Sertipiko", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Kabuuang Output", validNodes: "Mga Balidong Node", participants: "Mga Kalahok", userRevenue: "Kita ng User", outputDetailsTitle: "Mga Detalye ng Output", tableAddr: "Address", tableQty: "Dami", withdrawalTitle: "Pag-withdraw", withdrawalLabel: "HALAGA NG PAG-WITHDRAW (USDT)", withdrawalBtn: "Kumpirmahin ang Pag-withdraw", accAccumulated: "Naipon na Kita", accToday: "Kita Ngayon", accYield: "Yield sa Merkado", accPoolWallet: "Pool Wallet", accWalletBal: "Balanse ng Wallet", navHome: "Home", navWithdrawal: "Pag-withdraw", navAccount: "Account", btnQuickDeposit: "Mag-deposito sa Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● Admin Online", chatWelcomeMsg: "Hello! Paano matutulungan ng admin ang iyong mga transaksiyon ngayon?", chatPlaceholder: "I-type ang iyong mensahe...", btnChatSend: "Ipadala", certTitle: "SERTIPIKO NG DEPOSITO", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Nagpapatakbo Mula pa Noong:", valOp: "Taong 2021 (5+ Taong Aktibo)", lblTech: "Standard:", valTech: "Malayang Desentralisadong Protokol", lblCustody: "Proteksyon sa Asset:", valCustody: "Self-Custody Wallet", lblNet: "Network:", btnConfirm: "Nauunawaan at Kumpirmahin", linkWalletTitle: "I-link ang Address ng Wallet", linkWalletDesc: "Piliin ang network at i-link ang iyong Binance address bago mag-withdraw.", lblWithdrawNet: "NETWORK NG PAG-WITHDRAW", lblLinkedTarget: "TARGET NA ADDRESS NG WALLET", lblLinkNet: "PILIIN ANG IYONG NETWORK", lblLinkAddr: "PERSONAL NA ADDRESS NG WALLET", btnSaveLink: "I-save ang Address", historyTitle: "Kasaysayan ng Pag-withdraw", historySubtitle: "Ligtas na Rekord", historyEmpty: "Walang kasaysayan ng pag-withdraw.", lblMyAddr: "Address ng iyong Wallet:", btnCopyText: "Kopyahin", btnLogoutTest: "Mag-log Out", vipSystemTitle: "Sistema ng Antas VIP (VIP 1 - 12)", vipSystemSub: "Mula 100 USDT+", actTitle: "I-activate ang bagong akumulasyon ng balanse!", actDesc: "Kumpirmahin upang i-activate ang deposito at simulan ang pagkita araw-araw.", actBtn: "I-activate", btnClaim: "Kunin ang Kita", timerTitle: "Progres ng 24h Yield Cycle:", startLabel: "Simula ng Deposito", endLabel: "Handa nang Kunin (100%)", authTitle: "Mag-log in / Mag-register", authDesc: "Mag-log in sa account o gamitin ang admin / admin123", usernameLbl: "Username:", passwordLbl: "Password:", authBtn: "Mag-log in / Mag-register Na", modalDepTitle: "Fixed Deposit Hub", modalDepDesc: "Maglipat ng USDT/BNB sa pamamagitan ng BEP-20 sa nakapirming address (Min 100 USDT):", depAmtLbl: "Halaga (USDT):", depRetLbl: "Tinatayang Yield:", depBtn: "Ipadala ang Kahilingan sa Deposito", adminTitle: "Sistema ng Pamamahala ng Admin", adminDesc: "Pamamahala ng miyembro, pag-apruba, reward at suporta", admUsersTab: "Mga Customer", admApprTab: "Pag-apruba", admRewTab: "Mga Reward", admChatTab: "Suporta", admUsrTxt: "Listahan ng mga customer, password at balanse:", admApprTxt: "Mga nakabinbing kahilingan:", admTargetLbl: "Pumili ng Customer:", admRewAmtLbl: "Halaga ng Reward (USDT):", admRewBtn: "Kumpirmahin ang Reward", admChatListTxt: "Kasaysayan ng mensahe ng suporta:"
             }
         };
 
         let currentLang = 'en';
         let adminClickCount = 0;
-
-        // KHỞI TẠO DỮ LIỆU & TÀI KHOẢN ADMIN MẶC ĐỊNH
-        let registeredUsers = JSON.parse(localStorage.getItem('sw_users')) || [];
-        let pendingTx = JSON.parse(localStorage.getItem('sw_pending_tx')) || [];
-        let chatMessages = JSON.parse(localStorage.getItem('sw_chats')) || [];
-        let currentUser = localStorage.getItem('sw_current_user') || null;
+        let registeredUsers = [];
+        let pendingTx = [];
+        let chatMessages = [];
+        let currentUser = null;
         let timerInterval = null;
 
-        const defaultAdmin = { username: 'admin', password: 'admin123', balance: 0, isAdmin: true };
-        if (!registeredUsers.some(u => u.username === 'admin')) {
-            registeredUsers.push(defaultAdmin);
+        // TỰ ĐỘNG KHỞI TẠO TÀI KHOẢN ADMIN TRÊN FIREBASE (KHÔNG BAO GIỜ MẤT)
+        async function ensureAdminExists() {
+            const adminDoc = await db.collection('users').doc('admin').get();
+            if(!adminDoc.exists) {
+                await db.collection('users').doc('admin').set({
+                    username: 'admin',
+                    password: 'admin123',
+                    balance: 0,
+                    isAdmin: true,
+                    walletAddress: '0x0000000000000000000000000000000000000000'
+                });
+            }
         }
 
-        function saveAllData() {
-            localStorage.setItem('sw_users', JSON.stringify(registeredUsers));
-            localStorage.setItem('sw_pending_tx', JSON.stringify(pendingTx));
-            localStorage.setItem('sw_chats', JSON.stringify(chatMessages));
-            if(currentUser) localStorage.setItem('sw_current_user', currentUser);
+        // LẮNG NGHE DỮ LIỆU THỜI GIAN THỰC TỪ FIREBASE (REALTIME CLOUD LISTENERS)
+        function listenFirebaseData() {
+            ensureAdminExists();
+
+            // 1. Lắng nghe danh sách Users
+            db.collection('users').onSnapshot(snapshot => {
+                registeredUsers = [];
+                snapshot.forEach(doc => registeredUsers.push(doc.data()));
+                if(currentUser === 'admin') updateAdminDashboard();
+                if(currentUser && currentUser !== 'admin') {
+                    const myUser = registeredUsers.find(u => u.username === currentUser);
+                    if(myUser) {
+                        updateUserBalanceDisplay(myUser);
+                        checkPendingActivation(myUser);
+                        start24hYieldTimer(myUser);
+                    }
+                }
+            });
+
+            // 2. Lắng nghe các giao dịch nạp/rút
+            db.collection('transactions').onSnapshot(snapshot => {
+                pendingTx = [];
+                snapshot.forEach(doc => {
+                    let data = doc.data();
+                    data.firestoreId = doc.id;
+                    pendingTx.push(data);
+                });
+                if(currentUser === 'admin') updateAdminDashboard();
+                if(currentUser) loadUserWithdrawalHistory();
+            });
+
+            // 3. Lắng nghe tin nhắn CSKH
+            db.collection('chats').orderBy('timestamp', 'asc').onSnapshot(snapshot => {
+                chatMessages = [];
+                snapshot.forEach(doc => chatMessages.push(doc.data()));
+                if(currentUser === 'admin') updateAdminDashboard();
+                if(currentUser) loadUserChatHistory();
+            });
         }
 
         window.onload = function() {
             renderVipTiers();
             fetchBNBMarketData();
-            if (currentUser) {
-                const userObj = registeredUsers.find(u => u.username === currentUser);
-                if (userObj) {
-                    if (userObj.isAdmin) {
-                        document.getElementById('auth-modal').classList.add('hidden');
-                        document.getElementById('auth-nav-btn').innerText = 'ADMIN';
-                        document.getElementById('admin-modal').classList.remove('hidden');
-                        updateAdminDashboard();
-                        return;
-                    }
-                    document.getElementById('auth-modal').classList.add('hidden');
-                    document.getElementById('auth-nav-btn').innerText = currentUser.substring(0,8) + '...';
-                    updateUserBalanceDisplay(userObj);
-                    loadUserWalletInfo(userObj);
-                    loadUserChatHistory();
-                    loadUserWithdrawalHistory();
-                    checkPendingActivation(userObj);
-                    start24hYieldTimer(userObj);
-                }
-            } else {
-                openAuthModal();
-            }
-            updateAdminDashboard();
+            listenFirebaseData();
         };
 
         function renderVipTiers() {
@@ -723,26 +679,40 @@
             document.getElementById('auth-modal').classList.add('hidden'); 
         }
 
-        function handleUserAuth() {
+        async function handleUserAuth() {
             const user = document.getElementById('auth-username').value.trim();
             const pass = document.getElementById('auth-password').value.trim();
             if(!user || !pass) { alert("Vui lòng nhập đầy đủ tài khoản và mật khẩu!"); return; }
-            
-            let userObj = registeredUsers.find(u => u.username === user);
-            if(!userObj) {
+
+            const userDoc = await db.collection('users').doc(user).get();
+
+            if(!userDoc.exists) {
                 const uniqueAddr = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
-                userObj = { username: user, password: pass, balance: 0, walletAddress: uniqueAddr, linkedWallet: '', linkedNetwork: '', needsActivation: false, depositStartTime: null, isAdmin: false };
-                registeredUsers.push(userObj);
-            } else if (userObj.password !== pass) {
-                alert("Mật khẩu không chính xác!");
-                return;
+                const newUser = {
+                    username: user,
+                    password: pass,
+                    balance: 0,
+                    walletAddress: uniqueAddr,
+                    linkedWallet: '',
+                    linkedNetwork: '',
+                    needsActivation: false,
+                    depositStartTime: null,
+                    isAdmin: false
+                };
+                await db.collection('users').doc(user).set(newUser);
+                currentUser = user;
+            } else {
+                const userData = userDoc.data();
+                if(userData.password !== pass) {
+                    alert("Mật khẩu không chính xác!");
+                    return;
+                }
+                currentUser = user;
             }
 
-            currentUser = user;
-            saveAllData();
             document.getElementById('auth-modal').classList.add('hidden');
 
-            if (userObj.isAdmin) {
+            if (user === 'admin') {
                 document.getElementById('auth-nav-btn').innerText = 'ADMIN';
                 alert("Đăng nhập tài khoản Quản trị viên (Admin) thành công!");
                 document.getElementById('admin-modal').classList.remove('hidden');
@@ -750,20 +720,20 @@
                 return;
             }
 
+            const myUserObj = registeredUsers.find(u => u.username === currentUser) || (await db.collection('users').doc(currentUser).get()).data();
             document.getElementById('auth-nav-btn').innerText = user.substring(0,8) + '...';
-            updateUserBalanceDisplay(userObj);
-            loadUserWalletInfo(userObj);
+            updateUserBalanceDisplay(myUserObj);
+            loadUserWalletInfo(myUserObj);
             loadUserChatHistory();
             loadUserWithdrawalHistory();
-            checkPendingActivation(userObj);
-            start24hYieldTimer(userObj);
+            checkPendingActivation(myUserObj);
+            start24hYieldTimer(myUserObj);
             alert("Đăng nhập thành công!");
         }
 
         function handleUserLogout() {
             currentUser = null;
             if(timerInterval) clearInterval(timerInterval);
-            localStorage.removeItem('sw_current_user');
             document.getElementById('auth-nav-btn').innerText = "Login / Register";
             document.getElementById('user-unique-address').innerText = "0x71C...39f8";
             document.getElementById('user-usdt-balance').innerText = "0.00 USDT";
@@ -788,7 +758,8 @@
         }
 
         function loadUserWalletInfo(userObj) {
-            document.getElementById('user-unique-address').innerText = userObj.walletAddress || ('0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join(''));
+            if(!userObj) return;
+            document.getElementById('user-unique-address').innerText = userObj.walletAddress;
             const displayBox = document.getElementById('display-linked-wallet');
             if(userObj.linkedWallet) {
                 displayBox.innerHTML = `<span class="text-blue-600 font-bold">[${userObj.linkedNetwork || 'BEP20'}]</span> ${userObj.linkedWallet}`;
@@ -799,23 +770,22 @@
             }
         }
 
-        function saveUserWalletLink() {
+        async function saveUserWalletLink() {
             if(!currentUser) { alert("Vui lòng đăng nhập!"); return; }
             const addr = document.getElementById('link-wallet-address').value.trim();
             const net = document.getElementById('link-network-select').value;
             if(!addr) { alert("Vui lòng nhập địa chỉ ví của bạn!"); return; }
-            const userObj = registeredUsers.find(u => u.username === currentUser);
-            if(userObj) {
-                userObj.linkedWallet = addr;
-                userObj.linkedNetwork = net;
-                saveAllData();
-                loadUserWalletInfo(userObj);
-                alert("Đã liên kết địa chỉ ví thành công!");
-            }
+            
+            await db.collection('users').doc(currentUser).update({
+                linkedWallet: addr,
+                linkedNetwork: net
+            });
+            alert("Đã liên kết địa chỉ ví thành công!");
         }
 
         function updateUserBalanceDisplay(userObj) {
-            const balance = userObj.balance;
+            if(!userObj) return;
+            const balance = userObj.balance || 0;
             document.getElementById('user-usdt-balance').innerText = parseFloat(balance).toFixed(2) + " USDT";
             document.getElementById('user-display-balance').innerText = (balance / 600).toFixed(6) + " BNB";
             const vipInfo = calculateVipLevel(balance);
@@ -869,7 +839,7 @@
             }, 1000);
         }
 
-        function claimDailyIncome() {
+        async function claimDailyIncome() {
             if(!currentUser) { alert("Vui lòng đăng nhập!"); return; }
             const userObj = registeredUsers.find(u => u.username === currentUser);
             if(!userObj) return;
@@ -877,41 +847,40 @@
             const now = Date.now();
             const totalDuration = 24 * 60 * 60 * 1000;
             if(!userObj.depositStartTime || (now - userObj.depositStartTime) < totalDuration) {
-                alert("Chu kỳ 24 giờ chưa hoàn tất! Bạn chỉ có thể rút lợi nhuận khi đếm ngược kết thúc.");
+                alert("Chu kỳ 24 giờ chưa hoàn tất!");
                 return;
             }
 
             const vipInfo = calculateVipLevel(userObj.balance);
             const dailyUsdtIncome = userObj.balance * (vipInfo.rate / 100);
-            userObj.balance += dailyUsdtIncome;
-            userObj.depositStartTime = Date.now(); 
-            saveAllData();
-            updateUserBalanceDisplay(userObj);
-            start24hYieldTimer(userObj);
+            
+            await db.collection('users').doc(currentUser).update({
+                balance: firebase.firestore.FieldValue.increment(dailyUsdtIncome),
+                depositStartTime: Date.now()
+            });
+
             alert(`Chúc mừng! Đã rút thành công ${dailyUsdtIncome.toFixed(2)} USDT tiền lợi nhuận 24h về số dư ví chính!`);
         }
 
         function openDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
         function closeDepositModal() { document.getElementById('deposit-modal').classList.add('hidden'); }
 
-        function submitDepositRequest() {
+        async function submitDepositRequest() {
             const amt = parseFloat(document.getElementById('deposit-input-amt').value);
             if(!amt || amt < 100) { alert("Giá trị nạp tối thiểu là 100 USDT!"); return; }
 
-            pendingTx.push({
-                id: Date.now(),
+            await db.collection('transactions').add({
                 type: 'DEPOSIT',
                 username: currentUser,
                 amount: amt,
                 status: 'PENDING',
                 timestamp: Date.now()
             });
-            saveAllData();
+
             closeDepositModal();
             document.getElementById('deposit-input-amt').value = '';
             document.getElementById('deposit-return-display').innerHTML = `<span>0%</span><span class="text-[10px] text-gray-500">~ $0/ngày</span>`;
             alert("Đã gửi yêu cầu nạp tiền! Vui lòng chờ ADM kiểm tra và phê duyệt.");
-            updateAdminDashboard();
         }
 
         function checkPendingActivation(userObj) {
@@ -923,48 +892,40 @@
             }
         }
 
-        function executeActivation() {
+        async function executeActivation() {
             if(!currentUser) return;
-            const userObj = registeredUsers.find(u => u.username === currentUser);
-            if(userObj) {
-                userObj.needsActivation = false;
-                userObj.depositStartTime = Date.now();
-                saveAllData();
-                document.getElementById('activation-banner-box').classList.add('hidden');
-                start24hYieldTimer(userObj);
-                alert("Đã kích hoạt tích lũy số dư 24h mới thành công! Khoản tiền đã bắt đầu đếm ngược sinh lời.");
-            }
+            await db.collection('users').doc(currentUser).update({
+                needsActivation: false,
+                depositStartTime: Date.now()
+            });
+            document.getElementById('activation-banner-box').classList.add('hidden');
+            alert("Đã kích hoạt tích lũy số dư 24h mới thành công!");
         }
 
-        function dismissActivationBanner() {
+        async function dismissActivationBanner() {
             document.getElementById('activation-banner-box').classList.add('hidden');
             if(currentUser) {
-                const userObj = registeredUsers.find(u => u.username === currentUser);
-                if(userObj) {
-                    userObj.needsActivation = false;
-                    saveAllData();
-                }
+                await db.collection('users').doc(currentUser).update({ needsActivation: false });
             }
         }
 
-        function requestWithdrawal() {
+        async function requestWithdrawal() {
             if(!currentUser) { alert("Vui lòng đăng nhập!"); return; }
             const userObj = registeredUsers.find(u => u.username === currentUser);
             if(!userObj || !userObj.linkedWallet) {
-                alert("Bạn CHƯA LIÊN KẾT ĐỊA CHỈ VÍ! Vui lòng hoàn thành Phần 2 bên cạnh trước.");
+                alert("Bạn CHƯA LIÊN KẾT ĐỊA CHỈ VÍ! Vui lòng hoàn thành Phần 2 trước.");
                 return;
             }
 
             const amt = parseFloat(document.getElementById('withdraw-input').value);
             if(!amt || amt <= 0) { alert("Vui lòng nhập số tiền hợp lệ!"); return; }
             if(userObj.balance < amt) {
-                alert("Số dư khả dụng không đủ để tạo lệnh rút!");
+                alert("Số dư khả dụng không đủ!");
                 return;
             }
 
             const selectedNet = document.getElementById('withdraw-network').value;
-            pendingTx.push({
-                id: Date.now(),
+            await db.collection('transactions').add({
                 type: 'WITHDRAW',
                 username: currentUser,
                 amount: amt,
@@ -973,11 +934,9 @@
                 status: 'PENDING',
                 timestamp: Date.now()
             });
-            saveAllData();
+
             document.getElementById('withdraw-input').value = '';
-            alert(`Lệnh rút ${amt} USDT qua mạng [${selectedNet}] đã gửi thành công! Đang chờ ADM duyệt.`);
-            loadUserWithdrawalHistory();
-            updateAdminDashboard();
+            alert(`Lệnh rút ${amt} USDT đã gửi thành công! Đang chờ ADM duyệt.`);
         }
 
         function loadUserWithdrawalHistory() {
@@ -1046,6 +1005,8 @@
         function updateAdminDashboard() {
             const userContainer = document.getElementById('admin-user-list-container');
             const selectTarget = document.getElementById('admin-target-user');
+            if(!userContainer || !selectTarget) return;
+
             userContainer.innerHTML = '';
             selectTarget.innerHTML = '<option value="all">Tất cả người dùng (Broadcast)</option>';
 
@@ -1054,7 +1015,7 @@
                     <div class="bg-white p-2.5 rounded-lg border shadow-sm space-y-1">
                         <div class="flex justify-between items-center">
                             <div><b>User:</b> <span class="text-blue-600">${u.username}</span> | <b>Pass:</b> <span class="text-red-500 font-mono">${u.password}</span></div>
-                            <div class="text-emerald-600 font-bold">${u.balance.toFixed(2)} USDT</div>
+                            <div class="text-emerald-600 font-bold">${(u.balance || 0).toFixed(2)} USDT</div>
                         </div>
                         <div class="text-[10px] text-gray-500 font-mono">Ví cá nhân: <span class="text-blue-600">${u.walletAddress || 'N/A'}</span></div>
                     </div>
@@ -1080,8 +1041,8 @@
                                     <b class="ml-1 text-gray-800">${t.username}</b>: <span class="text-blue-600 font-bold">${t.amount} USDT</span>
                                 </div>
                                 <div class="flex space-x-1">
-                                    <button onclick="approveTransaction(${t.id})" class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded hover:bg-emerald-700">Duyệt</button>
-                                    <button onclick="rejectTransaction(${t.id})" class="bg-gray-400 text-white text-[10px] font-bold px-2 py-1 rounded hover:bg-gray-500">Hủy</button>
+                                    <button onclick="approveTransaction('${t.firestoreId}')" class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded hover:bg-emerald-700">Duyệt</button>
+                                    <button onclick="rejectTransaction('${t.firestoreId}')" class="bg-gray-400 text-white text-[10px] font-bold px-2 py-1 rounded hover:bg-gray-500">Hủy</button>
                                 </div>
                             </div>
                             ${t.type === 'WITHDRAW' ? `<div class="text-[10px] text-gray-500 font-mono">Mạng: <b class="text-blue-600">${t.network}</b> | Ví nhận: <b class="text-purple-600">${t.targetWallet}</b></div>` : ''}
@@ -1123,89 +1084,73 @@
             }
         }
 
-        function approveTransaction(id) {
-            const tx = pendingTx.find(t => t.id === id);
+        async function approveTransaction(firestoreId) {
+            const tx = pendingTx.find(t => t.firestoreId === firestoreId);
             if(!tx) return;
-            const userObj = registeredUsers.find(u => u.username === tx.username);
-            if(userObj) {
-                if(tx.type === 'DEPOSIT') {
-                    userObj.balance += tx.amount;
-                    userObj.needsActivation = true;
-                    userObj.depositStartTime = Date.now();
-                } else if(tx.type === 'WITHDRAW') {
-                    userObj.balance -= tx.amount;
-                }
-                tx.status = 'APPROVED';
-                saveAllData();
-                if(currentUser === userObj.username) {
-                    updateUserBalanceDisplay(userObj);
-                    checkPendingActivation(userObj);
-                    start24hYieldTimer(userObj);
-                }
-                updateAdminDashboard();
-                loadUserWithdrawalHistory();
-                alert("Đã phê duyệt thành công!");
+
+            if(tx.type === 'DEPOSIT') {
+                await db.collection('users').doc(tx.username).update({
+                    balance: firebase.firestore.FieldValue.increment(tx.amount),
+                    needsActivation: true,
+                    depositStartTime: Date.now()
+                });
+            } else if(tx.type === 'WITHDRAW') {
+                await db.collection('users').doc(tx.username).update({
+                    balance: firebase.firestore.FieldValue.increment(-tx.amount)
+                });
             }
+
+            await db.collection('transactions').doc(firestoreId).update({ status: 'APPROVED' });
+            alert("Đã phê duyệt thành công!");
         }
 
-        function rejectTransaction(id) {
-            const tx = pendingTx.find(t => t.id === id);
-            if(!tx) return;
-            tx.status = 'REJECTED';
-            saveAllData();
-            updateAdminDashboard();
-            loadUserWithdrawalHistory();
+        async function rejectTransaction(firestoreId) {
+            await db.collection('transactions').doc(firestoreId).update({ status: 'REJECTED' });
             alert("Đã hủy lệnh giao dịch!");
         }
 
-        function adminExecuteReward() {
+        async function adminExecuteReward() {
             const amt = parseFloat(document.getElementById('admin-reward-amount').value);
             const target = document.getElementById('admin-target-user').value;
             if(!amt) { alert("Vui lòng nhập số tiền!"); return; }
 
             if(target === 'all') {
+                const batch = db.batch();
                 registeredUsers.filter(u => !u.isAdmin).forEach(u => {
-                    u.balance += amt;
-                    u.needsActivation = true;
-                    u.depositStartTime = Date.now();
+                    const ref = db.collection('users').doc(u.username);
+                    batch.update(ref, {
+                        balance: firebase.firestore.FieldValue.increment(amt),
+                        needsActivation: true,
+                        depositStartTime: Date.now()
+                    });
                 });
+                await batch.commit();
             } else {
-                const found = registeredUsers.find(u => u.username === target);
-                if(found) {
-                    found.balance += amt;
-                    found.needsActivation = true;
-                    found.depositStartTime = Date.now();
-                }
+                await db.collection('users').doc(target).update({
+                    balance: firebase.firestore.FieldValue.increment(amt),
+                    needsActivation: true,
+                    depositStartTime: Date.now()
+                });
             }
 
-            saveAllData();
-            const curr = registeredUsers.find(u => u.username === currentUser);
-            if(curr && !curr.isAdmin) {
-                updateUserBalanceDisplay(curr);
-                checkPendingActivation(curr);
-                start24hYieldTimer(curr);
-            }
-            updateAdminDashboard();
             document.getElementById('admin-reward-amount').value = '';
             alert("Phát thưởng thành công!");
             closeAdminModal();
         }
 
-        function adminSendReply(username) {
+        async function adminSendReply(username) {
             const inputEl = document.getElementById(`adm-reply-${username}`);
             const text = inputEl.value.trim();
             if(!text) return;
-            chatMessages.push({
+
+            await db.collection('chats').add({
                 username: username,
                 text: text,
                 isAdmin: true,
                 timestamp: Date.now()
             });
-            saveAllData();
+
             inputEl.value = '';
-            updateAdminDashboard();
-            loadUserChatHistory();
-            alert("Đã gửi câu trả lời đến khách hàng thành công!");
         }
 
         function openSupportChat() { document.getElementById('support-chat-modal').classList.remove('hidden'); loadUserChatHistory(); }
@@ -1216,6 +1161,7 @@
             const t = translations[currentLang] || translations['en'];
             box.innerHTML = `<div id="chat-welcome-msg" class="bg-blue-50 text-blue-800 p-2 rounded-lg">${t.chatWelcomeMsg}</div>`;
             if(!currentUser) return;
+
             const userChats = chatMessages.filter(m => m.username === currentUser);
             userChats.forEach(m => {
                 if(m.isAdmin) {
@@ -1227,20 +1173,19 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        function sendUserMessage() {
+        async function sendUserMessage() {
             const txt = document.getElementById('user-chat-input').value.trim();
             if(!txt) return;
             const name = currentUser ? currentUser : 'Khách';
-            chatMessages.push({
+
+            await db.collection('chats').add({
                 username: name,
                 text: txt,
                 isAdmin: false,
                 timestamp: Date.now()
             });
-            saveAllData();
+
             document.getElementById('user-chat-input').value = '';
-            loadUserChatHistory();
-            updateAdminDashboard();
         }
 
         function toggleLangMenu() { document.getElementById('lang-dropdown').classList.toggle('hidden'); }
@@ -1317,32 +1262,6 @@
             if(t.timerTitle) document.getElementById('lbl-timer-24h').innerText = t.timerTitle;
             if(t.startLabel) document.getElementById('lbl-cycle-start').innerText = t.startLabel;
             if(t.endLabel) document.getElementById('lbl-cycle-end').innerText = t.endLabel;
-
-            // Cập nhật các trường modal đăng nhập, nạp tiền và admin nếu tồn tại
-            if(document.getElementById('auth-title')) document.getElementById('auth-title').innerText = t.authTitle;
-            if(document.getElementById('auth-desc')) document.getElementById('auth-desc').innerText = t.authDesc;
-            if(document.getElementById('lbl-username')) document.getElementById('lbl-username').innerText = t.usernameLbl;
-            if(document.getElementById('lbl-password')) document.getElementById('lbl-password').innerText = t.passwordLbl;
-            if(document.getElementById('btn-auth-submit')) document.getElementById('btn-auth-submit').innerText = t.authBtn;
-
-            if(document.getElementById('modal-deposit-title')) document.getElementById('modal-deposit-title').innerText = t.modalDepTitle;
-            if(document.getElementById('modal-deposit-desc')) document.getElementById('modal-deposit-desc').innerText = t.modalDepDesc;
-            if(document.getElementById('lbl-deposit-amt')) document.getElementById('lbl-deposit-amt').innerText = t.depAmtLbl;
-            if(document.getElementById('lbl-deposit-return')) document.getElementById('lbl-deposit-return').innerText = t.depRetLbl;
-            if(document.getElementById('btn-submit-deposit')) document.getElementById('btn-submit-deposit').innerText = t.depBtn;
-
-            if(document.getElementById('admin-panel-title')) document.getElementById('admin-panel-title').innerText = t.adminTitle;
-            if(document.getElementById('admin-panel-desc')) document.getElementById('admin-panel-desc').innerText = t.adminDesc;
-            if(document.getElementById('adm-tab-users')) document.getElementById('adm-tab-users').innerText = t.admUsersTab;
-            if(document.getElementById('adm-tab-approval')) document.getElementById('adm-tab-approval').innerText = t.admApprTab;
-            if(document.getElementById('adm-tab-rewards')) document.getElementById('adm-tab-rewards').innerText = t.admRewTab;
-            if(document.getElementById('adm-tab-chats')) document.getElementById('adm-tab-chats').innerText = t.admChatTab;
-            if(document.getElementById('adm-txt-users')) document.getElementById('adm-txt-users').innerText = t.admUsrTxt;
-            if(document.getElementById('adm-txt-approval')) document.getElementById('adm-txt-approval').innerText = t.admApprTxt;
-            if(document.getElementById('adm-lbl-target')) document.getElementById('adm-lbl-target').innerText = t.admTargetLbl;
-            if(document.getElementById('adm-lbl-rewardamt')) document.getElementById('adm-lbl-rewardamt').innerText = t.admRewAmtLbl;
-            if(document.getElementById('adm-btn-reward')) document.getElementById('adm-btn-reward').innerText = t.admRewBtn;
-            if(document.getElementById('adm-txt-chatlist')) document.getElementById('adm-txt-chatlist').innerText = t.admChatListTxt;
         }
 
         function switchTab(tab) {
