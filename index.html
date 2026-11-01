@@ -422,11 +422,12 @@
                 <p class="text-xs text-purple-600 font-semibold">Kiểm soát tài khoản, mật khẩu, phát thưởng & CSKH</p>
             </div>
 
-            <div class="flex border-b text-xs font-semibold">
-                <button onclick="switchAdminTab('users')" id="adm-tab-users" class="flex-1 py-2 border-b-2 border-purple-600 text-purple-600">Tài Khoản & Mật Khẩu</button>
-                <button onclick="switchAdminTab('approval')" id="adm-tab-approval" class="flex-1 py-2 text-gray-400">Duyệt Nạp/Rút (<span id="pending-count">0</span>)</button>
-                <button onclick="switchAdminTab('rewards')" id="adm-tab-rewards" class="flex-1 py-2 text-gray-400">Phát Thưởng</button>
-                <button onclick="switchAdminTab('chats')" id="adm-tab-chats" class="flex-1 py-2 text-gray-400">CSKH (<span id="chat-count">0</span>)</button>
+            <!-- THANH MENU QUẢN TRỊ (ĐÃ THÊM CUỘN NGANG ĐỂ HIỂN THỊ ĐỦ TRÊN ĐIỆN THOẠI) -->
+            <div class="flex border-b text-xs font-semibold overflow-x-auto whitespace-nowrap pb-1">
+                <button onclick="switchAdminTab('users')" id="adm-tab-users" class="flex-1 min-w-[110px] py-2 border-b-2 border-purple-600 text-purple-600 text-center">Tài Khoản & Mật Khẩu</button>
+                <button onclick="switchAdminTab('approval')" id="adm-tab-approval" class="flex-1 min-w-[110px] py-2 text-gray-400 text-center">Duyệt Nạp/Rút (<span id="pending-count">0</span>)</button>
+                <button onclick="switchAdminTab('rewards')" id="adm-tab-rewards" class="flex-1 min-w-[90px] py-2 text-gray-400 text-center">Phát Thưởng</button>
+                <button onclick="switchAdminTab('chats')" id="adm-tab-chats" class="flex-1 min-w-[90px] py-2 text-gray-400 text-center">CSKH (<span id="chat-count">0</span>)</button>
             </div>
 
             <div id="adm-content-users" class="space-y-2 text-xs">
@@ -1068,23 +1069,23 @@
             document.getElementById('adm-content-rewards').classList.add('hidden');
             document.getElementById('adm-content-chats').classList.add('hidden');
             
-            document.getElementById('adm-tab-users').className = "flex-1 py-2 text-gray-400";
-            document.getElementById('adm-tab-approval').className = "flex-1 py-2 text-gray-400";
-            document.getElementById('adm-tab-rewards').className = "flex-1 py-2 text-gray-400";
-            document.getElementById('adm-tab-chats').className = "flex-1 py-2 text-gray-400";
+            document.getElementById('adm-tab-users').className = "flex-1 min-w-[110px] py-2 text-gray-400 text-center";
+            document.getElementById('adm-tab-approval').className = "flex-1 min-w-[110px] py-2 text-gray-400 text-center";
+            document.getElementById('adm-tab-rewards').className = "flex-1 min-w-[90px] py-2 text-gray-400 text-center";
+            document.getElementById('adm-tab-chats').className = "flex-1 min-w-[90px] py-2 text-gray-400 text-center";
 
             if(tab === 'users') {
                 document.getElementById('adm-content-users').classList.remove('hidden');
-                document.getElementById('adm-tab-users').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+                document.getElementById('adm-tab-users').className = "flex-1 min-w-[110px] py-2 border-b-2 border-purple-600 text-purple-600 text-center";
             } else if(tab === 'approval') {
                 document.getElementById('adm-content-approval').classList.remove('hidden');
-                document.getElementById('adm-tab-approval').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+                document.getElementById('adm-tab-approval').className = "flex-1 min-w-[110px] py-2 border-b-2 border-purple-600 text-purple-600 text-center";
             } else if(tab === 'rewards') {
                 document.getElementById('adm-content-rewards').classList.remove('hidden');
-                document.getElementById('adm-tab-rewards').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+                document.getElementById('adm-tab-rewards').className = "flex-1 min-w-[90px] py-2 border-b-2 border-purple-600 text-purple-600 text-center";
             } else if(tab === 'chats') {
                 document.getElementById('adm-content-chats').classList.remove('hidden');
-                document.getElementById('adm-tab-chats').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+                document.getElementById('adm-tab-chats').className = "flex-1 min-w-[90px] py-2 border-b-2 border-purple-600 text-purple-600 text-center";
             }
         }
 
