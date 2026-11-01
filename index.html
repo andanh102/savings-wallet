@@ -1,456 +1,1417 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Savings Wallet - Hệ Thống Quản Trị & Đầu Tư Toàn Diện</title>
+    <title>SAVINGS WALLET</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #1976d2;
-            --primary-dark: #115293;
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --border-color: #e0e0e0;
+        .banner-bg {
+            background: linear-gradient(135deg, #091e3a 0%, #1e3a8a 50%, #2563eb 100%);
+            position: relative;
+            overflow: hidden;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
-        /* Header Khu vực điều khiển */
-        header { background: var(--primary-color); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10; }
-        header h1 { font-size: 1.4rem; font-weight: 600; }
-        .header-right { display: flex; align-items: center; gap: 15px; }
-        .status-sync { display: inline-block; width: 10px; height: 10px; background: #4caf50; border-radius: 50%; box-shadow: 0 0 8px #4caf50; }
-        .admin-badge { background: #ff9800; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
-
-        /* Bố cục chính */
-        .container { display: flex; flex: 1; overflow: hidden; }
-        
-        /* Thanh điều hướng bên trái (Sidebar) */
-        nav { background: var(--card-bg); width: 280px; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; overflow-y: auto; }
-        nav a { padding: 16px 20px; color: #455a64; text-decoration: none; border-bottom: 1px solid #f0f0f0; font-weight: 500; transition: all 0.2s ease; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
-        nav a:hover, nav a.active { background: #e3f2fd; color: var(--primary-color); border-left: 4px solid var(--primary-color); }
-        .badge-count { background: #e0e0e0; color: #333; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; }
-        nav a.active .badge-count { background: var(--primary-color); color: white; }
-
-        /* Vùng nội dung hiển thị chính */
-        main { flex: 1; padding: 25px; overflow-y: auto; background-color: var(--bg-color); }
-        .card { background: var(--card-bg); padding: 22px 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .card h2 { margin-bottom: 15px; color: var(--primary-color); font-size: 1.25rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-
-        /* Form nhập liệu & Lưới điều khiển */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        @media (max-width: 768px) {
-            .container { flex-direction: column; }
-            nav { width: 100%; flex-direction: row; overflow-x: auto; white-space: nowrap; border-right: none; border-bottom: 1px solid var(--border-color); }
-            nav a { padding: 12px 15px; border-bottom: none; border-right: 1px solid #f0f0f0; border-left: none !important; }
-            .form-grid { grid-template-columns: 1fr; }
+        .banner-bg::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(59,130,246,0.4) 0%, rgba(37,99,235,0) 70%);
+            border-radius: 50%;
+            z-index: 1;
         }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #555; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem; }
-        button { background: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
-        button:hover { background: var(--primary-dark); }
-
-        /* Bảng dữ liệu chi tiết */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px 15px; border: 1px solid var(--border-color); text-align: left; font-size: 0.9rem; }
-        th { background: #f5f7fa; color: #333; font-weight: 600; }
-        tr:hover { background: #fafafa; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        
-        /* Bộ chọn ngôn ngữ giao diện */
-        .lang-selector { display: flex; gap: 5px; align-items: center; }
-        .lang-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        .lang-btn.active { background: white; color: var(--primary-color); font-weight: bold; }
+        .coin-float { animation: floatCoin 3s ease-in-out infinite; }
+        @keyframes floatCoin { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-6px) rotate(5deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .lang-scroll-list::-webkit-scrollbar { width: 5px; }
+        .lang-scroll-list::-webkit-scrollbar-track { background: #f1f5f9; }
+        .lang-scroll-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 min-h-screen pb-24 select-none">
 
-    <!-- Header quản trị hệ thống -->
-    <header>
-        <h1 id="app-title">Savings Wallet - Quản Trị & Đầu Tư</h1>
-        <div class="header-right">
-            <div class="lang-selector">
-                <button class="lang-btn active" onclick="changeLanguage('vi')">VI</button>
-                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+    <!-- TOP BAR -->
+    <header class="bg-white shadow-sm p-3 flex justify-between items-center sticky top-0 z-40">
+        
+        <!-- MENU ĐỔ NGÔN NGỮ TOÀN CẦU (20 NGÔN NGỮ) -->
+        <div class="relative inline-block text-left">
+            <button onclick="toggleLangMenu()" id="lang-btn" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1 hover:bg-gray-100">
+                <span id="current-lang-text">English</span>
+                <i class="fa-solid fa-chevron-down text-[10px] text-gray-400"></i>
+            </button>
+            <div id="lang-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden">
+                <div class="max-h-64 overflow-y-auto py-1 text-xs text-gray-700 lang-scroll-list">
+                    <button onclick="selectLanguage('en', 'English')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">English (US/UK)</button>
+                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Tiếng Việt (Vietnam)</button>
+                    <button onclick="selectLanguage('zh', '中文')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">中文 (China)</button>
+                    <button onclick="selectLanguage('ja', '日本語')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">日本語 (Japan)</button>
+                    <button onclick="selectLanguage('ko', '한국어')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">한국어 (Korea)</button>
+                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Español (Spain)</button>
+                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Français (France)</button>
+                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Deutsch (Germany)</button>
+                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Русский (Russia)</button>
+                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Português (Brazil)</button>
+                    <button onclick="selectLanguage('ar', 'العربية')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">العربية (Arabic)</button>
+                    <button onclick="selectLanguage('hi', 'हिन्दी')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">हिन्दी (India)</button>
+                    <button onclick="selectLanguage('id', 'Bahasa Indonesia')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Bahasa Indonesia</button>
+                    <button onclick="selectLanguage('th', 'ไทย')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">ไทย (Thailand)</button>
+                    <button onclick="selectLanguage('it', 'Italiano')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Italiano (Italy)</button>
+                    <button onclick="selectLanguage('tr', 'Türkçe')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Türkçe (Turkey)</button>
+                    <button onclick="selectLanguage('nl', 'Nederlands')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Nederlands (Netherlands)</button>
+                    <button onclick="selectLanguage('pl', 'Polski')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Polski (Poland)</button>
+                    <button onclick="selectLanguage('sv', 'Svenska')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Svenska (Sweden)</button>
+                    <button onclick="selectLanguage('fil', 'Filipino')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Filipino (Philippines)</button>
+                </div>
             </div>
-            <div><span class="status-sync"></span> <span id="sync-status" style="font-size: 0.85rem;">Đang kết nối Cloud...</span></div>
-            <span class="admin-badge">👤 andanh102@gmail.com</span>
+        </div>
+
+        <!-- TÊN ỨNG DỤNG -->
+        <div class="absolute left-1/2 transform -translate-x-1/2 cursor-pointer" onclick="handleAdminSecretClick()" title="System Portal">
+            <span id="txt-app-title" class="font-bold text-sm md:text-base text-gray-800 tracking-wide">SAVINGS WALLET</span>
+        </div>
+
+        <!-- RIGHT ACTIONS: AUTH / USER -->
+        <div class="flex items-center space-x-2">
+            <button onclick="openAuthModal()" id="auth-nav-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition shadow">
+                Login / Register
+            </button>
         </div>
     </header>
 
-    <div class="container">
-        <!-- Thanh Menu Đa Ngôn Ngữ & Tính Năng -->
-        <nav>
-            <a href="#" class="active" onclick="switchTab('overview', event)">📊 <span data-i18n="nav_overview">Tổng Quan</span> <span class="badge-count" id="c-over">0</span></a>
-            <a href="#" onclick="switchTab('vip', event)">💎 <span data-i18n="nav_vip">Hệ Thống VIP & Lợi Nhuận</span></a>
-            <a href="#" onclick="switchTab('accounts', event)">👥 <span data-i18n="nav_accounts">Tài Khoản Hệ Thống</span> <span class="badge-count" id="c-acc">0</span></a>
-            <a href="#" onclick="switchTab('chat', event)">💬 <span data-i18n="nav_chat">Hỗ Trợ CSKH</span> <span class="badge-count" id="count-chat">0</span></a>
-            <a href="#" onclick="switchTab('notifications', event)">🔔 <span data-i18n="nav_notif">Thông Báo Hệ Thống</span> <span class="badge-count" id="count-notif">0</span></a>
-            <a href="#" onclick="switchTab('wallet', event)">💳 <span data-i18n="nav_wallet">Quản Lý Nạp / Rút</span> <span class="badge-count" id="c-wallet">0</span></a>
-        </nav>
+    <!-- MAIN CONTENT -->
+    <main class="max-w-4xl mx-auto p-4 space-y-4">
 
-        <main>
-            <!-- TAB 1: TỔNG QUAN -->
-            <div id="tab-overview" class="tab-content active">
-                <div class="card">
-                    <h2 data-i18n="card_status_title">Trạng Thái Hệ Thống Thời Gian Thực</h2>
-                    <p><span data-i18n="card_status_desc">Hệ thống đang hoạt động ổn định với tài khoản quản trị cố định:</span> <strong>andanh102@gmail.com</strong>.</p>
-                    <p style="margin-top: 8px;" data-i18n="card_status_sub">Mọi dữ liệu từ người dùng, lịch sử nạp rút và tin nhắn đều được đồng bộ thời gian thực qua đám mây để bạn sử dụng trên mọi thiết bị.</p>
+        <!-- TAB 1: TRANG CHỦ (HOME) -->
+        <div id="tab-home" class="max-w-md mx-auto space-y-4">
+            
+            <!-- HERO BANNER -->
+            <div class="relative rounded-2xl overflow-hidden banner-bg text-white p-6 shadow-xl border border-blue-400/20">
+                <div class="pr-24 z-10 relative">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <span class="bg-blue-500/40 text-blue-200 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-blue-300/30">Secure Vault</span>
+                        <span class="bg-emerald-500/30 text-emerald-300 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-300/30">USDT / BNB</span>
+                    </div>
+                    <h1 id="banner-title" class="text-2xl font-extrabold leading-tight tracking-wide drop-shadow">Receive Voucher</h1>
+                    <h2 id="banner-subtitle" class="text-lg font-bold text-blue-200">No pledge</h2>
+                    <p id="banner-desc" class="text-xs text-blue-100 mt-2 opacity-90">Join the node and start mining</p>
                 </div>
-                <div class="card">
-                    <h2 data-i18n="card_sync_title">Đồng Bộ & Kiểm Tra Dữ Liệu Nhanh</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label data-i18n="label_datatype">Chọn Danh Mục Dữ Liệu:</label>
-                            <select id="quick-type">
-                                <option value="notifications" data-i18n="opt_notif">Thông Báo Hệ Thống</option>
-                                <option value="chats" data-i18n="opt_chat">Tin Nhắn CSKH</option>
-                                <option value="wallets" data-i18n="opt_wallet">Giao Dịch Nạp / Rút</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label data-i18n="label_content">Nhập Nội Dung / Giá Trị:</label>
-                            <input type="text" id="quick-content" placeholder="Nhập nội dung kiểm tra đồng bộ...">
+                
+                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center z-20">
+                    <div class="relative w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-2xl border-2 border-white/30 coin-float backdrop-blur-md">
+                        <i class="fa-solid fa-wallet text-3xl text-yellow-300 drop-shadow-md"></i>
+                        <div class="absolute -bottom-2 -right-2 bg-emerald-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md border border-white">
+                            USDT
                         </div>
                     </div>
-                    <button onclick="pushQuickData()" data-i18n="btn_sync">Đẩy Dữ Liệu Lên Đám Mây</button>
+                </div>
+
+                <div class="mt-5 flex justify-between items-center relative z-10">
+                    <button onclick="openDepositModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-qrcode"></i>
+                        <span id="btn-deposit-hub">Deposit Hub</span>
+                    </button>
+                    <button onclick="openCertificateModal()" id="btn-cert" class="bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-bold px-4 py-2 rounded-xl shadow-lg hover:bg-white transition border border-gray-100 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shield-halved text-blue-600"></i>
+                        <span id="btn-cert-text">Certificate</span>
+                    </button>
+                </div>
+
+                <!-- ĐỊA CHỈ VÍ RIÊNG VÀ SAO CHÉP -->
+                <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs bg-black/20 px-3 py-2 rounded-xl backdrop-blur-sm">
+                    <div class="truncate mr-2">
+                        <span class="text-[10px] text-blue-200 block" id="lbl-my-addr">Your Wallet Address:</span>
+                        <span id="user-unique-address" class="font-mono font-bold text-white truncate">0x71C...39f8</span>
+                    </div>
+                    <button onclick="copyUserAddress()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] shadow transition flex items-center space-x-1 shrink-0">
+                        <i class="fa-regular fa-copy"></i>
+                        <span id="btn-copy-text">Copy</span>
+                    </button>
                 </div>
             </div>
 
-            <!-- TAB 2: HỆ THỐNG VIP & LỢI NHUẬN (Bảo toàn nguyên vẹn logic sinh lời) -->
-            <div id="tab-vip" class="tab-content">
-                <div class="card">
-                    <h2 data-i18n="vip_heading">Bảng Cấp Độ VIP & Chu Kỳ Lợi Nhuận (Cấp 1 - 12)</h2>
-                    <p style="margin-bottom: 12px; font-size: 0.95rem; color: #555;" data-i18n="vip_sub">Toàn bộ thông số hệ thống, tỷ lệ lợi nhuận theo mốc và chu kỳ 24 giờ được duy trì đầy đủ để đảm bảo độ chính xác tuyệt đối của ứng dụng gốc.</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="th_vip_level">Cấp VIP</th>
-                                <th data-i18n="th_min_balance">Số Dư Tối Thiểu</th>
-                                <th data-i18n="th_profit_rate">Tỷ Lệ Lợi Nhuận Ngày</th>
-                                <th data-i18n="th_cycle">Chu Kỳ Sinh Lời</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>VIP 1</td><td>1,000,000 VNĐ</td><td style="color:green; font-weight:bold;">1.5%</td><td>24 Giờ</td></tr>
-                            <tr><td>VIP 2</td><td>5,000,000 VNĐ</td><td style="color:green; font-weight:bold;">1.8%</td><td>24 Giờ</td></tr>
-                            <tr><td>VIP 3</td><td>10,000,000 VNĐ</td><td style="color:green; font-weight:bold;">2.2%</td><td>24 Giờ</td></tr>
-                            <tr><td>VIP 4</td><td>20,000,000 VNĐ</td><td style="color:green; font-weight:bold;">2.5%</td><td>24 Giờ</td></tr>
-                            <tr><td>VIP 5 - 12</td><td>50,000,000+ VNĐ</td><td style="color:green; font-weight:bold;">3.0% - 5.0%</td><td>24 Giờ</td></tr>
-                        </tbody>
-                    </table>
+            <!-- KHUNG KÍCH HOẠT TÍCH LŨY -->
+            <div id="activation-banner-box" class="hidden bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between animate-fade-in">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-bolt-lightning text-yellow-200"></i>
+                    </div>
+                    <div>
+                        <h4 id="act-banner-title" class="font-bold text-sm">Kích hoạt tích lũy số dư mới!</h4>
+                        <p id="act-banner-desc" class="text-[11px] text-amber-100">Xác nhận để kích hoạt khoản nạp và bắt đầu đếm 24h sinh lời.</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 shrink-0">
+                    <button onclick="executeActivation()" id="btn-activate-now" class="bg-white text-orange-600 font-bold px-3 py-1.5 rounded-xl text-xs shadow hover:bg-orange-50 transition">
+                        Kích hoạt
+                    </button>
+                    <button onclick="dismissActivationBanner()" class="text-white/80 hover:text-white p-1.5" title="Hủy">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- TAB 3: TÀI KHOẢN -->
-            <div id="tab-accounts" class="tab-content">
-                <div class="card">
-                    <h2 data-i18n="acc_heading">Quản Lý Danh Sách Tài Khoản Hệ Thống</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="th_email">Email / Tài Khoản</th>
-                                <th data-i18n="th_role">Vai Trò Phân Quyền</th>
-                                <th data-i18n="th_status">Trạng Thái Hoạt Động</th>
-                                <th data-i18n="th_action">Thao Tác Quản Lý</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-accounts">
-                            <tr><td colspan="4" style="text-align: center; color: #777;" data-i18n="loading">Đang kết nối tải dữ liệu từ đám mây...</td></tr>
-                        </tbody>
-                    </table>
+            <!-- POOL DATA -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+                <h3 id="pool-data-title" class="text-center font-bold text-gray-800 text-lg mb-2">Pool Data</h3>
+                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                    <span id="label-total-output" class="text-sm text-gray-500">Total Output</span>
+                    <span id="val-total-output" class="font-bold text-blue-700">9,153,176.23 BNB</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                    <span id="label-valid-nodes" class="text-sm text-gray-500">Valid Nodes</span>
+                    <span id="val-valid-nodes" class="font-bold text-blue-700">590,026</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                    <span id="label-participants" class="text-sm text-gray-500">Participants</span>
+                    <span id="val-participants" class="font-bold text-gray-800">760,435</span>
+                </div>
+                <div class="flex justify-between items-center pt-1">
+                    <span id="label-user-revenue" class="text-sm text-gray-500">User Revenue</span>
+                    <span id="val-user-revenue" class="font-bold text-gray-800">≈ 1,492,587,121.89 USDT</span>
                 </div>
             </div>
 
-            <!-- TAB 4: CSKH -->
-            <div id="tab-chat" class="tab-content">
-                <div class="card">
-                    <h2 data-i18n="chat_heading">Lịch Sử Tin Nhắn Hỗ Trợ Khách Hàng (CSKH)</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="th_time">Thời Gian Gửi</th>
-                                <th data-i18n="th_sender">Người Gửi</th>
-                                <th data-i18n="th_message">Nội Dung Chi Tiết</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-chat">
-                            <tr><td colspan="3" style="text-align: center; color: #777;" data-i18n="no_chat">Chưa có tin nhắn CSKH nào...</td></tr>
-                        </tbody>
-                    </table>
+            <!-- OUTPUT DETAILS -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3">
+                <h3 id="output-details-title" class="font-bold text-gray-800 text-lg mb-2">Output details</h3>
+                <div class="flex justify-between text-xs text-gray-400 font-semibold border-b pb-2">
+                    <span id="table-addr">Address</span>
+                    <span id="table-qty">Quantity</span>
+                </div>
+                <div id="output-list" class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="text-blue-600 font-medium">0x3f9acc...900270</span>
+                        <span class="font-semibold text-gray-700">0.076273 BNB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: RÚT TIỀN (WITHDRAWAL) -->
+        <div id="tab-withdrawal" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- PHẦN 1: TẠO LỆNH RÚT TIỀN -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 border-b pb-3 mb-3">
+                            <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold">1</div>
+                            <h3 id="withdrawal-title" class="font-bold text-gray-800 text-base">Withdrawal</h3>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div>
+                                <label id="lbl-withdraw-net" class="block text-xs font-semibold text-gray-600 mb-1">WITHDRAWAL NETWORK</label>
+                                <select id="withdraw-network" class="w-full border rounded-xl p-2.5 text-xs text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
+                                    <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
+                                    <option value="TRON (TRC20)">TRON (TRC20)</option>
+                                    <option value="Polygon (MATIC)">Polygon (MATIC)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label id="lbl-linked-target" class="block text-xs font-semibold text-gray-600 mb-1">TARGET WALLET ADDRESS</label>
+                                <div id="display-linked-wallet" class="bg-gray-50 p-2.5 rounded-xl border border-gray-200 text-xs text-gray-500 font-mono break-all">
+                                    Not linked yet
+                                </div>
+                            </div>
+
+                            <div>
+                                <label id="withdrawal-label" class="block text-xs font-semibold text-gray-600 mb-1">WITHDRAW AMOUNT (USDT)</label>
+                                <input type="number" id="withdraw-input" placeholder="0.00" class="w-full border rounded-xl p-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="withdrawal-btn" onclick="requestWithdrawal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow transition text-sm mt-4">
+                        Confirm Withdrawal
+                    </button>
+                </div>
+
+                <!-- PHẦN 2: LIÊN KẾT ĐỊA CHỈ VÍ -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 border-b pb-3 mb-3">
+                            <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center font-bold">2</div>
+                            <h3 id="link-wallet-title" class="font-bold text-gray-800 text-base">Link Wallet Address</h3>
+                        </div>
+
+                        <div class="space-y-3">
+                            <p id="link-wallet-desc" class="text-xs text-gray-500">Please select network and link your Binance or personal exchange wallet address before withdrawing.</p>
+                            
+                            <div>
+                                <label id="lbl-link-net" class="block text-xs font-semibold text-gray-600 mb-1">SELECT YOUR NETWORK</label>
+                                <select id="link-network-select" class="w-full border rounded-xl p-2.5 text-xs text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                    <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
+                                    <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
+                                    <option value="TRON (TRC20)">TRON (TRC20)</option>
+                                    <option value="Polygon (MATIC)">Polygon (MATIC)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label id="lbl-link-addr" class="block text-xs font-semibold text-gray-600 mb-1">PERSONAL WALLET ADDRESS</label>
+                                <input type="text" id="link-wallet-address" placeholder="Enter Binance / Trust wallet address..." class="w-full border rounded-xl p-2.5 text-xs font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="saveUserWalletLink()" id="btn-save-link" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition text-sm mt-4">
+                        Save Wallet Address
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- LỊCH SỬ RÚT TIỀN (LƯU 24H) -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border border-gray-100">
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h3 id="history-title" class="font-bold text-gray-800 text-sm">Withdrawal History (24h Auto-Expiry)</h3>
+                    <span id="history-subtitle" class="text-[10px] text-gray-400">Auto-clears after 24h</span>
+                </div>
+                <div id="withdrawal-history-list" class="space-y-2 max-h-48 overflow-y-auto text-xs">
+                    <div id="history-empty" class="text-gray-400 text-center py-4">No withdrawal history in the last 24 hours.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: TÀI KHOẢN (ACCOUNT) -->
+        <div id="tab-account" class="max-w-md mx-auto space-y-4">
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100">
+                <div class="flex justify-between items-center text-gray-500 text-sm">
+                    <span id="acc-accumulated">Accumulated Income</span>
+                    <span class="text-xs bg-amber-500 text-white font-bold px-2.5 py-1 rounded-full shadow" id="user-tier-badge">VIP 1 (2.00% / day)</span>
+                </div>
+                <div class="text-2xl font-bold text-blue-600" id="user-display-balance">0.000000 BNB</div>
+                
+                <!-- TODAY'S INCOME & LỢI NHUẬN QUY ĐỔI USDT & NÚT RÚT LỢI NHUẬN (CLAIM) -->
+                <div class="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100 text-sm items-center">
+                    <div>
+                        <div id="acc-today" class="text-gray-400 text-xs">Today's Income</div>
+                        <div id="user-today-bnb" class="font-semibold text-blue-600 mt-0.5 text-xs">0.000000 BNB</div>
+                        <div id="user-today-usdt" class="text-[10px] text-emerald-600 font-bold">≈ $0.00 USDT</div>
+                    </div>
+                    <div class="text-right">
+                        <button onclick="claimDailyIncome()" id="btn-claim-income" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            Claim Income
+                        </button>
+                    </div>
+                </div>
+
+                <!-- THANH TÍNH THỜI GIAN 24 GIỜ (PROGRESS BAR & TIMER COUNTDOWN) -->
+                <div class="pt-2 border-t border-gray-100 space-y-1.5">
+                    <div class="flex justify-between items-center text-xs">
+                        <span id="lbl-timer-24h" class="text-gray-500 font-medium">24h Yield Cycle Progress:</span>
+                        <span id="val-timer-countdown" class="font-mono font-bold text-blue-600">24:00:00</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                        <div id="timer-progress-bar" class="bg-gradient-to-r from-blue-500 to-emerald-500 h-2.5 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                    </div>
+                    <div class="flex justify-between items-center text-[10px] text-gray-400">
+                        <span id="lbl-cycle-start">Deposit Start</span>
+                        <span id="lbl-cycle-end">Ready to Claim (100%)</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100 text-sm">
+                    <div>
+                        <div id="acc-yield" class="text-gray-400 text-xs">Market Yield</div>
+                        <div id="bnb-market-rate" class="font-semibold text-gray-600 mt-0.5">Loading...</div>
+                    </div>
+                    <div class="text-right">
+                        <div id="acc-pool-wallet" class="text-gray-400 text-xs">Pool Wallet</div>
+                        <div id="bnb-price-usd" class="font-semibold text-blue-600 mt-0.5">$... USDT</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 pt-2 border-t border-gray-100 text-sm">
+                    <div>
+                        <div id="acc-wallet-bal" class="text-gray-400 text-xs">Wallet Balance</div>
+                        <div id="user-usdt-balance" class="font-semibold text-blue-600 mt-0.5 text-base">0.00 USDT</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- TAB 5: THÔNG BÁO -->
-            <div id="tab-notifications" class="tab-content">
-                <div class="card">
-                    <h2 data-i18n="notif_heading">Danh Sách Thông Báo Hệ Thống Toàn Cục</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="th_time">Thời Gian</th>
-                                <th data-i18n="th_content">Nội Dung Thông Báo</th>
-                                <th data-i18n="th_creator">Người Tạo</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-notif">
-                            <tr><td colspan="3" style="text-align: center; color: #777;" data-i18n="no_notif">Chưa có thông báo nào...</td></tr>
-                        </tbody>
-                    </table>
+            <!-- BẢNG HỆ THỐNG VIP CHUẨN TỪ VIP 1 ĐẾN VIP 12 -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border border-gray-100">
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h3 id="vip-system-title" class="font-bold text-gray-800 text-sm flex items-center space-x-1.5">
+                        <i class="fa-solid fa-crown text-amber-500"></i>
+                        <span>VIP Tiers System (VIP 1 - 12)</span>
+                    </h3>
+                    <span id="vip-system-sub" class="text-[10px] text-amber-600 font-bold">From 100 USDT+</span>
                 </div>
+                <div class="max-h-56 overflow-y-auto space-y-2 text-xs pr-1 lang-scroll-list" id="vip-tiers-container"></div>
             </div>
 
-            <!-- TAB 6: NẠP / RÚT -->
-            <div id="tab-wallet" class="tab-content">
-                <div class="card">
-                    <h2 data-i18n="wallet_heading">Quản Lý Yêu Cầu Nạp & Rút Tiền</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="th_time">Thời Gian</th>
-                                <th data-i18n="th_type">Loại Giao Dịch</th>
-                                <th data-i18n="th_amount">Số Tiền (VNĐ)</th>
-                                <th data-i18n="th_status">Trạng Thái Duyệt</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-wallet">
-                            <tr><td colspan="4" style="text-align: center; color: #777;" data-i18n="no_wallet">Chưa có giao dịch nạp rút nào...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
+            <button onclick="openDepositModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-qrcode"></i>
+                <span id="btn-quick-deposit">Deposit Fixed Wallet</span>
+            </button>
+
+            <!-- NÚT ĐĂNG XUẤT -->
+            <button onclick="handleUserLogout()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold py-3 rounded-xl shadow-sm transition flex items-center justify-center space-x-2 text-xs">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span id="btn-logout-text">Logout Account</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- NÚT CSKH NỔI BẬT NGOÀI HOME -->
+    <div class="fixed bottom-20 right-4 z-40 flex flex-col items-end space-y-2">
+        <div id="support-tooltip" class="bg-gray-900 text-white text-[11px] px-3 py-1.5 rounded-xl shadow-lg animate-bounce">
+            Live Support 24/7!
+        </div>
+        <button onclick="openSupportChat()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl transition transform hover:scale-110 border-2 border-white">
+            <i class="fa-solid fa-headset"></i>
+        </button>
     </div>
 
-    <!-- Hệ thống Đa Ngôn Ngữ & Firebase Realtime Database SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-        import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
+    <!-- MODAL 1: ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative space-y-4 border border-gray-100">
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800">Login / Register</h3>
+                <p class="text-xs text-gray-500">Bắt buộc đăng nhập để sử dụng Savings Wallet</p>
+            </div>
+            <div class="space-y-3 pt-2">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Username / Email:</label>
+                    <input type="text" id="auth-username" placeholder="Enter username..." class="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Password:</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button onclick="handleUserAuth()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
+                    Login / Register Now
+                </button>
+            </div>
+        </div>
+    </div>
 
-        // Từ điển đa ngôn ngữ (VI / EN)
+    <!-- MODAL 2: CỔNG NẠP TIỀN CỐ ĐỊNH -->
+    <div id="deposit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 border border-gray-100 text-center">
+            <button onclick="closeDepositModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
+                <i class="fa-solid fa-qrcode"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800">Fixed Deposit Hub</h3>
+            <p class="text-xs text-gray-500">Chuyển USDT/BNB qua mạng BEP-20 vào địa chỉ cố định (Tối thiểu 100 USDT):</p>
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
+                <div class="text-[11px] font-mono text-blue-600 font-bold break-all">0x6d617b8F9423c10aB2718ef8902A1b23C98f8F9</div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 text-left">
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-600 mb-1">Số tiền nạp (USDT):</label>
+                    <input type="number" id="deposit-input-amt" oninput="calculateDepositReturn()" placeholder="Min 100" class="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-emerald-600 mb-1">Lợi nhuận dự kiến:</label>
+                    <div id="deposit-return-display" class="w-full bg-emerald-50 border border-emerald-200 rounded-lg p-2.5 text-xs font-bold text-emerald-700 flex items-center justify-between">
+                        <span>0%</span>
+                        <span class="text-[10px] text-gray-500">~ $0/ngày</span>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="submitDepositRequest()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow mt-2">
+                Gửi Yêu Cầu Nạp Tiền (Chờ ADM Duyệt)
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 3: HỆ THỐNG ADM QUẢN LÝ TOÀN DIỆN -->
+    <div id="admin-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 border border-gray-200 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800">Hệ Thống ADM Quản Lý Toàn Diện</h3>
+                <p class="text-xs text-purple-600 font-semibold">Kiểm soát tài khoản, mật khẩu, phát thưởng & CSKH</p>
+            </div>
+
+            <div class="flex border-b text-xs font-semibold">
+                <button onclick="switchAdminTab('users')" id="adm-tab-users" class="flex-1 py-2 border-b-2 border-purple-600 text-purple-600">Tài Khoản & Mật Khẩu</button>
+                <button onclick="switchAdminTab('approval')" id="adm-tab-approval" class="flex-1 py-2 text-gray-400">Duyệt Nạp/Rút (<span id="pending-count">0</span>)</button>
+                <button onclick="switchAdminTab('rewards')" id="adm-tab-rewards" class="flex-1 py-2 text-gray-400">Phát Thưởng</button>
+                <button onclick="switchAdminTab('chats')" id="adm-tab-chats" class="flex-1 py-2 text-gray-400">CSKH (<span id="chat-count">0</span>)</button>
+            </div>
+
+            <div id="adm-content-users" class="space-y-2 text-xs">
+                <p class="text-gray-500 font-medium">Toàn bộ tên đăng nhập và mật khẩu khách hàng:</p>
+                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-user-list-container"></div>
+            </div>
+
+            <div id="adm-content-approval" class="hidden space-y-2 text-xs">
+                <p class="text-gray-500 font-medium">Danh sách yêu cầu Nạp/Rút chờ ADM phê duyệt:</p>
+                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-2" id="admin-approval-container"></div>
+            </div>
+
+            <div id="adm-content-rewards" class="hidden space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-gray-600 mb-1">Chọn Khách Hàng:</label>
+                    <select id="admin-target-user" class="w-full border rounded-lg p-2 bg-gray-50"></select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-600 mb-1">Số tiền thưởng thêm (USDT):</label>
+                    <input type="number" id="admin-reward-amount" placeholder="Ví dụ: 100.00" class="w-full border rounded-lg p-2">
+                </div>
+                <button onclick="adminExecuteReward()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-xl transition shadow">Xác Nhận Phát Thưởng</button>
+            </div>
+
+            <div id="adm-content-chats" class="hidden space-y-3 text-xs">
+                <p class="text-gray-500 font-medium">Danh sách tin nhắn khách hàng gửi đến (lưu 10 ngày):</p>
+                <div class="max-h-60 overflow-y-auto border rounded-xl p-2 bg-gray-50 space-y-3" id="admin-chat-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: CHAT CSKH KHÁCH HÀNG -->
+    <div id="support-chat-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl relative space-y-3 border border-gray-100">
+            <button onclick="closeSupportChat()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="flex items-center space-x-2 border-b pb-2">
+                <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <div>
+                    <h4 id="chat-title" class="font-bold text-gray-800 text-sm">24/7 Live Support</h4>
+                    <p id="chat-status" class="text-[10px] text-emerald-600 font-semibold">● ADM Online</p>
+                </div>
+            </div>
+            <div id="chat-messages-box" class="h-48 overflow-y-auto border rounded-xl p-2 bg-gray-50 text-xs space-y-2">
+                <div id="chat-welcome-msg" class="bg-blue-50 text-blue-800 p-2 rounded-lg">Hello! How can ADM assist your savings wallet transactions today?</div>
+            </div>
+            <div class="flex space-x-2">
+                <input type="text" id="user-chat-input" placeholder="Type your message..." class="flex-1 border rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="sendUserMessage()" id="btn-chat-send" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: CHỨNG NHẬN BẢO CHỨNG -->
+    <div id="certificate-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 border border-gray-100 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCertificateModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-2xl mb-2">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 id="modal-cert-title" class="text-lg font-bold text-gray-800">SAVINGS DEPOSIT CERTIFICATE</h3>
+                <p id="modal-cert-subtitle" class="text-xs text-blue-600 font-semibold tracking-wide">SAVINGS WALLET PROTOCOL</p>
+            </div>
+            <div class="border-t border-b border-gray-100 py-3 space-y-2 text-xs">
+                <div class="flex justify-between"><span id="modal-lbl-op" class="text-gray-500">Operating Since:</span><span id="modal-val-op" class="font-bold text-gray-800">Year 2021 (5+ Years Active)</span></div>
+                <div class="flex justify-between"><span id="modal-lbl-tech" class="text-gray-500">Standard:</span><span id="modal-val-tech" class="font-semibold text-gray-800">Independent Decentralized Protocol</span></div>
+                <div class="flex justify-between"><span id="modal-lbl-custody" class="text-gray-500">Asset Protection:</span><span id="modal-val-custody" class="font-semibold text-blue-600">Self-Custody Wallet</span></div>
+                <div class="flex justify-between"><span id="modal-lbl-net" class="text-gray-500">Network:</span><span class="font-semibold text-green-600">BNB Chain (BEP-20)</span></div>
+            </div>
+            <button onclick="closeCertificateModal()" id="modal-btn-confirm" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">Understood & Confirm</button>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-2 px-6 flex justify-around items-center z-40">
+        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-blue-600 font-medium">
+            <i class="fa-solid fa-house text-xl"></i>
+            <span id="nav-home-text" class="text-[11px] mt-1">Home</span>
+        </button>
+        <button onclick="switchTab('withdrawal')" id="nav-withdrawal" class="flex flex-col items-center text-gray-400 font-medium">
+            <i class="fa-solid fa-briefcase text-xl"></i>
+            <span id="nav-withdrawal-text" class="text-[11px] mt-1">Withdrawal</span>
+        </button>
+        <button onclick="switchTab('account')" id="nav-account" class="flex flex-col items-center text-gray-400 font-medium">
+            <i class="fa-solid fa-user text-xl"></i>
+            <span id="nav-account-text" class="text-[11px] mt-1">Account</span>
+        </button>
+    </nav>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const vipConfig = [
+            { level: 1, min: 100, rate: 2.00, desc: "~ $2+ / day" },
+            { level: 2, min: 300, rate: 2.50, desc: "~ $7.5+ / day" },
+            { level: 3, min: 500, rate: 3.00, desc: "~ $15+ / day" },
+            { level: 4, min: 1000, rate: 4.00, desc: "~ $40+ / day" },
+            { level: 5, min: 2000, rate: 5.00, desc: "~ $100+ / day" },
+            { level: 6, min: 5000, rate: 6.50, desc: "~ $325+ / day" },
+            { level: 7, min: 10000, rate: 8.00, desc: "~ $800+ / day" },
+            { level: 8, min: 20000, rate: 10.00, desc: "~ $2,000+ / day" },
+            { level: 9, min: 35000, rate: 12.00, desc: "~ $4,200+ / day" },
+            { level: 10, min: 50000, rate: 15.00, desc: "~ $7,500+ / day" },
+            { level: 11, min: 80000, rate: 18.00, desc: "~ $14,400+ / day" },
+            { level: 12, min: 120000, rate: 22.00, desc: "~ $26,400+ / day" }
+        ];
+
         const translations = {
-            vi: {
-                nav_overview: "Tổng Quan",
-                nav_vip: "Hệ Thống VIP & Lợi Nhuận",
-                nav_accounts: "Tài Khoản Hệ Thống",
-                nav_chat: "Hỗ Trợ CSKH",
-                nav_notif: "Thông Báo Hệ Thống",
-                nav_wallet: "Quản Lý Nạp / Rút",
-                card_status_title: "Trạng Thái Hệ Thống Thời Gian Thực",
-                card_status_desc: "Hệ thống đang hoạt động ổn định với tài khoản quản trị cố định:",
-                card_status_sub: "Mọi dữ liệu từ người dùng, lịch sử nạp rút và tin nhắn đều được đồng bộ thời gian thực qua đám mây để bạn sử dụng trên mọi thiết bị.",
-                card_sync_title: "Đồng Bộ & Kiểm Tra Dữ Liệu Nhanh",
-                label_datatype: "Chọn Danh Mục Dữ Liệu:",
-                opt_notif: "Thông Báo Hệ Thống",
-                opt_chat: "Tin Nhắn CSKH",
-                opt_wallet: "Giao Dịch Nạp / Rút",
-                label_content: "Nhập Nội Dung / Giá Trị:",
-                btn_sync: "Đẩy Dữ Liệu Lên Đám Mây",
-                vip_heading: "Bảng Cấp Độ VIP & Chu Kỳ Lợi Nhuận (Cấp 1 - 12)",
-                vip_sub: "Toàn bộ thông số hệ thống, tỷ lệ lợi nhuận theo mốc và chu kỳ 24 giờ được duy trì đầy đủ để đảm bảo độ chính xác tuyệt đối của ứng dụng gốc.",
-                th_vip_level: "Cấp VIP",
-                th_min_balance: "Số Dư Tối Thiểu",
-                th_profit_rate: "Tỷ Lệ Lợi Nhuận Ngày",
-                th_cycle: "Chu Kỳ Sinh Lời",
-                acc_heading: "Quản Lý Danh Sách Tài Khoản Hệ Thống",
-                th_email: "Email / Tài Khoản",
-                th_role: "Vai Trò Phân Quyền",
-                th_status: "Trạng Thái Hoạt Động",
-                th_action: "Thao Tác Quản Lý",
-                loading: "Đang kết nối tải dữ liệu từ đám mây...",
-                chat_heading: "Lịch Sử Tin Nhắn Hỗ Trợ Khách Hàng (CSKH)",
-                th_time: "Thời Gian",
-                th_sender: "Người Gửi",
-                th_message: "Nội Dung Chi Tiết",
-                no_chat: "Chưa có tin nhắn CSKH nào...",
-                notif_heading: "Danh Sách Thông Báo Hệ Thống Toàn Cục",
-                th_content: "Nội Dung Thông Báo",
-                th_creator: "Người Tạo",
-                no_notif: "Chưa có thông báo nào...",
-                wallet_heading: "Quản Lý Yêu Cầu Nạp & Rút Tiền",
-                th_type: "Loại Giao Dịch",
-                th_amount: "Số Tiền (VNĐ)",
-                no_wallet: "Chưa có giao dịch nạp rút nào..."
-            },
             en: {
-                nav_overview: "Overview",
-                nav_vip: "VIP System & Profits",
-                nav_accounts: "System Accounts",
-                nav_chat: "Customer Support",
-                nav_notif: "System Notifications",
-                nav_wallet: "Deposit / Withdrawal",
-                card_status_title: "Real-Time System Status",
-                card_status_desc: "The system is operating stably with the default administrator account:",
-                card_status_sub: "All user data, transaction histories, and messages are synchronized in real-time across all your devices.",
-                card_sync_title: "Quick Data Sync & Testing",
-                label_datatype: "Select Data Category:",
-                opt_notif: "System Notification",
-                opt_chat: "Support Message",
-                opt_wallet: "Deposit / Withdrawal",
-                label_content: "Enter Content / Value:",
-                btn_sync: "Push Data To Cloud",
-                vip_heading: "VIP Levels & Profit Cycles (Level 1 - 12)",
-                vip_sub: "All system parameters, milestone profit rates, and 24-hour cycles are fully maintained to ensure absolute accuracy.",
-                th_vip_level: "VIP Level",
-                th_min_balance: "Min Balance",
-                th_profit_rate: "Daily Profit Rate",
-                th_cycle: "Profit Cycle",
-                acc_heading: "System Accounts Management",
-                th_email: "Email / Account",
-                th_role: "Permission Role",
-                th_status: "Operational Status",
-                th_action: "Management Action",
-                loading: "Connecting and loading cloud data...",
-                chat_heading: "Customer Support Chat History",
-                th_time: "Time",
-                th_sender: "Sender",
-                th_message: "Detailed Content",
-                no_chat: "No support messages yet...",
-                notif_heading: "Global System Notifications",
-                th_content: "Notification Content",
-                th_creator: "Creator",
-                no_notif: "No notifications yet...",
-                wallet_heading: "Deposit & Withdrawal Management",
-                th_type: "Transaction Type",
-                th_amount: "Amount (VND)",
-                no_wallet: "No deposit/withdrawal transactions yet..."
+                appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send", certTitle: "SAVINGS DEPOSIT CERTIFICATE", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Operating Since:", valOp: "Year 2021 (5+ Years Active)", lblTech: "Standard:", valTech: "Independent Decentralized Protocol", lblCustody: "Asset Protection:", valCustody: "Self-Custody Wallet", lblNet: "Network:", btnConfirm: "Understood & Confirm", linkWalletTitle: "Link Wallet Address", linkWalletDesc: "Select network & bind your Binance wallet address before withdrawing.", lblWithdrawNet: "WITHDRAWAL NETWORK", lblLinkedTarget: "TARGET WALLET ADDRESS", lblLinkNet: "SELECT YOUR NETWORK", lblLinkAddr: "PERSONAL WALLET ADDRESS", btnSaveLink: "Save Wallet Address", historyTitle: "Withdrawal History (24h Auto-Expiry)", historySubtitle: "Auto-clears after 24h", historyEmpty: "No withdrawal history in the last 24 hours.", lblMyAddr: "Your Wallet Address:", btnCopyText: "Copy", btnLogoutText: "Logout Account", vipSystemTitle: "VIP Tiers System (VIP 1 - 12)", vipSystemSub: "From 100 USDT+", actTitle: "Activate new balance accumulation!", actDesc: "Confirm to activate your deposit and start earning daily returns.", actBtn: "Activate", btnClaim: "Claim Income", timerTitle: "24h Yield Cycle Progress:", startLabel: "Deposit Start", endLabel: "Ready to Claim (100%)"
+            },
+            vi: {
+                appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền (Withdrawal)", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút tiền", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi", certTitle: "CHỨNG NHẬN GỬI TIỀN TIẾT KIỆM", certSubtitle: "GIAO THỨC VÍ TIẾT KIỆM", lblOp: "Hoạt động từ:", valOp: "Năm 2021 (Hơn 5 năm hoạt động)", lblTech: "Tiêu chuẩn:", valTech: "Giao thức phi tập trung độc lập", lblCustody: "Bảo vệ tài sản:", valCustody: "Ví tự quản lý (Self-Custody)", lblNet: "Mạng lưới:", btnConfirm: "Đã hiểu & Xác nhận", linkWalletTitle: "Liên kết địa chỉ ví (Link Wallet)", linkWalletDesc: "Khách hàng cần chọn đúng mạng và điền địa chỉ ví Binance/Sàn giao dịch cá nhân trước khi thực hiện rút tiền.", lblWithdrawNet: "MẠNG RÚT TIỀN (NETWORK)", lblLinkedTarget: "VÍ ĐÍCH NHẬN TIỀN", lblLinkNet: "CHỌN MẠNG VÍ CỦA BẠN", lblLinkAddr: "ĐỊA CHỈ VÍ CÁ NHÂN (USDT/BNB)", btnSaveLink: "Lưu địa chỉ ví", historyTitle: "Lịch sử rút tiền (Lưu 24h)", historySubtitle: "Tự động xóa sau 24h", historyEmpty: "Chưa có lịch sử rút tiền nào trong 24h qua.", lblMyAddr: "Địa chỉ ví của bạn:", btnCopyText: "Sao chép", btnLogoutText: "Đăng xuất tài khoản", vipSystemTitle: "Hệ Thống Cấp Độ VIP (VIP 1 - 12)", vipSystemSub: "Từ 100 USDT+", actTitle: "Kích hoạt tích lũy số dư mới!", actDesc: "Xác nhận để kích hoạt khoản nạp và bắt đầu đếm 24h sinh lời.", actBtn: "Kích hoạt", btnClaim: "Rút lợi nhuận", timerTitle: "Tiến trình chu kỳ sinh lời 24h:", startLabel: "Bắt đầu nạp", endLabel: "Đủ 100% để rút"
+            },
+            zh: {
+                appTitle: "储蓄钱包", bannerTitle: "领取优惠券", bannerSubtitle: "无质押", bannerDesc: "加入节点并开始挖矿", btnCert: "证书", btnDepositHub: "充值中心", poolDataTitle: "池数据", totalOutput: "总产出", validNodes: "有效节点", participants: "参与者", userRevenue: "用户收益", outputDetailsTitle: "产出详情", tableAddr: "地址", tableQty: "数量", withdrawalTitle: "提现", withdrawalLabel: "提现金额 (USDT)", withdrawalBtn: "确认提现", accAccumulated: "累计收入", accToday: "今日收入", accYield: "市场收益率", accPoolWallet: "矿池钱包", accWalletBal: "钱包余额", navHome: "首页", navWithdrawal: "提现", navAccount: "账户", btnQuickDeposit: "充值到固定钱包", tooltipSupport: "24/7 在线客服！", chatTitle: "24/7 在线客服", chatStatus: "● 管理员在线", chatWelcomeMsg: "您好！请问管理员今天能为您的储蓄钱包交易提供什么帮助？", chatPlaceholder: "输入您的消息...", btnChatSend: "发送", certTitle: "储蓄存款证书", certSubtitle: "储蓄钱包协议", lblOp: "运营时间:", valOp: "2021年起 (5年以上活跃)", lblTech: "标准:", valTech: "独立去中心化协议", lblCustody: "资产保护:", valCustody: "自托管钱包", lblNet: "网络:", btnConfirm: "已了解并确认", linkWalletTitle: "绑定钱包地址", linkWalletDesc: "请在提现前选择网络并绑定您的币安或其他交易所钱包地址。", lblWithdrawNet: "提现网络", lblLinkedTarget: "目标钱包地址", lblLinkNet: "选择您的网络", lblLinkAddr: "个人钱包地址", btnSaveLink: "保存钱包地址", historyTitle: "提现历史 (24小时自动清除)", historySubtitle: "24小时后自动清除", historyEmpty: "最近24小时内无提现历史。", lblMyAddr: "您的钱包地址:", btnCopyText: "复制", btnLogoutText: "退出登录", vipSystemTitle: "VIP等级系统 (VIP 1 - 12)", vipSystemSub: "100 USDT起", actTitle: "激活新余额累积！", actDesc: "确认激活您的存款并开始赚取每日收益。", actBtn: "激活", btnClaim: "领取收益", timerTitle: "24小时收益周期进度:", startLabel: "开始存款", endLabel: "准备领取 (100%)"
+            },
+            ja: {
+                appTitle: "セーブウォレット", bannerTitle: "バウチャー受取", bannerSubtitle: "誓約なし", bannerDesc: "ノードに参加してマイニング開始", btnCert: "証明書", btnDepositHub: "入金ハブ", poolDataTitle: "プールデータ", totalOutput: "総出力", validNodes: "有効ノード", participants: "参加者", userRevenue: "ユーザー収益", outputDetailsTitle: "出力詳細", tableAddr: "アドレス", tableQty: "数量", withdrawalTitle: "出金", withdrawalLabel: "出金額 (USDT)", withdrawalBtn: "出金を確認", accAccumulated: "累計収益", accToday: "本日の収益", accYield: "市場利回り", accPoolWallet: "プールウォレット", accWalletBal: "ウォレット残高", navHome: "ホーム", navWithdrawal: "出金", navAccount: "アカウント", btnQuickDeposit: "固定ウォレットに入金", tooltipSupport: "24/7 ライブサポート！", chatTitle: "24/7 ライブサポート", chatStatus: "● 管理者オンライン", chatWelcomeMsg: "こんにちは！セーブウォレットのお取引についてサポートいたします。", chatPlaceholder: "メッセージを入力...", btnChatSend: "送信", certTitle: "定期預金証明書", certSubtitle: "セーブウォレットプロトコル", lblOp: "稼働開始:", valOp: "2021年 (5年以上稼働)", lblTech: "標準:", valTech: "独立分散型プロトコル", lblCustody: "資産保護:", valCustody: "セルフカストディウォレット", lblNet: "ネットワーク:", btnConfirm: "理解して確認", linkWalletTitle: "ウォレットアドレス連携", linkWalletDesc: "出金前にネットワークを選択し、Binance等の個人ウォレットアドレスをバインドしてください。", lblWithdrawNet: "出金ネットワーク", lblLinkedTarget: "宛先ウォレットアドレス", lblLinkNet: "ネットワークを選択", lblLinkAddr: "個人ウォレットアドレス", btnSaveLink: "ウォレットを保存", historyTitle: "出金履歴 (24時間で自動消去)", historySubtitle: "24時間後自動削除", historyEmpty: "過去24時間の出金履歴はありません。", lblMyAddr: "あなたのウォレットアドレス:", btnCopyText: "コピー", btnLogoutText: "ログアウト", vipSystemTitle: "VIPティアシステム (VIP 1 - 12)", vipSystemSub: "100 USDT以上", actTitle: "新しい残高の蓄積を有効化！", actDesc: "入金を有効にして毎日の利益を獲得しましょう。", actBtn: "有効化", btnClaim: "利益を請求", timerTitle: "24時間利回りサイクル進捗:", startLabel: "入金開始", endLabel: "受取可能 (100%)"
+            },
+            ko: {
+                appTitle: "저축 지갑", bannerTitle: "바우처 받기", bannerSubtitle: "서약 없음", bannerDesc: "노드에 참여하고 채굴 시작", btnCert: "증명서", btnDepositHub: "입금 센터", poolDataTitle: "풀 데이터", totalOutput: "총 출력", validNodes: "유효 노드", participants: "참여자", userRevenue: "사용자 수익", outputDetailsTitle: "출력 세부 정보", tableAddr: "주소", tableQty: "수량", withdrawalTitle: "출금", withdrawalLabel: "출금 금액 (USDT)", withdrawalBtn: "출금 확인", accAccumulated: "누적 수익", accToday: "오늘의 수익", accYield: "시장 수익률", accPoolWallet: "풀 지갑", accWalletBal: "지갑 잔액", navHome: "홈", navWithdrawal: "출금", navAccount: "계정", btnQuickDeposit: "고정 지갑에 입금", tooltipSupport: "24/7 실시간 지원!", chatTitle: "24/7 실시간 지원", chatStatus: "● 관리자 온라인", chatWelcomeMsg: "안녕하세요! 저축 지갑 거래에 대해 도움을 드리겠습니다.", chatPlaceholder: "메시지 입력...", btnChatSend: "전송", certTitle: "저축 예금 증명서", certSubtitle: "저축 지갑 프로토콜", lblOp: "운영 시작:", valOp: "2021년 (5년 이상 활성)", lblTech: "표준:", valTech: "독립 탈중앙화 프로토콜", lblCustody: "자산 보호:", valCustody: "셀프 커스터디 지갑", lblNet: "네트워크:", btnConfirm: "이해 및 확인", linkWalletTitle: "지갑 주소 연동", linkWalletDesc: "출금 전에 네트워크를 선택하고 바이낸스 등 개인 지갑 주소를 연동하세요.", lblWithdrawNet: "출금 네트워크", lblLinkedTarget: "수신 지갑 주소", lblLinkNet: "네트워크 선택", lblLinkAddr: "개인 지갑 주소", btnSaveLink: "지갑 주소 저장", historyTitle: "출금 내역 (24시간 자동 삭제)", historySubtitle: "24시간 후 자동 삭제", historyEmpty: "지난 24시간 동안 출금 내역이 없습니다.", lblMyAddr: "내 지갑 주소:", btnCopyText: "복사", btnLogoutText: "로그아웃", vipSystemTitle: "VIP 등급 시스템 (VIP 1 - 12)", vipSystemSub: "100 USDT 이상", actTitle: "새로운 잔액 축적 활성화!", actDesc: "입금을 활성화하고 매일 수익을 얻으세요.", actBtn: "활성화", btnClaim: "수익 청구", timerTitle: "24시간 수익 주기 진행률:", startLabel: "입금 시작", endLabel: "청구 가능 (100%)"
+            },
+            es: {
+                appTitle: "CARTERA DE AHORROS", bannerTitle: "Recibir Cupón", bannerSubtitle: "Sin compromiso", bannerDesc: "Únete al nodo y comienza a minar", btnCert: "Certificado", btnDepositHub: "Centro de Depósito", poolDataTitle: "Datos del Pool", totalOutput: "Producción Total", validNodes: "Nodos Válidos", participants: "Participantes", userRevenue: "Ingresos de Usuarios", outputDetailsTitle: "Detalles de Salida", tableAddr: "Dirección", tableQty: "Cantidad", withdrawalTitle: "Retiro", withdrawalLabel: "MONTO A RETIRAR (USDT)", withdrawalBtn: "Confirmar Retiro", accAccumulated: "Ingresos Acumulados", accToday: "Ingresos de Hoy", accYield: "Rendimiento de Mercado", accPoolWallet: "Billetera Pool", accWalletBal: "Saldo de Billetera", navHome: "Inicio", navWithdrawal: "Retiro", navAccount: "Cuenta", btnQuickDeposit: "Depositar en Billetera Fija", tooltipSupport: "¡Soporte 24/7!", chatTitle: "Soporte en Vivo 24/7", chatStatus: "● ADM En Línea", chatWelcomeMsg: "¡Hola! ¿En qué puede ayudarle el administrador hoy?", chatPlaceholder: "Escribe tu mensaje...", btnChatSend: "Enviar", certTitle: "CERTIFICADO DE DEPÓSITO", certSubtitle: "PROTOCOLO DE CARTERA DE AHORROS", lblOp: "Operando Desde:", valOp: "Año 2021 (5+ años activo)", lblTech: "Estándar:", valTech: "Protocolo Descentralizado Independiente", lblCustody: "Protección de Activos:", valCustody: "Billetera de Autocustodia", lblNet: "Red:", btnConfirm: "Entendido y Confirmar", linkWalletTitle: "Vincular Dirección de Billetera", linkWalletDesc: "Seleccione la red y vincule su dirección antes de retirar.", lblWithdrawNet: "RED DE RETIRO", lblLinkedTarget: "DIRECCIÓN DE BILLETERA DESTINO", lblLinkNet: "SELECCIONE SU RED", lblLinkAddr: "DIRECCIÓN DE BILLETERA PERSONAL", btnSaveLink: "Guardar Billetera", historyTitle: "Historial de Retiros (Caducidad 24h)", historySubtitle: "Se borra automáticamente en 24h", historyEmpty: "No hay historial de retiros en las últimas 24 horas.", lblMyAddr: "Tu Dirección de Billetera:", btnCopyText: "Copiar", btnLogoutText: "Cerrar Sesión", vipSystemTitle: "Sistema de Niveles VIP (VIP 1 - 12)", vipSystemSub: "Desde 100 USDT+", actTitle: "¡Activar acumulación de saldo!", actDesc: "Confirme para activar su depósito y comenzar a generar ganancias.", actBtn: "Activar", btnClaim: "Reclamar ganancias", timerTitle: "Progreso del ciclo de rendimiento 24h:", startLabel: "Inicio de depósito", endLabel: "Listo para reclamar (100%)"
+            },
+            fr: {
+                appTitle: "PORTEFEUILLE D'ÉPARGNE", bannerTitle: "Recevoir un Bon", bannerSubtitle: "Sans engagement", bannerDesc: "Rejoignez le nœud et minez", btnCert: "Certificat", btnDepositHub: "Centre de Dépôt", poolDataTitle: "Données du Pool", totalOutput: "Production Totale", validNodes: "Nœuds Valides", participants: "Participants", userRevenue: "Revenus des Utilisateurs", outputDetailsTitle: "Détails de Sortie", tableAddr: "Adresse", tableQty: "Quantité", withdrawalTitle: "Retrait", withdrawalLabel: "MONTANT DU RETRAIT (USDT)", withdrawalBtn: "Confirmer le Retrait", accAccumulated: "Revenu Accumulé", accToday: "Revenu du Jour", accYield: "Rendement du Marché", accPoolWallet: "Portefeuille Pool", accWalletBal: "Solde du Portefeuille", navHome: "Accueil", navWithdrawal: "Retrait", navAccount: "Compte", btnQuickDeposit: "Déposer sur le Portefeuille", tooltipSupport: "Support 24/7 !", chatTitle: "Support en Direct 24/7", chatStatus: "● ADM En Ligne", chatWelcomeMsg: "Bonjour ! Comment l'administrateur peut-il vous aider aujourd'hui ?", chatPlaceholder: "Écrivez votre message...", btnChatSend: "Envoyer", certTitle: "CERTIFICAT DE DÉPÔT D'ÉPARGNE", certSubtitle: "PROTOCOLE DE PORTEFEUILLE", lblOp: "En Service Depuis :", valOp: "Année 2021 (5+ ans d'activité)", lblTech: "Standard :", valTech: "Protocole Décentralisé Indépendant", lblCustody: "Protection des Actifs :", valCustody: "Portefeuille Autogéré", lblNet: "Réseau :", btnConfirm: "Compris et Confirmer", linkWalletTitle: "Lier l'Adresse du Portefeuille", linkWalletDesc: "Veuillez sélectionner le réseau et lier votre adresse avant de retirer.", lblWithdrawNet: "RÉSEAU DE RETRAIT", lblLinkedTarget: "ADRESSE DU PORTEFEUILLE CIBLE", lblLinkNet: "SÉLECTIONNEZ VOTRE RÉSEAU", lblLinkAddr: "ADRESSE DE PORTEFEUILLE PERSONNEL", btnSaveLink: "Enregistrer l'Adresse", historyTitle: "Historique des Retraits (Expiration 24h)", historySubtitle: "Effacement auto après 24h", historyEmpty: "Aucun historique de retrait ces dernières 24 heures.", lblMyAddr: "Votre Adresse de Portefeuille :", btnCopyText: "Copier", btnLogoutText: "Déconnexion", vipSystemTitle: "Système de Niveaux VIP (VIP 1 - 12)", vipSystemSub: "À partir de 100 USDT+", actTitle: "Activer l'accumulation de solde !", actDesc: "Confirmez pour activer votre dépôt et générer des revenus.", actBtn: "Activer", btnClaim: "Récupérer", timerTitle: "Progression du cycle de rendement 24h :", startLabel: "Début du dépôt", endLabel: "Prêt à réclamer (100%)"
+            },
+            de: {
+                appTitle: "SPARWALLET", bannerTitle: "Gutschein Erhalten", bannerSubtitle: "Keine Verpfändung", bannerDesc: "Trete dem Node bei und maximiere", btnCert: "Zertifikat", btnDepositHub: "Einzahlungszentrum", poolDataTitle: "Pool-Daten", totalOutput: "Gesamtleistung", validNodes: "Gültige Nodes", participants: "Teilnehmer", userRevenue: "Benutzerumsatz", outputDetailsTitle: "Ausgabedetails", tableAddr: "Adresse", tableQty: "Menge", withdrawalTitle: "Auszahlung", withdrawalLabel: "AUSZAHLUNGSBETRAG (USDT)", withdrawalBtn: "Auszahlung Bestätigen", accAccumulated: "Kumuliertes Einkommen", accToday: "Heutiges Einkommen", accYield: "Marktrendite", accPoolWallet: "Pool-Wallet", accWalletBal: "Wallet-Guthaben", navHome: "Startseite", navWithdrawal: "Auszahlung", navAccount: "Konto", btnQuickDeposit: "Einzahlung auf Wallet", tooltipSupport: "24/7 Live-Support!", chatTitle: "24/7 Live-Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hallo! Wie kann der Administrator Ihnen heute helfen?", chatPlaceholder: "Nachricht eingeben...", btnChatSend: "Senden", certTitle: "SPAREINLAGEN-ZERTIFIKAT", certSubtitle: "SPARWALLET-PROTOKOLL", lblOp: "In Betrieb Seit:", valOp: "Jahr 2021 (5+ Jahre aktiv)", lblTech: "Standard:", valTech: "Unabhängiges Dezentrales Protokoll", lblCustody: "Vermögensschutz:", valCustody: "Selbstverwahrte Wallet", lblNet: "Netzwerk:", btnConfirm: "Verstanden & Bestätigen", linkWalletTitle: "Wallet-Adresse verknüpfen", linkWalletDesc: "Bitte wählen Sie das Netzwerk und binden Sie Ihre Adresse vor der Auszahlung.", lblWithdrawNet: "AUSZAHLUNGS-NETZWERK", lblLinkedTarget: "ZIEL-WALLET-ADRESSE", lblLinkNet: "NETZWERK AUSWÄHLEN", lblLinkAddr: "PERSÖNLICHE WALLET-ADRESSE", btnSaveLink: "Wallet-Adresse speichern", historyTitle: "Auszahlungshistorie (24h Auto-Ablauf)", historySubtitle: "Löscht sich nach 24h automatisch", historyEmpty: "Keine Auszahlungshistorie in den letzten 24 Stunden.", lblMyAddr: "Ihre Wallet-Adresse:", btnCopyText: "Kopieren", btnLogoutText: "Abmelden", vipSystemTitle: "VIP-Stufen-System (VIP 1 - 12)", vipSystemSub: "Ab 100 USDT+", actTitle: "Guthaben-Akkumulation aktivieren!", actDesc: "Bestätigen Sie die Einzahlung, um Erträge zu erzielen.", actBtn: "Aktivieren", btnClaim: "Gewinn beanspruchen", timerTitle: "Fortschritt des 24h-Ertragszyklus:", startLabel: "Einzahlung Start", endLabel: "Bereit zum Beanspruchen (100%)"
+            },
+            ru: {
+                appTitle: "НАКОПИТЕЛЬНЫЙ КОШЕЛЕК", bannerTitle: "Получить Ваучер", bannerSubtitle: "Без залога", bannerDesc: "Присоединяйтесь к узлу и майните", btnCert: "Сертификат", btnDepositHub: "Центр Пополнения", poolDataTitle: "Данные Пула", totalOutput: "Общий Выпуск", validNodes: "Валидные Узлы", participants: "Участники", userRevenue: "Доход Пользователей", outputDetailsTitle: "Детали Вывода", tableAddr: "Адрес", tableQty: "Количество", withdrawalTitle: "Вывод", withdrawalLabel: "СУММА ВЫВОДА (USDT)", withdrawalBtn: "Подтвердить Вывод", accAccumulated: "Накопленный Доход", accToday: "Доход За Сегодня", accYield: "Доходность Рынка", accPoolWallet: "Пул Кошелек", accWalletBal: "Баланс Кошелька", navHome: "Главная", navWithdrawal: "Вывод", navAccount: "Аккаунт", btnQuickDeposit: "Пополнить Кошелек", tooltipSupport: "Поддержка 24/7!", chatTitle: "Онлайн Поддержка 24/7", chatStatus: "● АДМ В Сети", chatWelcomeMsg: "Здравствуйте! Чем администратор может вам помочь сегодня?", chatPlaceholder: "Введите сообщение...", btnChatSend: "Отправить", certTitle: "СЕРТИФИКАТ СБЕРЕГАТЕЛЬНОГО ВКЛАДА", certSubtitle: "ПРОТОКОЛ НАКОПИТЕЛЬНОГО КОШЕЛЬКА", lblOp: "Работает С:", valOp: "2021 год (активен 5+ лет)", lblTech: "Стандарт:", valTech: "Независимый Децентрализованный Протокол", lblCustody: "Защита Активов:", valCustody: "Некастодиальный Кошелек", lblNet: "Сеть:", btnConfirm: "Понятно и Подтвердить", linkWalletTitle: "Привязать адрес кошелька", linkWalletDesc: "Пожалуйста, выберите сеть и привяжите адрес перед выводом средств.", lblWithdrawNet: "СЕТЬ ВЫВОДА", lblLinkedTarget: "АДРЕС КОШЕЛЬКА ПОЛУЧАТЕЛЯ", lblLinkNet: "ВЫБЕРИТЕ СЕТЬ", lblLinkAddr: "ЛИЧНЫЙ АДРЕС КОШЕЛЬКА", btnSaveLink: "Сохранить кошелек", historyTitle: "История выводов (Авто-удаление 24ч)", historySubtitle: "Удаляется через 24 часа", historyEmpty: "Нет истории выводов за последние 24 часа.", lblMyAddr: "Адрес вашего кошелька:", btnCopyText: "Копировать", btnLogoutText: "Выйти из аккаунта", vipSystemTitle: "Система VIP уровней (VIP 1 - 12)", vipSystemSub: "От 100 USDT+", actTitle: "Активировать накопление баланса!", actDesc: "Подтвердите депозит, чтобы начать получать ежедневный доход.", actBtn: "Активировать", btnClaim: "Собрать доход", timerTitle: "Прогресс 24ч цикла доходности:", startLabel: "Начало депозита", endLabel: "Готово к сбору (100%)"
+            },
+            pt: {
+                appTitle: "CARTEIRA DE POUPANÇA", bannerTitle: "Receber Voucher", bannerSubtitle: "Sem penhor", bannerDesc: "Junte-se ao nó e comece a minerar", btnCert: "Certificado", btnDepositHub: "Centro de Depósito", poolDataTitle: "Dados do Pool", totalOutput: "Produção Total", validNodes: "Nós Válidos", participants: "Participantes", userRevenue: "Receita dos Usuários", outputDetailsTitle: "Detalhes de Saída", tableAddr: "Endereço", tableQty: "Quantidade", withdrawalTitle: "Retirada", withdrawalLabel: "VALOR DA RETIRADA (USDT)", withdrawalBtn: "Confirmar Retirada", accAccumulated: "Renda Acumulada", accToday: "Renda de Hoje", accYield: "Rendimento de Mercado", accPoolWallet: "Carteira Pool", accWalletBal: "Saldo da Carteira", navHome: "Início", navWithdrawal: "Retirada", navAccount: "Conta", btnQuickDeposit: "Depositar na Carteira", tooltipSupport: "Suporte 24/7!", chatTitle: "Suporte ao Vivo 24/7", chatStatus: "● ADM Online", chatWelcomeMsg: "Olá! Como o administrador pode ajudar nas suas transações hoje?", chatPlaceholder: "Digite sua mensagem...", btnChatSend: "Enviar", certTitle: "CERTIFICADO DE DEPÓSITO DE POUPANÇA", certSubtitle: "PROTOCOLO DA CARTEIRA DE POUPANÇA", lblOp: "Operando Desde:", valOp: "Ano 2021 (5+ Anos Ativo)", lblTech: "Padrão:", valTech: "Protocolo Descentralizado Independente", lblCustody: "Proteção de Ativos:", valCustody: "Carteira de Autocustódia", lblNet: "Rede:", btnConfirm: "Entendido e Confirmar", linkWalletTitle: "Vincular Endereço de Carteira", linkWalletDesc: "Selecione a rede e vincule seu endereço de carteira antes de retirar.", lblWithdrawNet: "REDE DE RETIRADA", lblLinkedTarget: "ENDEREÇO DA CARTEIRA DE DESTINO", lblLinkNet: "SELECIONE SUA REDE", lblLinkAddr: "ENDEREÇO DE CARTEIRA PESSOAL", btnSaveLink: "Salvar Endereço", historyTitle: "Histórico de Retirada (Expiração 24h)", historySubtitle: "Limpeza automática após 24h", historyEmpty: "Sem histórico nas últimas 24 horas.", lblMyAddr: "Seu Endereço de Carteira:", btnCopyText: "Copiar", btnLogoutText: "Sair da Conta", vipSystemTitle: "Sistema de Níveis VIP (VIP 1 - 12)", vipSystemSub: "A partir de 100 USDT+", actTitle: "Ativar nova acumulação de saldo!", actDesc: "Confirme para ativar seu depósito e começar a gerar retornos.", actBtn: "Ativar", btnClaim: "Resgatar Renda", timerTitle: "Progresso do ciclo de rendimento 24h:", startLabel: "Início do Depósito", endLabel: "Pronto para Resgatar (100%)"
+            },
+            ar: {
+                appTitle: "محفظة التوفير", bannerTitle: "استلام القسيمة", bannerSubtitle: "بدون تعهد", bannerDesc: "انضم إلى العقدة وابدأ التعدين", btnCert: "شهادة", btnDepositHub: "مركز الإيداع", poolDataTitle: "بيانات التجمع", totalOutput: "إجمالي الإنتاج", validNodes: "العقد الصالحة", participants: "المشاركون", userRevenue: "إيرادات المستخدمين", outputDetailsTitle: "تفاصيل المخرجات", tableAddr: "العنوان", tableQty: "الكمية", withdrawalTitle: "السحب", withdrawalLabel: "مبلغ السحب (USDT)", withdrawalBtn: "تأكيد السحب", accAccumulated: "الدخل المتراكم", accToday: "دخل اليوم", accYield: "عائد السوق", accPoolWallet: "محفظة التجمع", accWalletBal: "رصيد المحفظة", navHome: "الرئيسية", navWithdrawal: "السحب", navAccount: "الحساب", btnQuickDeposit: "إيداع في المحفظة", tooltipSupport: "دعم مباشر 24/7!", chatTitle: "دعم مباشر 24/7", chatStatus: "● المشرف متصل", chatWelcomeMsg: "مرحباً! كيف يمكن للمشرف مساعدتك في معاملاتك اليوم؟", chatPlaceholder: "اكتب رسالتك...", btnChatSend: "إرسال", certTitle: "شهادة وديعة التوفير", certSubtitle: "بروتوكول محفظة التوفير", lblOp: "تعمل منذ:", valOp: "عام 2021 (أكثر من 5 سنوات نشطة)", lblTech: "المعيار:", valTech: "بروتوكول لامركزي مستقل", lblCustody: "حماية الأصول:", valCustody: "محفظة ذاتية الحراسة", lblNet: "الشبكة:", btnConfirm: "فهمت وتأكيد", linkWalletTitle: "ربط عنوان المحفظة", linkWalletDesc: "يرجى اختيار الشبكة وربط عنوان محفظتك قبل السحب.", lblWithdrawNet: "شبكة السحب", lblLinkedTarget: "عنوان المحفظة المستهدفة", lblLinkNet: "اختر شبكتك", lblLinkAddr: "عنوان المحفظة الشخصية", btnSaveLink: "حفظ عنوان المحفظة", historyTitle: "سجل السحب (انتهاء الصلاحية 24 ساعة)", historySubtitle: "يتم الحذف تلقائياً بعد 24 ساعة", historyEmpty: "لا يوجد سجل سحب في الـ 24 ساعة الماضية.", lblMyAddr: "عنوان محفظتك:", btnCopyText: "نسخ", btnLogoutText: "تسجيل الخروج", vipSystemTitle: "نظام مستويات VIP (VIP 1 - 12)", vipSystemSub: "من 100 USDT+", actTitle: "تفعيل تراكم الرصيد الجديد!", actDesc: "قم التأكيد لتفعيل إيداعك والبدء في تحقيق الأرباح اليومية.", actBtn: "تفعيل", btnClaim: "مطالبة بالدخل", timerTitle: "تقدم دورة العائد خلال 24 ساعة:", startLabel: "بداية الإيداع", endLabel: "جاهز للمطالبة (100%)"
+            },
+            hi: {
+                appTitle: "सेavings वॉलेट", bannerTitle: "वाउचर प्राप्त करें", bannerSubtitle: "कोई गिरवी नहीं", bannerDesc: "नोड से जुड़ें और माइनिंग शुरू करें", btnCert: "प्रमाण पत्र", btnDepositHub: "डिपॉजिट हब", poolDataTitle: "पूल डेटा", totalOutput: "कुल आउटपुट", validNodes: "मान्य नोड्स", participants: "प्रतिभागी", userRevenue: "उपयोगकर्ता राजस्व", outputDetailsTitle: "आउटपुट विवरण", tableAddr: "पत्ता", tableQty: "मात्रा", withdrawalTitle: "निकासी", withdrawalLabel: "निकासी राशि (USDT)", withdrawalBtn: "निकासी की पुष्टि करें", accAccumulated: "संचित आय", accToday: "आज की आय", accYield: "बाजार उपज", accPoolWallet: "पूल वॉलेट", accWalletBal: "वॉलेट शेष", navHome: "होम", navWithdrawal: "निकासी", navAccount: "खाता", btnQuickDeposit: "फिक्स वॉलेट में जमा करें", tooltipSupport: "लाइव सहायता 24/7!", chatTitle: "24/7 लाइव सहायता", chatStatus: "● एडमिन ऑनलाइन", chatWelcomeMsg: "नमस्ते! एडमिन आपके बचत वॉलेट लेनदेन में कैसे सहायता कर सकता है?", chatPlaceholder: "अपना संदेश टाइप करें...", btnChatSend: "भेजें", certTitle: "बचत जमा प्रमाण पत्र", certSubtitle: "सेविंग्स वॉलेट प्रोटोकॉल", lblOp: "संचालन:", valOp: "वर्ष 2021 (5+ वर्ष सक्रिय)", lblTech: "मानक:", valTech: "स्वतंत्र विकेंद्रीकृत प्रोटोकॉल", lblCustody: "संपत्ति सुरक्षा:", valCustody: "सेल्फ-कस्टडी वॉलेट", lblNet: "नेटवर्क:", btnConfirm: "समझ गया और पुष्टि करें", linkWalletTitle: "वॉलेट पता लिंक करें", linkWalletDesc: "कृपया निकासी से पहले नेटवर्क चुनें और अपना वॉलेट पता लिंक करें।", lblWithdrawNet: "निकासी नेटवर्क", lblLinkedTarget: "लक्ष्य वॉलेट पता", lblLinkNet: "अपना नेटवर्क चुनें", lblLinkAddr: "व्यक्तिगत वॉलेट पता", btnSaveLink: "वॉलेट पता सहेजें", historyTitle: "निकासी इतिहास (24 घंटे ऑटो-समाप्ति)", historySubtitle: "24 घंटे बाद स्वतः साफ़ हो जाता है", historyEmpty: "पिछले 24 घंटों में कोई निकासी इतिहास नहीं है।", lblMyAddr: "आपका वॉलेट पता:", btnCopyText: "कॉपी करें", btnLogoutText: "खाता लॉग आउट करें", vipSystemTitle: "VIP टियर सिस्टम (VIP 1 - 12)", vipSystemSub: "100 USDT से अधिक", actTitle: "नई शेष राशि संचय सक्रिय करें!", actDesc: "अपनी जमा राशि सक्रिय करने और दैनिक रिटर्न अर्जित करने के लिए पुष्टि करें।", actBtn: "सक्रिय करें", btnClaim: "आय का दावा करें", timerTitle: "24h यील्ड चक्र प्रगति:", startLabel: "डिपॉजिट शुरू", endLabel: "दावा करने के लिए तैयार (100%)"
+            },
+            id: {
+                appTitle: "DOMPET TABUNGAN", bannerTitle: "Terima Voucher", bannerSubtitle: "Tanpa jaminan", bannerDesc: "Bergabunglah dengan node dan mulai menambang", btnCert: "Sertifikat", btnDepositHub: "Pusat Deposit", poolDataTitle: "Data Pool", totalOutput: "Total Output", validNodes: "Node Valid", participants: "Peserta", userRevenue: "Pendapatan Pengguna", outputDetailsTitle: "Detail Output", tableAddr: "Alamat", tableQty: "Jumlah", withdrawalTitle: "Penarikan", withdrawalLabel: "JUMLAH PENARIKAN (USDT)", withdrawalBtn: "Konfirmasi Penarikan", accAccumulated: "Pendapatan Akumulasi", accToday: "Pendapatan Hari Ini", accYield: "Hasil Pasar", accPoolWallet: "Dompet Pool", accWalletBal: "Saldo Dompet", navHome: "Beranda", navWithdrawal: "Penarikan", navAccount: "Akun", btnQuickDeposit: "Deposit Dompet Tetap", tooltipSupport: "Dukungan 24/7!", chatTitle: "Dukungan Langsung 24/7", chatStatus: "● ADM Online", chatWelcomeMsg: "Halo! Bagaimana administrator dapat membantu transaksi dompet Anda hari ini?", chatPlaceholder: "Ketik pesan Anda...", btnChatSend: "Kirim", certTitle: "SERTIFIKAT DEPOSITO TABUNGAN", certSubtitle: "PROTOKOL DOMPET TABUNGAN", lblOp: "Beroperasi Sejak:", valOp: "Tahun 2021 (Aktif 5+ Tahun)", lblTech: "Standar:", valTech: "Protokol Terdesentralisasi Independen", lblCustody: "Perlindungan Aset:", valCustody: "Dompet Penyimpanan Mandiri", lblNet: "Jaringan:", btnConfirm: "Mengerti & Konfirmasi", linkWalletTitle: "Tautkan Alamat Dompet", linkWalletDesc: "Pilih jaringan dan tautkan alamat dompet pribadi Anda sebelum menarik.", lblWithdrawNet: "JARINGAN PENARIKAN", lblLinkedTarget: "ALAMAT DOMPET TUJUAN", lblLinkNet: "PILIH JARINGAN ANDA", lblLinkAddr: "ALAMAT DOMPET PRIBADI", btnSaveLink: "Simpan Alamat Dompet", historyTitle: "Riwayat Penarikan (Kedaluwarsa 24j)", historySubtitle: "Otomatis dihapus setelah 24j", historyEmpty: "Tidak ada riwayat penarikan dalam 24 jam terakhir.", lblMyAddr: "Alamat Dompet Anda:", btnCopyText: "Salin", btnLogoutText: "Keluar Akun", vipSystemTitle: "Sistem Tingkat VIP (VIP 1 - 12)", vipSystemSub: "Dari 100 USDT+", actTitle: "Aktifkan akumulasi saldo baru!", actDesc: "Konfirmasi untuk mengaktifkan deposit dan mulai menghasilkan imbal hasil.", actBtn: "Aktifkan", btnClaim: "Klaim Penghasilan", timerTitle: "Progres Siklus Imbal Hasil 24j:", startLabel: "Mulai Deposit", endLabel: "Siap Diklaim (100%)"
+            },
+            th: {
+                appTitle: "กระเป๋าเงินออม", bannerTitle: "รับบัตรกำนัล", bannerSubtitle: "ไม่มีการค้ำประกัน", bannerDesc: "เข้าร่วมโหนดและเริ่มขุด", btnCert: "ใบรับรอง", btnDepositHub: "ศูนย์ฝากเงิน", poolDataTitle: "ข้อมูลพูล", totalOutput: "ผลผลิตรวม", validNodes: "โหนดที่ถูกต้อง", participants: "ผู้เข้าร่วม", userRevenue: "รายได้ผู้ใช้", outputDetailsTitle: "รายละเอียดผลผลิต", tableAddr: "ที่อยู่", tableQty: "จำนวน", withdrawalTitle: "ถอนเงิน", withdrawalLabel: "จำนวนเงินที่ถอน (USDT)", withdrawalBtn: "ยืนยันการถอน", accAccumulated: "รายได้สะสม", accToday: "รายได้วันนี้", accYield: "ผลตอบแทนตลาด", accPoolWallet: "กระเป๋าพูล", accWalletBal: "ยอดเงินในกระเป๋า", navHome: "หน้าแรก", navWithdrawal: "ถอนเงิน", navAccount: "บัญชี", btnQuickDeposit: "ฝากเข้ากระเป๋าถาวร", tooltipSupport: "ซัพพอร์ต 24/7!", chatTitle: "ซัพพอร์ตสด 24/7", chatStatus: "● แอดมินออนไลน์", chatWelcomeMsg: "สวัสดีครับ! แอดมินสามารถช่วยเหลือธุรกรรมของคุณได้อย่างไรบ้าง?", chatPlaceholder: "พิมพ์ข้อความของคุณ...", btnChatSend: "ส่ง", certTitle: "ใบรับรองการฝากเงินออม", certSubtitle: "โปรโตคอลกระเป๋าเงินออม", lblOp: "เปิดดำเนินการตั้งแต่:", valOp: "ปี 2021 (ใช้งานมานานกว่า 5 ปี)", lblTech: "มาตรฐาน:", valTech: "โปรโตคอลกระจายอำนาจอิสระ", lblCustody: "การคุ้มครองสินทรัพย์:", valCustody: "กระเป๋าเงินดูแลตนเอง", lblNet: "เครือข่าย:", btnConfirm: "เข้าใจและยืนยัน", linkWalletTitle: "เชื่อมโยงที่อยู่กระเป๋าเงิน", linkWalletDesc: "โปรดเลือกเครือข่ายและเชื่อมโยงที่อยู่กระเป๋าส่วนตัวของคุณก่อนทำการถอนเงิน", lblWithdrawNet: "เครือข่ายการถอน", lblLinkedTarget: "ที่อยู่กระเป๋าเงินปลายทาง", lblLinkNet: "เลือกเครือข่ายของคุณ", lblLinkAddr: "ที่อยู่กระเป๋าเงินส่วนตัว", btnSaveLink: "บันทึกที่อยู่กระเป๋าเงิน", historyTitle: "ประวัติการถอน (ลบอัตโนมัติใน 24 ชม.)", historySubtitle: "ลบอัตโนมัติหลังจาก 24 ชม.", historyEmpty: "ไม่มีประวัติการถอนเงินใน 24 ชั่วโมงที่ผ่านมา", lblMyAddr: "ที่อยู่กระเป๋าเงินของคุณ:", btnCopyText: "คัดลอก", btnLogoutText: "ออกจากระบบ", vipSystemTitle: "ระบบระดับ VIP (VIP 1 - 12)", vipSystemSub: "เริ่มต้น 100 USDT+", actTitle: "เปิดใช้งานการสะสมยอดเงินใหม่!", actDesc: "ยืนยันเพื่อเปิดใช้งานการฝากเงินของคุณและเริ่มรับผลตอบแทนรายวัน", actBtn: "เปิดใช้งาน", btnClaim: "รับรายได้", timerTitle: "ความคืบหน้ารอบผลตอบแทน 24 ชม.:", startLabel: "เริ่มฝากเงิน", endLabel: "พร้อมรับสิทธิ์ (100%)"
+            },
+            it: {
+                appTitle: "PORTAFOGLIO RISPARMIO", bannerTitle: "Ricevi Voucher", bannerSubtitle: "Nessun pegno", bannerDesc: "Unisciti al nodo e inizia a minare", btnCert: "Certificato", btnDepositHub: "Centro Depositi", poolDataTitle: "Dati Pool", totalOutput: "Produzione Totale", validNodes: "Nodi Validi", participants: "Partecipanti", userRevenue: "Entrate Utenti", outputDetailsTitle: "Dettagli Output", tableAddr: "Indirizzo", tableQty: "Quantità", withdrawalTitle: "Prelievo", withdrawalLabel: "IMPORTO PRELIEVO (USDT)", withdrawalBtn: "Conferma Prelievo", accAccumulated: "Reddito Accumulato", accToday: "Reddito di Oggi", accYield: "Rendimento di Mercato", accPoolWallet: "Portafoglio Pool", accWalletBal: "Saldo Portafoglio", navHome: "Home", navWithdrawal: "Prelievo", navAccount: "Account", btnQuickDeposit: "Deposita su Portafoglio", tooltipSupport: "Supporto Live 24/7!", chatTitle: "Supporto Live 24/7", chatStatus: "● AMMINISTRATORE Online", chatWelcomeMsg: "Ciao! Come può aiutarti l'amministratore oggi?", chatPlaceholder: "Scrivi il tuo messaggio...", btnChatSend: "Invia", certTitle: "CERTIFICATO DI DEPOSITO RISPARMIO", certSubtitle: "PROTOCOLLO PORTAFOGLIO RISPARMIO", lblOp: "Operativo Dal:", valOp: "Anno 2021 (Attivo da 5+ anni)", lblTech: "Standard:", valTech: "Protocollo Decentralizzato Indipendente", lblCustody: "Protezione Asset:", valCustody: "Portafoglio Self-Custody", lblNet: "Rete:", btnConfirm: "Compreso e Conferma", linkWalletTitle: "Collega Indirizzo Portafoglio", linkWalletDesc: "Seleziona la rete e collega il tuo indirizzo personale prima di prelevare.", lblWithdrawNet: "RETE DI PRELIEVO", lblLinkedTarget: "INDIRIZZO PORTAFOGLIO DESTINAZIONE", lblLinkNet: "SELEZIONA LA TUA RETE", lblLinkAddr: "INDIRIZZO PORTAFOGLIO PERSONALE", btnSaveLink: "Salva Indirizzo", historyTitle: "Cronologia Prelievi (Scadenza 24h)", historySubtitle: "Cancellazione automatica dopo 24h", historyEmpty: "Nessuna cronologia nelle ultime 24 ore.", lblMyAddr: "Il tuo Indirizzo Portafoglio:", btnCopyText: "Copia", btnLogoutText: "Disconnettiti", vipSystemTitle: "Sistema Livelli VIP (VIP 1 - 12)", vipSystemSub: "Da 100 USDT+", actTitle: "Attiva l'accumulo del nuovo saldo!", actDesc: "Conferma per attivare il deposito e iniziare a generare rendimenti.", actBtn: "Attiva", btnClaim: "Riscuoti Reddito", timerTitle: "Avanzamento ciclo rendimento 24h:", startLabel: "Inizio Deposito", endLabel: "Pronto per il riscatto (100%)"
+            },
+            tr: {
+                appTitle: "TASARRUF CÜZDANI", bannerTitle: "Kupon Al", bannerSubtitle: "Taahhüt yok", bannerDesc: "Düğüme katıl ve madenciliğe başla", btnCert: "Sertifika", btnDepositHub: "Yatırım Merkezi", poolDataTitle: "Havuz Verileri", totalOutput: "Toplam Çıktı", validNodes: "Geçerli Düğümler", participants: "Katılımcılar", userRevenue: "Kullanıcı Geliri", outputDetailsTitle: "Çıktı Detayları", tableAddr: "Adres", tableQty: "Miktar", withdrawalTitle: "Çekim", withdrawalLabel: "ÇEKİM MİKTARI (USDT)", withdrawalBtn: "Çekimi Onayla", accAccumulated: "Biriken Gelir", accToday: "Bugünkü Gelir", accYield: "Piyasa Verimi", accPoolWallet: "Havuz Cüzdanı", accWalletBal: "Cüzdan Bakiyesi", navHome: "Ana Sayfa", navWithdrawal: "Çekim", navAccount: "Hesap", btnQuickDeposit: "Cüzdana Yatır", tooltipSupport: "Canlı Destek 7/24!", chatTitle: "7/24 Canlı Destek", chatStatus: "● YÖNETİCİ Çevrimiçi", chatWelcomeMsg: "Merhaba! Yönetici bugün işlemlerinizde size nasıl yardımcı olabilir?", chatPlaceholder: "Mesajınızı yazın...", btnChatSend: "Gönder", certTitle: "TASARRUF MEVDUATI SERTİFİKASI", certSubtitle: "TASARRUF CÜZDANI PROTOKOLÜ", lblOp: "Faaliyet Yılı:", valOp: "2021 (5+ Yıldır Aktif)", lblTech: "Standart:", valTech: "Bağımsız Merkeziyetsiz Protokol", lblCustody: "Varlık Koruma:", valCustody: "Bireysel Saklama Cüzdanı", lblNet: "Ağ:", btnConfirm: "Anladım ve Onayla", linkWalletTitle: "Cüzdan Adresini Bağla", linkWalletDesc: "Çekim yapmadan önce lütfen ağı seçin ve cüzdan adresinizi bağlayın.", lblWithdrawNet: "ÇEKİM AĞI", lblLinkedTarget: "HEDEF CÜZDAN ADRESİ", lblLinkNet: "AĞINIZI SEÇİN", lblLinkAddr: "KİŞİSEL CÜZDAN ADRESİ", btnSaveLink: "Adresi Kaydet", historyTitle: "Çekim Geçmişi (24 Saat Otomatik Silinir)", historySubtitle: "24 saat sonra otomatik silinir", historyEmpty: "Son 24 saatte çekim geçmişi yok.", lblMyAddr: "Cüzdan Adresiniz:", btnCopyText: "Kopyala", btnLogoutText: "Hesaptan Çıkış Yap", vipSystemTitle: "VIP Seviye Sistemi (VIP 1 - 12)", vipSystemSub: "100 USDT ve üzeri", actTitle: "Yeni bakiye birikimini etkinleştir!", actDesc: "Yatırımınızı etkinleştirmek ve günlük kazanç elde etmeye başlamak için onaylayın.", actBtn: "Etkinleştir", btnClaim: "Geliri Talep Et", timerTitle: "24s Verim Döngüsü İlerlemesi:", startLabel: "Yatırım Başlangıcı", endLabel: "Talep Etmeye Hazır (%100)"
+            },
+            nl: {
+                appTitle: "SPARWALLET", bannerTitle: "Ontvang Voucher", bannerSubtitle: "Geen verpanding", bannerDesc: "Sluit je aan bij de node en start met mijnen", btnCert: "Certificaat", btnDepositHub: "Stortingshub", poolDataTitle: "Poolgegevens", totalOutput: "Totale Productie", validNodes: "Geldige Nodes", participants: "Deelnemers", userRevenue: "Gebruikersinkomsten", outputDetailsTitle: "Uitvoerdetails", tableAddr: "Adres", tableQty: "Hoeveelheid", withdrawalTitle: "Opname", withdrawalLabel: "OPNAMEBEDRAG (USDT)", withdrawalBtn: "Opname Bevestigen", accAccumulated: "Gecumuleerd Inkomen", accToday: "Inkomen Vandaag", accYield: "Marktopbrengst", accPoolWallet: "Pool-wallet", accWalletBal: "Portemonnee Saldo", navHome: "Home", navWithdrawal: "Opname", navAccount: "Account", btnQuickDeposit: "Storten op Wallet", tooltipSupport: "24/7 Live Ondersteuning!", chatTitle: "24/7 Live Ondersteuning", chatStatus: "● Beheerder Online", chatWelcomeMsg: "Hallo! Hoe kan de beheerder u vandaag helpen met uw transacties?", chatPlaceholder: "Typ uw bericht...", btnChatSend: "Verzenden", certTitle: "SPAARDEPOSITO CERTIFICAAT", certSubtitle: "SPAARWALLET PROTOCOL", lblOp: "Operationeel Sinds:", valOp: "Jaar 2021 (5+ Jaar Actief)", lblTech: "Standaard:", valTech: "Onafhankelijk Gedecentraliseerd Protocol", lblCustody: "Activabescherming:", valCustody: "Eigen Beheer Wallet", lblNet: "Netwerk:", btnConfirm: "Begrepen & Bevestigen", linkWalletTitle: "Wallet-adres Koppelen", linkWalletDesc: "Selecteer het netwerk en koppel uw persoonlijke adres vóór opname.", lblWithdrawNet: "OPNAMENETWERK", lblLinkedTarget: "DOEL WALLET-ADRES", lblLinkNet: "SELECTEER UW NETWERK", lblLinkAddr: "PERSOONLIJK WALLET-ADRES", btnSaveLink: "Adres Opslaan", historyTitle: "Opnamegeschiedenis (24u Automatisch Gewist)", historySubtitle: "Wist automatisch na 24 uur", historyEmpty: "Geen opnamegeschiedenis in de afgelopen 24 uur.", lblMyAddr: "Uw Wallet-adres:", btnCopyText: "Kopiëren", btnLogoutText: "Uitloggen", vipSystemTitle: "VIP-niveausysteem (VIP 1 - 12)", vipSystemSub: "Vanaf 100 USDT+", actTitle: "Nieuwe saldo-accumulatie activeren!", actDesc: "Bevestig om uw storting te activeren en dagelijkse rendementen te verdienen.", actBtn: "Activeren", btnClaim: "Inkomen Claimen", timerTitle: "Voortgang 24-uurs rendementscyclus:", startLabel: "Storting Start", endLabel: "Klaar om te Claimen (100%)"
+            },
+            pl: {
+                appTitle: "PORTFEL OSZCZĘDNOŚCIOWY", bannerTitle: "Odbierz Voucher", bannerSubtitle: "Brak zastawu", bannerDesc: "Dołącz do węzła i rozpocznij wydobycie", btnCert: "Certyfikat", btnDepositHub: "Centrum Depozytów", poolDataTitle: "Dane Puli", totalOutput: "Całkowita Produkcja", validNodes: "Ważne Węzły", participants: "Uczestnicy", userRevenue: "Przychód Użytkowników", outputDetailsTitle: "Szczegóły Wyjścia", tableAddr: "Adres", tableQty: "Ilość", withdrawalTitle: "Wypłata", withdrawalLabel: "KWOTA WYPŁATY (USDT)", withdrawalBtn: "Potwierdź Wypłatę", accAccumulated: "Skumulowany Dochód", accToday: "Dzisiejszy Dochód", accYield: "Zysk Rynkowy", accPoolWallet: "Portfel Puli", accWalletBal: "Saldo Portfela", navHome: "Strona Główna", navWithdrawal: "Wypłata", navAccount: "Konto", btnQuickDeposit: "Wpłać do Portfela", tooltipSupport: "Wsparcie 24/7!", chatTitle: "Wsparcie na Żywo 24/7", chatStatus: "● Administrator Online", chatWelcomeMsg: "Witaj! W czym administrator może pomóc Ci w transakcjach?", chatPlaceholder: "Wpisz swoją wiadomość...", btnChatSend: "Wyślij", certTitle: "CERTYFIKAT DEPOZYTU OSZCZĘDNOŚCIOWEGO", certSubtitle: "PROTOKÓŁ PORTFELA OSZCZĘDNOŚCIOWEGO", lblOp: "Działa Od:", valOp: "Rok 2021 (Aktywny od 5+ lat)", lblTech: "Standard:", valTech: "Niezależny Zdecentralizowany Protokół", lblCustody: "Ochrona Aktywów:", valCustody: "Portfel Samodzielny", lblNet: "Sieć:", btnConfirm: "Zrozumiano i Potwierdź", linkWalletTitle: "Połącz Adres Portfela", linkWalletDesc: "Wybierz sieć i powiąż swój prywatny adres przed wypłatą.", lblWithdrawNet: "SIEĆ WYPŁAT", lblLinkedTarget: "DOCELOWY ADRES PORTFELA", lblLinkNet: "WYBIERZ SWOJĄ SIEĆ", lblLinkAddr: "OSOBISTY ADRES PORTFELA", btnSaveLink: "Zapisz Adres Portfela", historyTitle: "Historia Wypłat (Wygaśnięcie po 24h)", historySubtitle: "Automatyczne czyszczenie po 24h", historyEmpty: "Brak historii wypłat w ciągu ostatnich 24 godzin.", lblMyAddr: "Twój Adres Portfela:", btnCopyText: "Kopiuj", btnLogoutText: "Wyloguj się", vipSystemTitle: "System Poziomów VIP (VIP 1 - 12)", vipSystemSub: "Od 100 USDT+", actTitle: "Aktywuj akumulację nowego salda!", actDesc: "Potwierdź, aby aktywować swój depozyt i zacząć generować dzienne zyski.", actBtn: "Aktywuj", btnClaim: "Odbierz Dochód", timerTitle: "Postęp 24-godzinnego cyklu zysków:", startLabel: "Początek Wpłaty", endLabel: "Gotowe do Odbioru (100%)"
+            },
+            sv: {
+                appTitle: "SPARPLÅNBOK", bannerTitle: "Ta emot kupong", bannerSubtitle: "Ingen pantsättning", bannerDesc: "Anslut dig till noden och börja mina", btnCert: "Certifikat", btnDepositHub: "Insättningsnav", poolDataTitle: "Pooldata", totalOutput: "Total produktion", validNodes: "Giltiga noder", participants: "Deltagare", userRevenue: "Användarintäkter", outputDetailsTitle: "Utdata-detaljer", tableAddr: "Adress", tableQty: "Kvantitet", withdrawalTitle: "Uttag", withdrawalLabel: "UTTAGSBELOPP (USDT)", withdrawalBtn: "Bekräfta uttag", accAccumulated: "Akkumulerad inkomst", accToday: "Dagens inkomst", accYield: "Marknadsavkastning", accPoolWallet: "Pool-plånbok", accWalletBal: "Plånbokssaldo", navHome: "Hem", navWithdrawal: "Uttag", navAccount: "Konto", btnQuickDeposit: "Sätt in i plånbok", tooltipSupport: "Live-support 24/7!", chatTitle: "Live-support 24/7", chatStatus: "● Admin Online", chatWelcomeMsg: "Hej! Hur kan administratören hjälpa till med dina transaktioner idag?", chatPlaceholder: "Skriv ditt meddelande...", btnChatSend: "Skicka", certTitle: "SPARANDEPOSITOCERTIFIKAT", certSubtitle: "SPARPLÅNBOKSPROTOKOLL", lblOp: "Verksam Sedan:", valOp: "År 2021 (5+ år aktiv)", lblTech: "Standard:", valTech: "Oberoende decentraliserat protokoll", lblCustody: "Tillgångsskydd:", valCustody: "Självförvarad plånbok", lblNet: "Nätverk:", btnConfirm: "Förstått & Bekräfta", linkWalletTitle: "Koppla plånboksadress", linkWalletDesc: "Välj nätverk och bind din privata adress innan du gör ett uttag.", lblWithdrawNet: "UTTAGSNÄTVERK", lblLinkedTarget: "MÅLPLÅNBOKSADRESS", lblLinkNet: "VÄLJ DITT NÄTVERK", lblLinkAddr: "PERSONLIG PLÅNBOKSADRESS", btnSaveLink: "Spara adress", historyTitle: "Uttagshistorik (Rensas efter 24h)", historySubtitle: "Rensas automatiskt efter 24h", historyEmpty: "Ingen uttagshistorik de senaste 24 timmarna.", lblMyAddr: "Din plånboksadress:", btnCopyText: "Kopiera", btnLogoutText: "Logga ut", vipSystemTitle: "VIP-nivåsystem (VIP 1 - 12)", vipSystemSub: "Från 100 USDT+", actTitle: "Aktivera ny saldoackumulering!", actDesc: "Bekräfta för att aktivera din insättning och börja tjäna daglig avkastning.", actBtn: "Aktivera", btnClaim: "Hämta inkomst", timerTitle: "Framsteg för 24h avkastningscykel:", startLabel: "Insättning Start", endLabel: "Klar att hämta (100%)"
+            },
+            fil: {
+                appTitle: "SAVINGS WALLET", bannerTitle: "Tumanggap ng Voucher", bannerSubtitle: "Walang sanglaan", bannerDesc: "Sumali sa node at mag-simula ng mining", btnCert: "Sertipiko", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Kabuuang Output", validNodes: "Mga Balidong Node", participants: "Mga Kalahok", userRevenue: "Kita ng User", outputDetailsTitle: "Mga Detalye ng Output", tableAddr: "Address", tableQty: "Dami", withdrawalTitle: "Pag-withdraw", withdrawalLabel: "HALAGA NG WITHDRAW (USDT)", withdrawalBtn: "Kumpirmahin ang Withdraw", accAccumulated: "Naipong Kita", accToday: "Kita Ngayon", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Balanse ng Wallet", navHome: "Home", navWithdrawal: "Withdraw", navAccount: "Account", btnQuickDeposit: "Mag-deposit sa Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● Online ang Admin", chatWelcomeMsg: "Hello! Paano makatulong ang admin sa iyong mga transaksyon ngayon?", chatPlaceholder: "I-type ang iyong mensahe...", btnChatSend: "Ipadala", certTitle: "SERTIPIKO NG SAVINGS DEPOSIT", certSubtitle: "PROTOCOL NG SAVINGS WALLET", lblOp: "Nagpapatakbo Mula Pa:", valOp: "Taong 2021 (5+ Taong Aktibo)", lblTech: "Standard:", valTech: "Malayang Decentralized Protocol", lblCustody: "Proteksyon sa Asset:", valCustody: "Self-Custody Wallet", lblNet: "Network:", btnConfirm: "Naintindihan at Kumpirmahin", linkWalletTitle: "I-link ang Wallet Address", linkWalletDesc: "Piliin ang network at i-link ang iyong exchange wallet address bago mag-withdraw.", lblWithdrawNet: "WITHDRAWAL NETWORK", lblLinkedTarget: "TARGET WALLET ADDRESS", lblLinkNet: "PILIIN ANG IYONG NETWORK", lblLinkAddr: "PERSONAL WALLET ADDRESS", btnSaveLink: "I-save ang Address", historyTitle: "Kasaysayan ng Withdraw (Auto-Expire sa 24h)", historySubtitle: "Kusang nabubura pagkatapos ng 24h", historyEmpty: "Walang kasaysayan ng withdraw sa huling 24 oras.", lblMyAddr: "Ang iyong Wallet Address:", btnCopyText: "Kopyahin", btnLogoutText: "Mag-logout", vipSystemTitle: "VIP Tiers System (VIP 1 - 12)", vipSystemSub: "Mula 100 USDT+", actTitle: "I-activate ang bagong akumulasyon ng balanse!", actDesc: "Kumpirmahin para ma-activate ang iyong deposit at magsimulang kumita araw-araw.", actBtn: "I-activate", btnClaim: "Kunin ang Kita", timerTitle: "Progreso ng 24h Yield Cycle:", startLabel: "Simula ng Deposit", endLabel: "Handang Kunin (100%)"
             }
         };
 
-        // Hàm thay đổi ngôn ngữ giao diện
-        window.changeLanguage = function(lang) {
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.innerText = translations[lang][key];
-                }
-            });
-        };
+        let currentLang = 'en';
+        let adminClickCount = 0;
 
-        // Cấu hình Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyD2vDHB9W4213Pva6buuDwParbokfliIJU",
-            authDomain: "savings-wallet-44284.firebaseapp.com",
-            databaseURL: "https://savings-wallet-44284-default-rtdb.firebaseio.com",
-            projectId: "savings-wallet-44284",
-            storageBucket: "savings-wallet-44284.firebasestorage.app",
-            messagingSenderId: "419820796386",
-            appId: "1:419820796386:web:b67ab04aad8eaaa02421bb",
-            measurementId: "G-DGTTV1KWX9"
-        };
+        let registeredUsers = JSON.parse(localStorage.getItem('sw_users')) || [];
+        let pendingTx = JSON.parse(localStorage.getItem('sw_pending_tx')) || [];
+        let chatMessages = JSON.parse(localStorage.getItem('sw_chats')) || [];
+        let currentUser = localStorage.getItem('sw_current_user') || null;
+        let timerInterval = null;
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        document.getElementById('sync-status').innerText = "Đã đồng bộ Realtime (andanh102)";
-
-        // Chuyển đổi tab hiển thị
-        window.switchTab = function(tabId, event) {
-            if(event) event.preventDefault();
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('nav a').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.add('active');
-            if(event && event.currentTarget) event.currentTarget.classList.add('active');
+        function saveAllData() {
+            localStorage.setItem('sw_users', JSON.stringify(registeredUsers));
+            localStorage.setItem('sw_pending_tx', JSON.stringify(pendingTx));
+            localStorage.setItem('sw_chats', JSON.stringify(chatMessages));
+            if(currentUser) localStorage.setItem('sw_current_user', currentUser);
         }
 
-        // Lắng nghe dữ liệu Thông báo từ Realtime Database
-        onValue(ref(db, 'admin/notifications'), (snapshot) => {
-            const data = snapshot.val();
-            const tbody = document.getElementById('table-notif');
-            tbody.innerHTML = "";
-            let count = 0;
-            if (data) {
-                for (let key in data) {
-                    count++;
-                    const item = data[key];
-                    tbody.innerHTML += `<tr><td>${item.time || '--'}</td><td>${item.content || ''}</td><td>${item.sender || 'andanh102'}</td></tr>`;
+        function cleanupOldData() {
+            const now = Date.now();
+            const tenDaysMs = 10 * 24 * 60 * 60 * 1000;
+            const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+
+            chatMessages = chatMessages.filter(m => (now - (m.timestamp || now)) < tenDaysMs);
+            pendingTx = pendingTx.filter(t => (now - (t.timestamp || now)) < twentyFourHoursMs);
+            saveAllData();
+        }
+
+        window.onload = function() {
+            cleanupOldData();
+            renderVipTiers();
+            if (currentUser) {
+                const userObj = registeredUsers.find(u => u.username === currentUser);
+                if (userObj) {
+                    document.getElementById('auth-modal').classList.add('hidden');
+                    document.getElementById('auth-nav-btn').innerText = currentUser.substring(0,8) + '...';
+                    updateUserBalanceDisplay(userObj);
+                    loadUserWalletInfo(userObj);
+                    loadUserChatHistory();
+                    loadUserWithdrawalHistory();
+                    checkPendingActivation(userObj);
+                    start24hYieldTimer(userObj);
                 }
             } else {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #777;">Chưa có thông báo nào...</td></tr>`;
+                openAuthModal();
             }
-            document.getElementById('count-notif').innerText = count;
-            document.getElementById('c-over').innerText = count;
-        });
+            updateAdminDashboard();
+        };
 
-        // Lắng nghe dữ liệu Chat CSKH từ Realtime Database
-        onValue(ref(db, 'admin/chats'), (snapshot) => {
-            const data = snapshot.val();
-            const tbody = document.getElementById('table-chat');
-            tbody.innerHTML = "";
-            let count = 0;
-            if (data) {
-                for (let key in data) {
-                    count++;
-                    const item = data[key];
-                    tbody.innerHTML += `<tr><td>${item.time || '--'}</td><td>${item.sender || 'Khách hàng'}</td><td>${item.content || ''}</td></tr>`;
-                }
-            } else {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #777;">Chưa có tin nhắn CSKH nào...</td></tr>`;
-            }
-            document.getElementById('count-chat').innerText = count;
-        });
+        function renderVipTiers() {
+            const container = document.getElementById('vip-tiers-container');
+            container.innerHTML = '';
+            vipConfig.forEach(item => {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                        <div>
+                            <span class="font-bold text-amber-600">VIP ${item.level}</span>
+                            <span class="text-[10px] text-gray-500 ml-1">(≥ ${item.min.toLocaleString()} USDT)</span>
+                        </div>
+                        <div class="font-bold text-emerald-600">+${item.rate.toFixed(2)}% / day</div>
+                    </div>
+                `;
+            });
+        }
 
-        // Lắng nghe dữ liệu Nạp/Rút từ Realtime Database
-        onValue(ref(db, 'admin/wallets'), (snapshot) => {
-            const data = snapshot.val();
-            const tbody = document.getElementById('table-wallet');
-            tbody.innerHTML = "";
-            let count = 0;
-            if (data) {
-                for (let key in data) {
-                    count++;
-                    const item = data[key];
-                    tbody.innerHTML += `<tr><td>${item.time || '--'}</td><td>${item.type || 'Nạp tiền'}</td><td>${item.amount || '0'} VNĐ</td><td style="color:green; font-weight:bold;">Thành công</td></tr>`;
-                }
-            } else {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #777;">Chưa có giao dịch nạp rút nào...</td></tr>`;
-            }
-            document.getElementById('c-wallet').innerText = count;
-        });
-
-        // Lắng nghe danh sách tài khoản hệ thống từ Realtime Database
-        onValue(ref(db, 'admin/accounts'), (snapshot) => {
-            const data = snapshot.val();
-            const tbody = document.getElementById('table-accounts');
-            tbody.innerHTML = "";
-            let count = 0;
-            tbody.innerHTML += `<tr><td>andanh102@gmail.com</td><td><span style="background:#ff9800; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem;">Super Admin</span></td><td style="color:green; font-weight:bold;">Hoạt động</td><td>Mặc định</td></tr>`;
-            if (data) {
-                for (let key in data) {
-                    count++;
-                    const item = data[key];
-                    tbody.innerHTML += `<tr><td>${item.email || 'N/A'}</td><td>Thành viên</td><td style="color:green;">Hoạt động</td><td>Quản lý</td></tr>`;
+        function calculateVipLevel(balance) {
+            for (let i = vipConfig.length - 1; i >= 0; i--) {
+                if (balance >= vipConfig[i].min) {
+                    return vipConfig[i];
                 }
             }
-            document.getElementById('c-acc').innerText = count + 1;
-        });
+            return vipConfig[0];
+        }
 
-        // Thao tác đẩy dữ liệu kiểm tra lên mây
-        window.pushQuickData = function() {
-            const type = document.getElementById('quick-type').value;
-            const content = document.getElementById('quick-content').value;
-            if (!content) {
-                alert("Vui lòng nhập nội dung!");
+        function calculateDepositReturn() {
+            const amt = parseFloat(document.getElementById('deposit-input-amt').value) || 0;
+            const display = document.getElementById('deposit-return-display');
+            
+            if (amt < 100 && amt > 0) {
+                display.innerHTML = `<span class="text-red-500 text-[10px]">Tối thiểu 100 USDT</span>`;
                 return;
             }
-            const newRef = push(ref(db, 'admin/' + type));
-            set(newRef, {
-                content: content,
-                sender: "andanh102@gmail.com",
-                time: new Date().toLocaleString(),
-                type: "Giao dịch nhanh",
-                amount: "500,000"
-            }).then(() => {
-                document.getElementById('quick-content').value = "";
-                alert("Đã đồng bộ dữ liệu lên đám mây thành công!");
-            });
+            
+            if (amt <= 0) {
+                display.innerHTML = `<span>0%</span><span class="text-[10px] text-gray-500">~ $0/ngày</span>`;
+                return;
+            }
+
+            const vip = calculateVipLevel(amt);
+            display.innerHTML = `<span class="text-emerald-700 font-bold">${vip.rate}%</span><span class="text-[10px] text-emerald-600">${vip.desc}</span>`;
         }
+
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { 
+            if(!currentUser) { alert("Bạn phải đăng nhập hoặc tạo tài khoản trước!"); return; }
+            document.getElementById('auth-modal').classList.add('hidden'); 
+        }
+
+        function handleUserAuth() {
+            const user = document.getElementById('auth-username').value.trim();
+            const pass = document.getElementById('auth-password').value.trim();
+            if(!user || !pass) { alert("Vui lòng nhập đầy đủ tài khoản và mật khẩu!"); return; }
+            
+            let userObj = registeredUsers.find(u => u.username === user);
+            if(!userObj) {
+                const uniqueAddr = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
+                userObj = { username: user, password: pass, balance: 0, walletAddress: uniqueAddr, linkedWallet: '', linkedNetwork: '', needsActivation: false, depositStartTime: null };
+                registeredUsers.push(userObj);
+            } else if (userObj.password !== pass) {
+                alert("Mật khẩu không chính xác!");
+                return;
+            }
+
+            currentUser = user;
+            saveAllData();
+            document.getElementById('auth-nav-btn').innerText = user.substring(0,8) + '...';
+            document.getElementById('auth-modal').classList.add('hidden');
+            updateUserBalanceDisplay(userObj);
+            loadUserWalletInfo(userObj);
+            loadUserChatHistory();
+            loadUserWithdrawalHistory();
+            checkPendingActivation(userObj);
+            start24hYieldTimer(userObj);
+            updateAdminDashboard();
+            alert("Đăng nhập thành công!");
+        }
+
+        function handleUserLogout() {
+            currentUser = null;
+            if(timerInterval) clearInterval(timerInterval);
+            localStorage.removeItem('sw_current_user');
+            document.getElementById('auth-nav-btn').innerText = "Login / Register";
+            document.getElementById('user-unique-address').innerText = "0x71C...39f8";
+            document.getElementById('user-usdt-balance').innerText = "0.00 USDT";
+            document.getElementById('user-display-balance').innerText = "0.000000 BNB";
+            document.getElementById('user-today-bnb').innerText = "0.000000 BNB";
+            document.getElementById('user-today-usdt').innerText = "≈ $0.00 USDT";
+            document.getElementById('user-tier-badge').innerText = "VIP 1 (2.00% / day)";
+            document.getElementById('activation-banner-box').classList.add('hidden');
+            document.getElementById('val-timer-countdown').innerText = "24:00:00";
+            document.getElementById('timer-progress-bar').style.width = "0%";
+            openAuthModal();
+        }
+
+        function copyUserAddress() {
+            const addrSpan = document.getElementById('user-unique-address').innerText;
+            if(!currentUser || addrSpan.includes("0x71C")) {
+                alert("Vui lòng đăng nhập để lấy địa chỉ ví!");
+                return;
+            }
+            navigator.clipboard.writeText(addrSpan);
+            alert("Đã sao chép địa chỉ ví thành công: " + addrSpan);
+        }
+
+        function loadUserWalletInfo(userObj) {
+            document.getElementById('user-unique-address').innerText = userObj.walletAddress || ('0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join(''));
+            const displayBox = document.getElementById('display-linked-wallet');
+            if(userObj.linkedWallet) {
+                displayBox.innerHTML = `<span class="text-blue-600 font-bold">[${userObj.linkedNetwork || 'BEP20'}]</span> ${userObj.linkedWallet}`;
+                document.getElementById('link-wallet-address').value = userObj.linkedWallet;
+                if(userObj.linkedNetwork) document.getElementById('link-network-select').value = userObj.linkedNetwork;
+            } else {
+                displayBox.innerHTML = `<span class="text-red-500 font-semibold">Chưa liên kết ví (Vui lòng điền ở Phần 2)</span>`;
+            }
+        }
+
+        function saveUserWalletLink() {
+            if(!currentUser) { alert("Vui lòng đăng nhập!"); return; }
+            const addr = document.getElementById('link-wallet-address').value.trim();
+            const net = document.getElementById('link-network-select').value;
+            if(!addr) { alert("Vui lòng nhập địa chỉ ví của bạn!"); return; }
+
+            const userObj = registeredUsers.find(u => u.username === currentUser);
+            if(userObj) {
+                userObj.linkedWallet = addr;
+                userObj.linkedNetwork = net;
+                saveAllData();
+                loadUserWalletInfo(userObj);
+                alert("Đã liên kết địa chỉ ví thành công!");
+            }
+        }
+
+        function updateUserBalanceDisplay(userObj) {
+            const balance = userObj.balance;
+            document.getElementById('user-usdt-balance').innerText = parseFloat(balance).toFixed(2) + " USDT";
+            document.getElementById('user-display-balance').innerText = (balance / 600).toFixed(6) + " BNB";
+            
+            const vipInfo = calculateVipLevel(balance);
+            document.getElementById('user-tier-badge').innerText = `VIP ${vipInfo.level} (${vipInfo.rate.toFixed(2)}% / day)`;
+        }
+
+        function start24hYieldTimer(userObj) {
+            if(timerInterval) clearInterval(timerInterval);
+
+            const timerLabel = document.getElementById('val-timer-countdown');
+            const progressBar = document.getElementById('timer-progress-bar');
+            const claimBtn = document.getElementById('btn-claim-income');
+
+            if(!userObj || userObj.balance <= 0 || !userObj.depositStartTime) {
+                timerLabel.innerText = "24:00:00";
+                progressBar.style.width = "0%";
+                document.getElementById('user-today-bnb').innerText = "0.000000 BNB";
+                document.getElementById('user-today-usdt').innerText = "≈ $0.00 USDT";
+                claimBtn.disabled = true;
+                return;
+            }
+
+            const totalDuration = 24 * 60 * 60 * 1000;
+
+            timerInterval = setInterval(() => {
+                const now = Date.now();
+                const elapsed = now - userObj.depositStartTime;
+                const remaining = totalDuration - elapsed;
+
+                const vipInfo = calculateVipLevel(userObj.balance);
+                const full24hUsdt = userObj.balance * (vipInfo.rate / 100);
+
+                if (remaining <= 0) {
+                    clearInterval(timerInterval);
+                    timerLabel.innerText = "00:00:00 (Completed)";
+                    timerLabel.className = "font-mono font-bold text-emerald-600 animate-pulse";
+                    progressBar.style.width = "100%";
+                    
+                    document.getElementById('user-today-bnb').innerText = (full24hUsdt / 600).toFixed(6) + " BNB";
+                    document.getElementById('user-today-usdt').innerText = `≈ $${full24hUsdt.toFixed(2)} USDT`;
+                    claimBtn.disabled = false;
+                } else {
+                    const hours = Math.floor(remaining / (1000 * 60 * 60));
+                    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+                    timerLabel.innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    timerLabel.className = "font-mono font-bold text-blue-600";
+                    
+                    const progressPercent = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+                    progressBar.style.width = progressPercent.toFixed(2) + "%";
+
+                    const currentUsdtYield = full24hUsdt * (progressPercent / 100);
+                    document.getElementById('user-today-bnb').innerText = (currentUsdtYield / 600).toFixed(6) + " BNB";
+                    document.getElementById('user-today-usdt').innerText = `≈ $${currentUsdtYield.toFixed(2)} USDT`;
+                    claimBtn.disabled = true;
+                }
+            }, 1000);
+        }
+
+        function claimDailyIncome() {
+            if(!currentUser) { alert("Vui lòng đăng nhập!"); return; }
+            const userObj = registeredUsers.find(u => u.username === currentUser);
+            if(!userObj) return;
+
+            const now = Date.now();
+            const totalDuration = 24 * 60 * 60 * 1000;
+            if(!userObj.depositStartTime || (now - userObj.depositStartTime) < totalDuration) {
+                alert("Chu kỳ 24 giờ chưa hoàn tất! Bạn chỉ có thể rút lợi nhuận khi đếm ngược kết thúc.");
+                return;
+            }
+
+            const vipInfo = calculateVipLevel(userObj.balance);
+            const dailyUsdtIncome = userObj.balance * (vipInfo.rate / 100);
+
+            userObj.balance += dailyUsdtIncome;
+            userObj.depositStartTime = Date.now(); 
+            saveAllData();
+            
+            updateUserBalanceDisplay(userObj);
+            start24hYieldTimer(userObj);
+            alert(`Chúc mừng! Đã rút thành công ${dailyUsdtIncome.toFixed(2)} USDT tiền lợi nhuận 24h về số dư ví chính!`);
+        }
+
+        function openDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
+        function closeDepositModal() { document.getElementById('deposit-modal').classList.add('hidden'); }
+        
+        function submitDepositRequest() {
+            const amt = parseFloat(document.getElementById('deposit-input-amt').value);
+            if(!amt || amt < 100) { alert("Giá trị nạp tối thiểu là 100 USDT!"); return; }
+
+            pendingTx.push({
+                id: Date.now(),
+                type: 'DEPOSIT',
+                username: currentUser,
+                amount: amt,
+                status: 'PENDING',
+                timestamp: Date.now()
+            });
+            saveAllData();
+            closeDepositModal();
+            document.getElementById('deposit-input-amt').value = '';
+            document.getElementById('deposit-return-display').innerHTML = `<span>0%</span><span class="text-[10px] text-gray-500">~ $0/ngày</span>`;
+            alert("Đã gửi yêu cầu nạp tiền! Vui lòng chờ ADM kiểm tra và phê duyệt.");
+            updateAdminDashboard();
+        }
+
+        function checkPendingActivation(userObj) {
+            const box = document.getElementById('activation-banner-box');
+            if(userObj && userObj.needsActivation) {
+                box.classList.remove('hidden');
+            } else {
+                box.classList.add('hidden');
+            }
+        }
+
+        function executeActivation() {
+            if(!currentUser) return;
+            const userObj = registeredUsers.find(u => u.username === currentUser);
+            if(userObj) {
+                userObj.needsActivation = false;
+                userObj.depositStartTime = Date.now();
+                saveAllData();
+                document.getElementById('activation-banner-box').classList.add('hidden');
+                start24hYieldTimer(userObj);
+                alert("Đã kích hoạt tích lũy số dư 24h mới thành công! Khoản tiền đã bắt đầu đếm ngược sinh lời.");
+            }
+        }
+
+        function dismissActivationBanner() {
+            document.getElementById('activation-banner-box').classList.add('hidden');
+            if(currentUser) {
+                const userObj = registeredUsers.find(u => u.username === currentUser);
+                if(userObj) {
+                    userObj.needsActivation = false;
+                    saveAllData();
+                }
+            }
+        }
+
+        function requestWithdrawal() {
+            if(!currentUser) { alert("Vui lòng đăng nhập!"); return; }
+            const userObj = registeredUsers.find(u => u.username === currentUser);
+            if(!userObj || !userObj.linkedWallet) {
+                alert("Bạn CHƯA LIÊN KẾT ĐỊA CHỈ VÍ! Vui lòng hoàn thành Phần 2 bên cạnh trước.");
+                return;
+            }
+
+            const amt = parseFloat(document.getElementById('withdraw-input').value);
+            if(!amt || amt <= 0) { alert("Vui lòng nhập số tiền hợp lệ!"); return; }
+            
+            if(userObj.balance < amt) {
+                alert("Số dư khả dụng không đủ để tạo lệnh rút!");
+                return;
+            }
+
+            const selectedNet = document.getElementById('withdraw-network').value;
+
+            pendingTx.push({
+                id: Date.now(),
+                type: 'WITHDRAW',
+                username: currentUser,
+                amount: amt,
+                network: selectedNet,
+                targetWallet: userObj.linkedWallet,
+                status: 'PENDING',
+                timestamp: Date.now()
+            });
+            saveAllData();
+            document.getElementById('withdraw-input').value = '';
+            alert(`Lệnh rút ${amt} USDT qua mạng [${selectedNet}] đã gửi thành công! Đang chờ ADM duyệt.`);
+            loadUserWithdrawalHistory();
+            updateAdminDashboard();
+        }
+
+        function loadUserWithdrawalHistory() {
+            const container = document.getElementById('withdrawal-history-list');
+            if(!currentUser) return;
+
+            const now = Date.now();
+            const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+            const myHistory = pendingTx.filter(t => t.username === currentUser && t.type === 'WITHDRAW' && (now - (t.timestamp || now)) < twentyFourHoursMs);
+
+            if(myHistory.length === 0) {
+                container.innerHTML = `<div id="history-empty" class="text-gray-400 text-center py-4">No withdrawal history in the last 24 hours.</div>`;
+                return;
+            }
+
+            container.innerHTML = myHistory.map(t => {
+                let statusBadge = '<span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-bold">Pending</span>';
+                if(t.status === 'APPROVED') statusBadge = '<span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-bold">Approved</span>';
+                if(t.status === 'REJECTED') statusBadge = '<span class="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold">Rejected</span>';
+
+                const timeStr = new Date(t.timestamp || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+                return `
+                    <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                        <div>
+                            <div class="font-bold text-gray-800">${t.amount} USDT <span class="text-[10px] text-blue-600">(${t.network || 'BEP20'})</span></div>
+                            <div class="text-[10px] text-gray-400 font-mono">Ví: ${t.targetWallet ? t.targetWallet.substring(0,10) + '...' : 'Cố định'} | ${timeStr}</div>
+                        </div>
+                        <div>${statusBadge}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleAdminSecretClick() {
+            adminClickCount++;
+            if(adminClickCount >= 5) {
+                adminClickCount = 0;
+                document.getElementById('admin-modal').classList.remove('hidden');
+                updateAdminDashboard();
+            }
+        }
+        function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
+
+        function switchAdminTab(tab) {
+            document.getElementById('adm-content-users').classList.add('hidden');
+            document.getElementById('adm-content-approval').classList.add('hidden');
+            document.getElementById('adm-content-rewards').classList.add('hidden');
+            document.getElementById('adm-content-chats').classList.add('hidden');
+            
+            document.getElementById('adm-tab-users').className = "flex-1 py-2 text-gray-400";
+            document.getElementById('adm-tab-approval').className = "flex-1 py-2 text-gray-400";
+            document.getElementById('adm-tab-rewards').className = "flex-1 py-2 text-gray-400";
+            document.getElementById('adm-tab-chats').className = "flex-1 py-2 text-gray-400";
+
+            if(tab === 'users') {
+                document.getElementById('adm-content-users').classList.remove('hidden');
+                document.getElementById('adm-tab-users').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+            } else if(tab === 'approval') {
+                document.getElementById('adm-content-approval').classList.remove('hidden');
+                document.getElementById('adm-tab-approval').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+            } else if(tab === 'rewards') {
+                document.getElementById('adm-content-rewards').classList.remove('hidden');
+                document.getElementById('adm-tab-rewards').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+            } else if(tab === 'chats') {
+                document.getElementById('adm-content-chats').classList.remove('hidden');
+                document.getElementById('adm-tab-chats').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+            }
+        }
+
+        function updateAdminDashboard() {
+            const userContainer = document.getElementById('admin-user-list-container');
+            const selectTarget = document.getElementById('admin-target-user');
+            userContainer.innerHTML = '';
+            selectTarget.innerHTML = '<option value="all">Tất cả người dùng (Broadcast)</option>';
+
+            registeredUsers.forEach(u => {
+                userContainer.innerHTML += `
+                    <div class="bg-white p-2.5 rounded-lg border shadow-sm space-y-1">
+                        <div class="flex justify-between items-center">
+                            <div><b>User:</b> <span class="text-blue-600">${u.username}</span> | <b>Pass:</b> <span class="text-red-500 font-mono">${u.password}</span></div>
+                            <div class="text-emerald-600 font-bold">${u.balance.toFixed(2)} USDT</div>
+                        </div>
+                        <div class="text-[10px] text-gray-500 font-mono">Ví cá nhân: <span class="text-blue-600">${u.walletAddress || 'N/A'}</span></div>
+                    </div>
+                `;
+                selectTarget.innerHTML += `<option value="${u.username}">${u.username}</option>`;
+            });
+
+            const approvalContainer = document.getElementById('admin-approval-container');
+            const pendingList = pendingTx.filter(t => t.status === 'PENDING');
+            document.getElementById('pending-count').innerText = pendingList.length;
+
+            if(pendingList.length === 0) {
+                approvalContainer.innerHTML = '<div class="text-gray-400 text-center py-4">Không có lệnh nạp/rút nào đang chờ duyệt.</div>';
+            } else {
+                approvalContainer.innerHTML = '';
+                pendingList.forEach(t => {
+                    const badgeClass = t.type === 'DEPOSIT' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700';
+                    approvalContainer.innerHTML += `
+                        <div class="bg-white p-2.5 rounded-lg border shadow-sm space-y-2">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${badgeClass}">${t.type}</span>
+                                    <b class="ml-1 text-gray-800">${t.username}</b>: <span class="text-blue-600 font-bold">${t.amount} USDT</span>
+                                </div>
+                                <div class="flex space-x-1">
+                                    <button onclick="approveTransaction(${t.id})" class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded hover:bg-emerald-700">Duyệt</button>
+                                    <button onclick="rejectTransaction(${t.id})" class="bg-gray-400 text-white text-[10px] font-bold px-2 py-1 rounded hover:bg-gray-500">Hủy</button>
+                                </div>
+                            </div>
+                            ${t.type === 'WITHDRAW' ? `<div class="text-[10px] text-gray-500 font-mono">Mạng: <b class="text-blue-600">${t.network}</b> | Ví nhận: <b class="text-purple-600">${t.targetWallet}</b></div>` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('chat-count').innerText = chatMessages.length;
+            const chatContainer = document.getElementById('admin-chat-container');
+            if(chatMessages.length === 0) {
+                chatContainer.innerHTML = '<div class="text-gray-400 text-center py-4">Chưa có tin nhắn hỗ trợ nào.</div>';
+            } else {
+                chatContainer.innerHTML = '';
+                const grouped = {};
+                chatMessages.forEach(m => {
+                    if(!grouped[m.username]) grouped[m.username] = [];
+                    grouped[m.username].push(m);
+                });
+
+                for(let uname in grouped) {
+                    let historyHTML = grouped[uname].map(msg => `
+                        <div class="text-[11px] ${msg.isAdmin ? 'text-purple-700 font-semibold text-right bg-purple-50 p-1 rounded' : 'text-gray-700 text-left bg-white p-1 rounded border'}">
+                            <b>${msg.isAdmin ? 'ADM' : uname}:</b> ${msg.text}
+                        </div>
+                    `).join('');
+
+                    chatContainer.innerHTML += `
+                        <div class="bg-white p-3 rounded-xl border shadow-sm space-y-2">
+                            <div class="font-bold text-blue-600 border-b pb-1">Khách hàng: ${uname}</div>
+                            <div class="space-y-1 max-h-32 overflow-y-auto bg-gray-50 p-2 rounded">${historyHTML}</div>
+                            <div class="flex space-x-1 pt-1">
+                                <input type="text" id="adm-reply-${uname}" placeholder="Nhập câu trả lời của ADM..." class="flex-1 border rounded px-2 py-1 text-xs">
+                                <button onclick="adminSendReply('${uname}')" class="bg-purple-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-purple-700">Gửi phản hồi</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function approveTransaction(id) {
+            const tx = pendingTx.find(t => t.id === id);
+            if(!tx) return;
+
+            const userObj = registeredUsers.find(u => u.username === tx.username);
+            if(userObj) {
+                if(tx.type === 'DEPOSIT') {
+                    userObj.balance += tx.amount;
+                    userObj.needsActivation = true;
+                    userObj.depositStartTime = Date.now();
+                }
+                else if(tx.type === 'WITHDRAW') {
+                    userObj.balance -= tx.amount;
+                }
+
+                tx.status = 'APPROVED';
+                saveAllData();
+                if(currentUser === userObj.username) {
+                    updateUserBalanceDisplay(userObj);
+                    checkPendingActivation(userObj);
+                    start24hYieldTimer(userObj);
+                }
+                updateAdminDashboard();
+                loadUserWithdrawalHistory();
+                alert("Đã phê duyệt thành công!");
+            }
+        }
+
+        function rejectTransaction(id) {
+            const tx = pendingTx.find(t => t.id === id);
+            if(!tx) return;
+            tx.status = 'REJECTED';
+            saveAllData();
+            updateAdminDashboard();
+            loadUserWithdrawalHistory();
+            alert("Đã hủy lệnh giao dịch!");
+        }
+
+        function adminExecuteReward() {
+            const amt = parseFloat(document.getElementById('admin-reward-amount').value);
+            const target = document.getElementById('admin-target-user').value;
+            if(!amt) { alert("Vui lòng nhập số tiền!"); return; }
+
+            if(target === 'all') {
+                registeredUsers.forEach(u => {
+                    u.balance += amt;
+                    u.needsActivation = true;
+                    u.depositStartTime = Date.now();
+                });
+            } else {
+                const found = registeredUsers.find(u => u.username === target);
+                if(found) {
+                    found.balance += amt;
+                    found.needsActivation = true;
+                    found.depositStartTime = Date.now();
+                }
+            }
+
+            saveAllData();
+            const curr = registeredUsers.find(u => u.username === currentUser);
+            if(curr) {
+                updateUserBalanceDisplay(curr);
+                checkPendingActivation(curr);
+                start24hYieldTimer(curr);
+            }
+
+            alert("Phát thưởng thành công!");
+            updateAdminDashboard();
+            closeAdminModal();
+        }
+
+        function adminSendReply(username) {
+            const inputEl = document.getElementById(`adm-reply-${username}`);
+            const text = inputEl.value.trim();
+            if(!text) return;
+
+            chatMessages.push({
+                username: username,
+                text: text,
+                isAdmin: true,
+                timestamp: Date.now()
+            });
+            saveAllData();
+            inputEl.value = '';
+            updateAdminDashboard();
+            loadUserChatHistory();
+            alert("Đã gửi câu trả lời đến khách hàng thành công!");
+        }
+
+        function openSupportChat() { document.getElementById('support-chat-modal').classList.remove('hidden'); loadUserChatHistory(); }
+        function closeSupportChat() { document.getElementById('support-chat-modal').classList.add('hidden'); }
+
+        function loadUserChatHistory() {
+            const box = document.getElementById('chat-messages-box');
+            const t = translations[currentLang] || translations['en'];
+            box.innerHTML = `<div id="chat-welcome-msg" class="bg-blue-50 text-blue-800 p-2 rounded-lg">${t.chatWelcomeMsg}</div>`;
+            
+            if(!currentUser) return;
+            const userChats = chatMessages.filter(m => m.username === currentUser);
+            userChats.forEach(m => {
+                if(m.isAdmin) {
+                    box.innerHTML += `<div class="bg-purple-100 text-purple-900 p-2 rounded-lg text-left"><b>ADM:</b> ${m.text}</div>`;
+                } else {
+                    box.innerHTML += `<div class="bg-gray-100 text-gray-800 p-2 rounded-lg text-right"><b>Bạn (${currentUser}):</b> ${m.text}</div>`;
+                }
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function sendUserMessage() {
+            const txt = document.getElementById('user-chat-input').value.trim();
+            if(!txt) return;
+
+            const name = currentUser ? currentUser : 'Khách';
+            chatMessages.push({
+                username: name,
+                text: txt,
+                isAdmin: false,
+                timestamp: Date.now()
+            });
+            saveAllData();
+
+            document.getElementById('user-chat-input').value = '';
+            loadUserChatHistory();
+            updateAdminDashboard();
+        }
+
+        function toggleLangMenu() { document.getElementById('lang-dropdown').classList.toggle('hidden'); }
+        
+        function selectLanguage(code, name) {
+            currentLang = code;
+            document.getElementById('current-lang-text').innerText = name;
+            document.getElementById('lang-dropdown').classList.add('hidden');
+            const t = translations[code] || translations['en'];
+
+            document.getElementById('txt-app-title').innerText = t.appTitle;
+            document.getElementById('banner-title').innerText = t.bannerTitle;
+            document.getElementById('banner-subtitle').innerText = t.bannerSubtitle;
+            document.getElementById('banner-desc').innerText = t.bannerDesc;
+            document.getElementById('btn-deposit-hub').innerText = t.btnDepositHub;
+            document.getElementById('btn-cert-text').innerText = t.btnCert;
+            document.getElementById('pool-data-title').innerText = t.poolDataTitle;
+            document.getElementById('label-total-output').innerText = t.totalOutput;
+            document.getElementById('label-valid-nodes').innerText = t.validNodes;
+            document.getElementById('label-participants').innerText = t.participants;
+            document.getElementById('label-user-revenue').innerText = t.userRevenue;
+            document.getElementById('output-details-title').innerText = t.outputDetailsTitle;
+            document.getElementById('table-addr').innerText = t.tableAddr;
+            document.getElementById('table-qty').innerText = t.tableQty;
+            document.getElementById('withdrawal-title').innerText = t.withdrawalTitle;
+            document.getElementById('withdrawal-label').innerText = t.withdrawalLabel;
+            document.getElementById('withdrawal-btn').innerText = t.withdrawalBtn;
+            document.getElementById('acc-accumulated').innerText = t.accAccumulated;
+            document.getElementById('acc-today').innerText = t.accToday;
+            document.getElementById('acc-yield').innerText = t.accYield;
+            document.getElementById('acc-pool-wallet').innerText = t.accPoolWallet;
+            document.getElementById('acc-wallet-bal').innerText = t.accWalletBal;
+            document.getElementById('nav-home-text').innerText = t.navHome;
+            document.getElementById('nav-withdrawal-text').innerText = t.navWithdrawal;
+            document.getElementById('nav-account-text').innerText = t.navAccount;
+            document.getElementById('btn-quick-deposit').innerText = t.btnQuickDeposit;
+            document.getElementById('support-tooltip').innerText = t.tooltipSupport;
+            document.getElementById('chat-title').innerText = t.chatTitle;
+            document.getElementById('chat-status').innerText = t.chatStatus;
+            document.getElementById('chat-welcome-msg').innerText = t.chatWelcomeMsg;
+            document.getElementById('user-chat-input').placeholder = t.chatPlaceholder;
+            document.getElementById('btn-chat-send').innerText = t.btnChatSend;
+
+            document.getElementById('modal-cert-title').innerText = t.certTitle;
+            document.getElementById('modal-cert-subtitle').innerText = t.certSubtitle;
+            document.getElementById('modal-lbl-op').innerText = t.lblOp;
+            document.getElementById('modal-val-op').innerText = t.valOp;
+            document.getElementById('modal-lbl-tech').innerText = t.lblTech;
+            document.getElementById('modal-val-tech').innerText = t.valTech;
+            document.getElementById('modal-lbl-custody').innerText = t.lblCustody;
+            document.getElementById('modal-val-custody').innerText = t.valCustody;
+            document.getElementById('modal-lbl-net').innerText = t.lblNet;
+            document.getElementById('modal-btn-confirm').innerText = t.btnConfirm;
+
+            if(t.linkWalletTitle) document.getElementById('link-wallet-title').innerText = t.linkWalletTitle;
+            if(t.linkWalletDesc) document.getElementById('link-wallet-desc').innerText = t.linkWalletDesc;
+            if(t.lblWithdrawNet) document.getElementById('lbl-withdraw-net').innerText = t.lblWithdrawNet;
+            if(t.lblLinkedTarget) document.getElementById('lbl-linked-target').innerText = t.lblLinkedTarget;
+            if(t.lblLinkNet) document.getElementById('lbl-link-net').innerText = t.lblLinkNet;
+            if(t.lblLinkAddr) document.getElementById('lbl-link-addr').innerText = t.lblLinkAddr;
+            if(t.btnSaveLink) document.getElementById('btn-save-link').innerText = t.btnSaveLink;
+            if(t.historyTitle) document.getElementById('history-title').innerText = t.historyTitle;
+            if(t.historySubtitle) document.getElementById('history-subtitle').innerText = t.historySubtitle;
+            if(t.historyEmpty) document.getElementById('history-empty').innerText = t.historyEmpty;
+            if(t.lblMyAddr) document.getElementById('lbl-my-addr').innerText = t.lblMyAddr;
+            if(t.btnCopyText) document.getElementById('btn-copy-text').innerText = t.btnCopyText;
+            if(t.btnLogoutText) document.getElementById('btn-logout-text').innerText = t.btnLogoutText;
+            if(t.vipSystemTitle) document.getElementById('vip-system-title').innerHTML = `<i class="fa-solid fa-crown text-amber-500"></i><span>${t.vipSystemTitle}</span>`;
+            if(t.vipSystemSub) document.getElementById('vip-system-sub').innerText = t.vipSystemSub;
+            if(t.actTitle) document.getElementById('act-banner-title').innerText = t.actTitle;
+            if(t.actDesc) document.getElementById('act-banner-desc').innerText = t.actDesc;
+            if(t.actBtn) document.getElementById('btn-activate-now').innerText = t.actBtn;
+            if(t.btnClaim) document.getElementById('btn-claim-income').innerText = t.btnClaim;
+            if(t.timerTitle) document.getElementById('lbl-timer-24h').innerText = t.timerTitle;
+            if(t.startLabel) document.getElementById('lbl-cycle-start').innerText = t.startLabel;
+            if(t.endLabel) document.getElementById('lbl-cycle-end').innerText = t.endLabel;
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tab-home').classList.add('hidden');
+            document.getElementById('tab-withdrawal').classList.add('hidden');
+            document.getElementById('tab-account').classList.add('hidden');
+            document.getElementById('nav-home').className = "flex flex-col items-center text-gray-400 font-medium";
+            document.getElementById('nav-withdrawal').className = "flex flex-col items-center text-gray-400 font-medium";
+            document.getElementById('nav-account').className = "flex flex-col items-center text-gray-400 font-medium";
+
+            if (tab === 'home') {
+                document.getElementById('tab-home').classList.remove('hidden');
+                document.getElementById('nav-home').className = "flex flex-col items-center text-blue-600 font-medium";
+            } else if (tab === 'withdrawal') {
+                document.getElementById('tab-withdrawal').classList.remove('hidden');
+                document.getElementById('nav-withdrawal').className = "flex flex-col items-center text-blue-600 font-medium";
+            } else if (tab === 'account') {
+                document.getElementById('tab-account').classList.remove('hidden');
+                document.getElementById('nav-account').className = "flex flex-col items-center text-blue-600 font-medium";
+            }
+        }
+
+        function openCertificateModal() { document.getElementById('certificate-modal').classList.remove('hidden'); }
+        function closeCertificateModal() { document.getElementById('certificate-modal').classList.add('hidden'); }
+
+        async function fetchBNBMarketData() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd&include_24hr_change=true');
+                const data = await response.json();
+                if (data && data.binancecoin) {
+                    const priceUSD = data.binancecoin.usd;
+                    document.getElementById('bnb-price-usd').innerText = `$${priceUSD.toLocaleString()} USDT`;
+                    document.getElementById('bnb-market-rate').innerHTML = `<span class="text-green-600">+3.00%</span>`;
+                }
+            } catch (error) {
+                document.getElementById('bnb-market-rate').innerText = "+3.00%";
+                document.getElementById('bnb-price-usd').innerText = "600.00 USDT";
+            }
+        }
+        fetchBNBMarketData();
+
+        let baseOutput = 9153176.23;
+        let baseNodes = 590026;
+        let baseParticipants = 760435;
+        let baseRevenue = 1492587121.89;
+
+        setInterval(() => {
+            const deltaOutput = (Math.random() - 0.48) * 120;
+            const deltaNodes = Math.floor((Math.random() - 0.48) * 9);
+            const deltaParticipants = Math.floor((Math.random() - 0.48) * 15);
+            const deltaRevenue = (Math.random() - 0.48) * 50000;
+
+            baseOutput += deltaOutput;
+            baseNodes += deltaNodes;
+            baseParticipants += deltaParticipants;
+            baseRevenue += deltaRevenue;
+
+            if(baseRevenue < 1400000000) baseRevenue = 1492587121.89;
+
+            document.getElementById('val-total-output').innerText = baseOutput.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " BNB";
+            document.getElementById('val-valid-nodes').innerText = baseNodes.toLocaleString();
+            document.getElementById('val-participants').innerText = baseParticipants.toLocaleString();
+            document.getElementById('val-user-revenue').innerText = "≈ " + baseRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " USDT";
+        }, 45000);
+
+        setInterval(() => {
+            const list = document.getElementById('output-list');
+            if (list) {
+                const newItem = document.createElement('div');
+                newItem.className = 'flex justify-between items-center animate-fade-in';
+                newItem.innerHTML = `
+                    <span class="text-blue-600 font-medium">0x${Math.floor(Math.random()*1e6).toString(16)}...${Math.floor(Math.random()*1e4).toString(16)}</span>
+                    <span class="font-semibold text-gray-700">${(Math.random() * 0.08 + 0.01).toFixed(6)} BNB</span>
+                `;
+                list.insertBefore(newItem, list.firstChild);
+                if (list.children.length > 5) list.removeChild(list.lastChild);
+            }
+        }, 3000);
     </script>
 </body>
 </html>
