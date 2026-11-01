@@ -3,228 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAVINGS WALLET</title>
+    <title id="txt-app-title">SAVINGS WALLET</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .banner-bg {
-            background: linear-gradient(135deg, #091e3a 0%, #1e3a8a 50%, #2563eb 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .banner-bg::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(59,130,246,0.4) 0%, rgba(37,99,235,0) 70%);
-            border-radius: 50%;
-            z-index: 1;
-        }
-        .coin-float { animation: floatCoin 3s ease-in-out infinite; }
-        @keyframes floatCoin { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-6px) rotate(5deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
-        .lang-scroll-list::-webkit-scrollbar { width: 5px; }
-        .lang-scroll-list::-webkit-scrollbar-track { background: #f1f5f9; }
-        .lang-scroll-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    </style>
+    
+    <!-- FIREBASE SDK COMPAT (Dùng để đồng bộ dữ liệu đám mây giữa mọi thiết bị) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen pb-24 select-none">
+<body class="bg-slate-50 text-gray-800 pb-24 select-none">
 
-    <!-- TOP BAR -->
-    <header class="bg-white shadow-sm p-3 flex justify-between items-center sticky top-0 z-40">
-        
-        <!-- MENU ĐỔ NGÔN NGỮ TOÀN CẦU (20 NGÔN NGỮ) -->
-        <div class="relative inline-block text-left">
-            <button onclick="toggleLangMenu()" id="lang-btn" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1 hover:bg-gray-100">
-                <span id="current-lang-text">English</span>
-                <i class="fa-solid fa-chevron-down text-[10px] text-gray-400"></i>
-            </button>
-            <div id="lang-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden">
-                <div class="max-h-64 overflow-y-auto py-1 text-xs text-gray-700 lang-scroll-list">
-                    <button onclick="selectLanguage('en', 'English')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">English (US/UK)</button>
-                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Tiếng Việt (Vietnam)</button>
-                    <button onclick="selectLanguage('zh', '中文')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">中文 (China)</button>
-                    <button onclick="selectLanguage('ja', '日本語')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">日本語 (Japan)</button>
-                    <button onclick="selectLanguage('ko', '한국어')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">한국어 (Korea)</button>
-                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Español (Spain)</button>
-                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Français (France)</button>
-                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Deutsch (Germany)</button>
-                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Русский (Russia)</button>
-                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Português (Brazil)</button>
-                    <button onclick="selectLanguage('ar', 'العربية')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">العربية (Arabic)</button>
-                    <button onclick="selectLanguage('hi', 'हिन्दी')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">हिन्दी (India)</button>
-                    <button onclick="selectLanguage('id', 'Bahasa Indonesia')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Bahasa Indonesia</button>
-                    <button onclick="selectLanguage('th', 'ไทย')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">ไทย (Thailand)</button>
-                    <button onclick="selectLanguage('it', 'Italiano')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Italiano (Italy)</button>
-                    <button onclick="selectLanguage('tr', 'Türkçe')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Türkçe (Turkey)</button>
-                    <button onclick="selectLanguage('nl', 'Nederlands')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Nederlands (Netherlands)</button>
-                    <button onclick="selectLanguage('pl', 'Polski')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Polski (Poland)</button>
-                    <button onclick="selectLanguage('sv', 'Svenska')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Svenska (Sweden)</button>
-                    <button onclick="selectLanguage('fil', 'Filipino')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">Filipino (Philippines)</button>
+    <!-- HEADER / NAVIGATION BAR -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-40 px-4 py-3 flex justify-between items-center shadow-sm">
+        <div class="flex items-center space-x-2">
+            <div class="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-md">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+            <h1 id="txt-app-title-nav" class="font-bold text-gray-900 text-base tracking-wide">SAVINGS WALLET</h1>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <!-- NÚT ĐỔI NGÔN NGỮ -->
+            <div class="relative">
+                <button onclick="toggleLangMenu()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition">
+                    <i class="fa-solid fa-globe"></i>
+                    <span id="current-lang-text">English</span>
+                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                </button>
+                <div id="lang-dropdown" class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-xl py-1 z-50 text-xs max-h-60 overflow-y-auto">
+                    <button onclick="selectLanguage('en', 'English')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">English</button>
+                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Tiếng Việt</button>
+                    <button onclick="selectLanguage('zh', '中文')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">中文</button>
+                    <button onclick="selectLanguage('ja', '日本語')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">日本語</button>
+                    <button onclick="selectLanguage('ko', '한국어')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">한국어</button>
+                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Español</button>
+                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Français</button>
+                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Deutsch</button>
+                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Русский</button>
+                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Português</button>
+                    <button onclick="selectLanguage('ar', 'العربية')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">العربية</button>
+                    <button onclick="selectLanguage('hi', 'हिन्दी')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">हिन्दी</button>
+                    <button onclick="selectLanguage('id', 'Indonesia')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Indonesia</button>
+                    <button onclick="selectLanguage('th', 'ไทย')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">ไทย</button>
+                    <button onclick="selectLanguage('it', 'Italiano')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Italiano</button>
+                    <button onclick="selectLanguage('tr', 'Türkçe')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Türkçe</button>
+                    <button onclick="selectLanguage('nl', 'Nederlands')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Nederlands</button>
+                    <button onclick="selectLanguage('pl', 'Polski')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Polski</button>
+                    <button onclick="selectLanguage('sv', 'Svenska')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Svenska</button>
+                    <button onclick="selectLanguage('fil', 'Filipino')" class="w-full text-left px-3 py-2 hover:bg-blue-50 font-medium">Filipino</button>
                 </div>
             </div>
-        </div>
 
-        <!-- TÊN ỨNG DỤNG -->
-        <div class="absolute left-1/2 transform -translate-x-1/2 cursor-pointer" onclick="handleAdminSecretClick()" title="System Portal">
-            <span id="txt-app-title" class="font-bold text-sm md:text-base text-gray-800 tracking-wide">SAVINGS WALLET</span>
-        </div>
-
-        <!-- RIGHT ACTIONS: AUTH / USER -->
-        <div class="flex items-center space-x-2">
-            <button onclick="openAuthModal()" id="auth-nav-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition shadow">
+            <!-- NÚT ĐĂNG NHẬP / TÀI KHOẢN -->
+            <button onclick="openAuthModal()" id="auth-nav-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow transition">
                 Login / Register
             </button>
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="max-w-4xl mx-auto p-4 space-y-4">
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="p-4 max-w-lg mx-auto space-y-4">
 
-        <!-- TAB 1: TRANG CHỦ (HOME) -->
-        <div id="tab-home" class="max-w-md mx-auto space-y-4">
-            
-            <!-- HERO BANNER -->
-            <div class="relative rounded-2xl overflow-hidden banner-bg text-white p-6 shadow-xl border border-blue-400/20">
-                <div class="pr-24 z-10 relative">
-                    <div class="flex items-center space-x-2 mb-1">
-                        <span class="bg-blue-500/40 text-blue-200 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-blue-300/30">Secure Vault</span>
-                        <span class="bg-emerald-500/30 text-emerald-300 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-300/30">USDT / BNB</span>
-                    </div>
-                    <h1 id="banner-title" class="text-2xl font-extrabold leading-tight tracking-wide drop-shadow">Receive Voucher</h1>
-                    <h2 id="banner-subtitle" class="text-lg font-bold text-blue-200">No pledge</h2>
-                    <p id="banner-desc" class="text-xs text-blue-100 mt-2 opacity-90">Join the node and start mining</p>
+        <!-- THÔNG BÁO KÍCH HOẠT SỐ DƯ MỚI (ẨN/HIỆN THEO TRẠNG THÁI) -->
+        <div id="activation-banner-box" class="hidden bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-4 text-white shadow-lg space-y-2">
+            <div class="flex justify-between items-start">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-triangle-exclamation text-xl animate-bounce"></i>
+                    <h4 id="act-banner-title" class="font-bold text-sm">Activate new balance accumulation!</h4>
                 </div>
-                
-                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center z-20">
-                    <div class="relative w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-2xl border-2 border-white/30 coin-float backdrop-blur-md">
-                        <i class="fa-solid fa-wallet text-3xl text-yellow-300 drop-shadow-md"></i>
-                        <div class="absolute -bottom-2 -right-2 bg-emerald-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md border border-white">
-                            USDT
+                <button onclick="dismissActivationBanner()" class="text-white/80 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p id="act-banner-desc" class="text-xs text-white/90">Confirm to activate your deposit and start earning daily returns.</p>
+            <button onclick="executeActivation()" id="btn-activate-now" class="w-full bg-white text-orange-600 hover:bg-orange-50 font-bold py-2 rounded-xl text-xs shadow transition">
+                Activate
+            </button>
+        </div>
+
+        <!-- TAB 1: HOME -->
+        <div id="tab-home" class="space-y-4">
+            <!-- BANNER GIỚI THIỆU -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden flex justify-between items-center">
+                <div class="space-y-2 z-10">
+                    <span class="bg-white/20 text-[10px] px-2.5 py-1 rounded-full font-semibold" id="banner-subtitle">No pledge</span>
+                    <h2 id="banner-title" class="text-xl font-bold">Receive Voucher</h2>
+                    <p id="banner-desc" class="text-xs text-blue-100">Join the node and start mining</p>
+                    <div class="flex space-x-2 pt-1">
+                        <button onclick="openDepositModal()" id="btn-deposit-hub" class="bg-white text-blue-600 hover:bg-blue-50 font-bold px-3.5 py-2 rounded-xl text-xs shadow transition">Deposit Hub</button>
+                        <button onclick="openCertificateModal()" class="bg-blue-500/50 hover:bg-blue-500 text-white border border-white/30 font-bold px-3.5 py-2 rounded-xl text-xs backdrop-blur-sm transition flex items-center space-x-1.5">
+                            <i class="fa-solid fa-certificate"></i>
+                            <span id="btn-cert-text">Certificate</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-white/10 text-7xl font-black absolute right-2 -bottom-4 select-none pointer-events-none">
+                    <i class="fa-solid fa-vault"></i>
+                </div>
+            </div>
+
+            <!-- ĐỊA CHỈ VÍ CÁ NHÂN -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between">
+                <div>
+                    <span id="lbl-my-addr" class="text-[10px] text-gray-400 block font-medium">Your Wallet Address:</span>
+                    <span id="user-unique-address" class="font-mono text-xs font-bold text-blue-600">0x71C...39f8</span>
+                </div>
+                <button onclick="copyUserAddress()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1">
+                    <i class="fa-solid fa-copy"></i>
+                    <span id="btn-copy-text">Copy</span>
+                </button>
+            </div>
+
+            <!-- THỐNG KÊ POOL DATA (5 BẢNG THÔNG TIN) -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100">
+                <div onclick="handleAdminSecretClick()" class="flex justify-between items-center border-b pb-3 cursor-pointer">
+                    <h3 id="pool-data-title" class="font-bold text-gray-800 text-sm">Pool Data</h3>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-600 font-bold px-2.5 py-1 rounded-full">● Live Nodes</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span id="label-total-output" class="text-gray-400 text-[11px] block">Total Output</span>
+                        <span id="val-total-output" class="font-bold text-gray-800 text-sm mt-0.5 block">9,153,176.23 BNB</span>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span id="label-valid-nodes" class="text-gray-400 text-[11px] block">Valid Nodes</span>
+                        <span id="val-valid-nodes" class="font-bold text-gray-800 text-sm mt-0.5 block">590,026</span>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span id="label-participants" class="text-gray-400 text-[11px] block">Participants</span>
+                        <span id="val-participants" class="font-bold text-gray-800 text-sm mt-0.5 block">760,435</span>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span id="label-user-revenue" class="text-gray-400 text-[11px] block">User Revenue</span>
+                        <span id="val-user-revenue" class="font-bold text-emerald-600 text-sm mt-0.5 block">≈ 1,492,587,121.89 USDT</span>
+                    </div>
+                </div>
+
+                <!-- CHI TIẾT ĐẦU RA (OUTPUT DETAILS) -->
+                <div class="pt-3 border-t border-gray-100 space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <span id="output-details-title" class="font-bold text-gray-700">Output details</span>
+                        <span class="text-[10px] text-gray-400 font-mono">Real-time sync</span>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-3 border border-gray-100">
+                        <div class="grid grid-cols-2 text-[11px] font-bold text-gray-400 border-b pb-2 mb-2">
+                            <span id="table-addr">Address</span>
+                            <span id="table-qty" class="text-right">Quantity</span>
                         </div>
-                    </div>
-                </div>
-
-                <div class="mt-5 flex justify-between items-center relative z-10">
-                    <button onclick="openDepositModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg transition flex items-center space-x-1.5">
-                        <i class="fa-solid fa-qrcode"></i>
-                        <span id="btn-deposit-hub">Deposit Hub</span>
-                    </button>
-                    <button onclick="openCertificateModal()" id="btn-cert" class="bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-bold px-4 py-2 rounded-xl shadow-lg hover:bg-white transition border border-gray-100 flex items-center space-x-1.5">
-                        <i class="fa-solid fa-shield-halved text-blue-600"></i>
-                        <span id="btn-cert-text">Certificate</span>
-                    </button>
-                </div>
-
-                <!-- ĐỊA CHỈ VÍ RIÊNG VÀ SAO CHÉP -->
-                <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs bg-black/20 px-3 py-2 rounded-xl backdrop-blur-sm">
-                    <div class="truncate mr-2">
-                        <span class="text-[10px] text-blue-200 block" id="lbl-my-addr">Your Wallet Address:</span>
-                        <span id="user-unique-address" class="font-mono font-bold text-white truncate">0x71C...39f8</span>
-                    </div>
-                    <button onclick="copyUserAddress()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] shadow transition flex items-center space-x-1 shrink-0">
-                        <i class="fa-regular fa-copy"></i>
-                        <span id="btn-copy-text">Copy</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- KHUNG KÍCH HOẠT TÍCH LŨY -->
-            <div id="activation-banner-box" class="hidden bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between animate-fade-in">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl shrink-0">
-                        <i class="fa-solid fa-bolt-lightning text-yellow-200"></i>
-                    </div>
-                    <div>
-                        <h4 id="act-banner-title" class="font-bold text-sm">Kích hoạt tích lũy số dư mới!</h4>
-                        <p id="act-banner-desc" class="text-[11px] text-amber-100">Xác nhận để kích hoạt khoản nạp và bắt đầu đếm 24h sinh lời.</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2 shrink-0">
-                    <button onclick="executeActivation()" id="btn-activate-now" class="bg-white text-orange-600 font-bold px-3 py-1.5 rounded-xl text-xs shadow hover:bg-orange-50 transition">
-                        Kích hoạt
-                    </button>
-                    <button onclick="dismissActivationBanner()" class="text-white/80 hover:text-white p-1.5" title="Hủy">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- POOL DATA -->
-            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4">
-                <h3 id="pool-data-title" class="text-center font-bold text-gray-800 text-lg mb-2">Pool Data</h3>
-                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
-                    <span id="label-total-output" class="text-sm text-gray-500">Total Output</span>
-                    <span id="val-total-output" class="font-bold text-blue-700">9,153,176.23 BNB</span>
-                </div>
-                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
-                    <span id="label-valid-nodes" class="text-sm text-gray-500">Valid Nodes</span>
-                    <span id="val-valid-nodes" class="font-bold text-blue-700">590,026</span>
-                </div>
-                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
-                    <span id="label-participants" class="text-sm text-gray-500">Participants</span>
-                    <span id="val-participants" class="font-bold text-gray-800">760,435</span>
-                </div>
-                <div class="flex justify-between items-center pt-1">
-                    <span id="label-user-revenue" class="text-sm text-gray-500">User Revenue</span>
-                    <span id="val-user-revenue" class="font-bold text-gray-800">≈ 1,492,587,121.89 USDT</span>
-                </div>
-            </div>
-
-            <!-- OUTPUT DETAILS -->
-            <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3">
-                <h3 id="output-details-title" class="font-bold text-gray-800 text-lg mb-2">Output details</h3>
-                <div class="flex justify-between text-xs text-gray-400 font-semibold border-b pb-2">
-                    <span id="table-addr">Address</span>
-                    <span id="table-qty">Quantity</span>
-                </div>
-                <div id="output-list" class="space-y-3 text-sm">
-                    <div class="flex justify-between items-center">
-                        <span class="text-blue-600 font-medium">0x3f9acc...900270</span>
-                        <span class="font-semibold text-gray-700">0.076273 BNB</span>
+                        <div id="output-list" class="space-y-2 text-xs">
+                            <div class="flex justify-between items-center">
+                                <span class="text-blue-600 font-medium">0x8f4c...1b92</span>
+                                <span class="font-semibold text-gray-700">0.054128 BNB</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-blue-600 font-medium">0x3a9d...7e41</span>
+                                <span class="font-semibold text-gray-700">0.021940 BNB</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-blue-600 font-medium">0x9b21...4f83</span>
+                                <span class="font-semibold text-gray-700">0.089412 BNB</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 2: RÚT TIỀN (WITHDRAWAL) -->
-        <div id="tab-withdrawal" class="hidden space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- TAB 2: WITHDRAWAL -->
+        <div id="tab-withdrawal" class="hidden space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
-                <!-- PHẦN 1: TẠO LỆNH RÚT TIỀN -->
+                <!-- PHẦN 1: TẠO LỆNH RÚT -->
                 <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-gray-100 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center space-x-2 border-b pb-3 mb-3">
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2 border-b pb-3">
                             <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold">1</div>
                             <h3 id="withdrawal-title" class="font-bold text-gray-800 text-base">Withdrawal</h3>
                         </div>
-                        
-                        <div class="space-y-3">
-                            <div>
-                                <label id="lbl-withdraw-net" class="block text-xs font-semibold text-gray-600 mb-1">WITHDRAWAL NETWORK</label>
-                                <select id="withdraw-network" class="w-full border rounded-xl p-2.5 text-xs text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
-                                    <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
-                                    <option value="TRON (TRC20)">TRON (TRC20)</option>
-                                    <option value="Polygon (MATIC)">Polygon (MATIC)</option>
-                                </select>
-                            </div>
 
-                            <div>
-                                <label id="lbl-linked-target" class="block text-xs font-semibold text-gray-600 mb-1">TARGET WALLET ADDRESS</label>
-                                <div id="display-linked-wallet" class="bg-gray-50 p-2.5 rounded-xl border border-gray-200 text-xs text-gray-500 font-mono break-all">
-                                    Not linked yet
-                                </div>
-                            </div>
+                        <div>
+                            <label id="lbl-withdraw-net" class="block text-xs font-semibold text-gray-600 mb-1">WITHDRAWAL NETWORK</label>
+                            <select id="withdraw-network" class="w-full border rounded-xl p-2.5 text-xs text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
+                                <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
+                                <option value="TRON (TRC20)">TRON (TRC20)</option>
+                                <option value="Polygon (MATIC)">Polygon (MATIC)</option>
+                            </select>
+                        </div>
 
-                            <div>
-                                <label id="withdrawal-label" class="block text-xs font-semibold text-gray-600 mb-1">WITHDRAW AMOUNT (USDT)</label>
-                                <input type="number" id="withdraw-input" placeholder="0.00" class="w-full border rounded-xl p-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <div>
+                            <label id="lbl-linked-target" class="block text-xs font-semibold text-gray-600 mb-1">TARGET WALLET ADDRESS</label>
+                            <div id="display-linked-wallet" class="bg-gray-50 border border-gray-200 rounded-xl p-2.5 text-xs font-mono text-gray-600 break-all">
+                                <span class="text-red-500 font-semibold">Chưa liên kết ví (Vui lòng điền ở Phần 2)</span>
                             </div>
+                        </div>
+
+                        <div>
+                            <label id="withdrawal-label" class="block text-xs font-semibold text-gray-600 mb-1">WITHDRAW AMOUNT (USDT)</label>
+                            <input type="number" id="withdraw-input" placeholder="0.00" class="w-full border rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
 
@@ -547,8 +522,28 @@
         </button>
     </nav>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT LOGIC TÍCH HỢP FIREBASE REALTIME DB & ĐỒNG BỘ TOÀN DIỆN -->
     <script>
+        // CẤU HÌNH FIREBASE KẾT NỐI ĐÁM MÂY (Bạn hãy thay thông tin Firebase thực tế của dự án bạn vào đây)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // KÍCH HOẠT FIREBASE DB (Dự phòng LocalStorage nếu chưa điền thông tin Firebase)
+        let db = null;
+        try {
+            if(firebaseConfig.apiKey !== "YOUR_API_KEY") {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.database();
+            }
+        } catch(e) { console.log("Firebase fallback to local"); }
+
         const vipConfig = [
             { level: 1, min: 100, rate: 2.00, desc: "~ $2+ / day" },
             { level: 2, min: 300, rate: 2.50, desc: "~ $7.5+ / day" },
@@ -636,11 +631,49 @@
         let currentUser = localStorage.getItem('sw_current_user') || null;
         let timerInterval = null;
 
+        // ĐỒNG BỘ ĐÁM MÂY QUA FIREBASE VÀ DỰ PHÒNG LOCALSTORAGE
         function saveAllData() {
             localStorage.setItem('sw_users', JSON.stringify(registeredUsers));
             localStorage.setItem('sw_pending_tx', JSON.stringify(pendingTx));
             localStorage.setItem('sw_chats', JSON.stringify(chatMessages));
             if(currentUser) localStorage.setItem('sw_current_user', currentUser);
+
+            if(db) {
+                db.ref('app_data').set({
+                    users: registeredUsers,
+                    pendingTx: pendingTx,
+                    chatMessages: chatMessages
+                });
+            }
+        }
+
+        // LẮNG NGHE DỮ LIỆU THỜI GIAN THỰC TỪ FIREBASE CHO MỌI THIẾT BỊ
+        function initCloudSync() {
+            if(!db) return;
+            db.ref('app_data').on('value', (snapshot) => {
+                const cloudData = snapshot.val();
+                if(cloudData) {
+                    if(cloudData.users) registeredUsers = cloudData.users;
+                    if(cloudData.pendingTx) pendingTx = cloudData.pendingTx;
+                    if(cloudData.chatMessages) chatMessages = cloudData.chatMessages;
+
+                    localStorage.setItem('sw_users', JSON.stringify(registeredUsers));
+                    localStorage.setItem('sw_pending_tx', JSON.stringify(pendingTx));
+                    localStorage.setItem('sw_chats', JSON.stringify(chatMessages));
+
+                    if (currentUser) {
+                        const userObj = registeredUsers.find(u => u.username === currentUser);
+                        if(userObj) {
+                            updateUserBalanceDisplay(userObj);
+                            loadUserWalletInfo(userObj);
+                            checkPendingActivation(userObj);
+                        }
+                    }
+                    updateAdminDashboard();
+                    loadUserChatHistory();
+                    loadUserWithdrawalHistory();
+                }
+            });
         }
 
         function cleanupOldData() {
@@ -656,6 +689,8 @@
         window.onload = function() {
             cleanupOldData();
             renderVipTiers();
+            initCloudSync();
+
             if (currentUser) {
                 const userObj = registeredUsers.find(u => u.username === currentUser);
                 if (userObj) {
