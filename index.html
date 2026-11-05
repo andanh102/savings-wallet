@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- SDK FIREBASE (PHIÊN BẢN COMPAT) -->
+    <!-- SDK FIREBASE COMPAT -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
@@ -52,7 +52,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen pb-28 select-none">
 
-    <!-- TOP BAR (ĐÃ XÓA CHỮ {HTML}) -->
+    <!-- TOP BAR -->
     <header class="bg-white shadow-sm p-3 flex justify-between items-center sticky top-0 z-40">
         <div class="relative inline-block text-left">
             <button onclick="toggleLangMenu()" id="lang-btn" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1 hover:bg-gray-100">
@@ -63,8 +63,8 @@
                 <div class="max-h-72 overflow-y-auto py-1 text-xs text-gray-700 lang-scroll-list">
                     <button onclick="selectLanguage('en', 'English (US/UK)')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">🇺🇸 English (US/UK)</button>
                     <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">🇻🇳 Tiếng Việt (Vietnam)</button>
-                    <button onclick="selectLanguage('zh', '中文 (中国)')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">🇨🇳 中文 (China)</button>
                     <button onclick="selectLanguage('ja', '日本語 (日本)')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">🇯🇵 日本語 (Japan)</button>
+                    <button onclick="selectLanguage('zh', '中文 (中国)')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">🇨🇳 中文 (China)</button>
                     <button onclick="selectLanguage('ko', '한국어 (대한민국)')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">🇰🇷 한국어 (Korea)</button>
                     <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">🇪🇸 Español (Spain)</button>
                     <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-gray-50">🇫🇷 Français (France)</button>
@@ -413,7 +413,7 @@
         </button>
     </div>
 
-    <!-- MODAL 1: AUTH (BỔ SUNG CHỌN NGÔN NGỮ ĐỒNG BỘ VÀ TỰ ĐỘNG DỊCH TRỰC TIẾP) -->
+    <!-- MODAL 1: AUTH -->
     <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative space-y-4 border border-gray-100">
             <button onclick="closeAuthModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
@@ -427,14 +427,13 @@
                 <p id="auth-desc" class="text-xs text-gray-500">Please login or create a new account</p>
             </div>
 
-            <!-- CHỌN NGÔN NGỮ TRONG MODAL ĐĂNG NHẬP -->
             <div class="bg-gray-50 p-2 rounded-xl border border-gray-200 flex items-center justify-between">
                 <span id="lbl-auth-lang" class="text-[11px] font-semibold text-gray-600">Language / Ngôn ngữ:</span>
                 <select id="auth-lang-select" onchange="selectLanguage(this.value, this.options[this.selectedIndex].text)" class="bg-white border rounded-lg px-2 py-1 text-xs font-medium text-gray-700 focus:outline-none">
                     <option value="en">🇺🇸 English</option>
                     <option value="vi">🇻🇳 Tiếng Việt</option>
-                    <option value="zh">🇨🇳 中文</option>
                     <option value="ja">🇯🇵 日本語</option>
+                    <option value="zh">🇨🇳 中文</option>
                     <option value="ko">🇰🇷 한국어</option>
                     <option value="es">🇪🇸 Español</option>
                     <option value="fr">🇫🇷 Français</option>
@@ -460,7 +459,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: DEPOSIT -->
+    <!-- MODAL 2: DEPOSIT (ĐÃ CẬP NHẬT ĐỊA CHỈ VÍ NẠP & NÚT SAO CHÉP TRỰC QUAN) -->
     <div id="deposit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 border border-gray-100 text-center">
             <button onclick="closeDepositModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
@@ -471,8 +470,13 @@
             </div>
             <h3 id="modal-deposit-title" class="text-lg font-bold text-gray-800">Fixed Deposit Hub</h3>
             <p id="modal-deposit-desc" class="text-xs text-gray-500">Transfer USDT/BNB via BEP-20 network to fixed address (Min 100 USDT):</p>
-            <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
-                <div class="text-[11px] font-mono text-blue-600 font-bold break-all">0x6d617b8F9423c10aB2718ef8902A1b23C98f8F9</div>
+            
+            <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200 flex items-center justify-between space-x-2">
+                <div id="fixed-deposit-address" class="text-[11px] font-mono text-blue-600 font-bold truncate">TG4EY8MrSMaNFXnaHjGFPNYDQS5v2jDQap</div>
+                <button onclick="copyFixedDepositAddress()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shrink-0 flex items-center space-x-1">
+                    <i class="fa-regular fa-copy"></i>
+                    <span id="btn-copy-deposit-addr">Copy</span>
+                </button>
             </div>
             
             <div class="grid grid-cols-2 gap-2 text-left">
@@ -609,7 +613,7 @@
         </button>
     </nav>
 
-    <!-- JAVASCRIPT LOGIC DỊCH THUẬT ĐỒNG BỘ TOÀN DIỆN & LƯU PHIÊN ĐĂNG NHẬP (RELOAD KHÔNG BỊ THOÁT) -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyD2vDHB9W4213Pva6buuDwParbokfliIJU",
@@ -639,49 +643,21 @@
             { level: 12, min: 120000, rate: 22.00, desc: "~ $26,400+ / day" }
         ];
 
-        // TỪ ĐIỂN ĐỒNG BỘ NỘI DUNG VÀ TẤT CẢ THÔNG BÁO (ALERTS) THEO NGÔN NGỮ
         const translations = {
             en: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send", certTitle: "SAVINGS DEPOSIT CERTIFICATE", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Operating Since:", valOp: "Year 2021 (5+ Years Active)", lblTech: "Standard:", valTech: "Independent Decentralized Protocol", lblCustody: "Asset Protection:", valCustody: "Self-Custody Wallet", lblNet: "Network:", btnConfirm: "Understood & Confirm", linkWalletTitle: "Link Wallet Address", linkWalletDesc: "Select network & bind your Binance wallet address before withdrawing.", lblWithdrawNet: "WITHDRAWAL NETWORK", lblLinkedTarget: "TARGET WALLET ADDRESS", lblLinkNet: "SELECT YOUR NETWORK", lblLinkAddr: "PERSONAL WALLET ADDRESS", btnSaveLink: "Save Wallet Address", historyTitle: "Withdrawal History (24h Auto-Expiry)", historySubtitle: "Auto-clears after 24h", historyEmpty: "No withdrawal history in the last 24 hours.", lblMyAddr: "Your Wallet Address:", btnCopyText: "Copy", btnLogoutText: "Logout Account", vipSystemTitle: "VIP Tiers System (VIP 1 - 12)", vipSystemSub: "From 100 USDT+", actTitle: "Activate new balance accumulation!", actDesc: "Confirm to activate your deposit and start earning daily returns.", actBtn: "Activate", btnClaim: "Claim Income", timerTitle: "24h Yield Cycle Progress:", startLabel: "Deposit Start", endLabel: "Ready to Claim (100%)", authTitle: "Login / Register", authDesc: "Please login or create a new account", usernameLbl: "Username:", passwordLbl: "Password:", authBtn: "Login / Register Now", modalDepTitle: "Fixed Deposit Hub", modalDepDesc: "Transfer USDT/BNB via BEP-20 network to fixed address (Min 100 USDT):", depAmtLbl: "Deposit Amount (USDT):", depRetLbl: "Expected Return:", depBtn: "Submit Deposit Request (Pending ADM Approval)", badgeSecure: "Secure Vault", welcomeTitle: "Welcome to SAVINGS WALLET!", welcomeSub: "Leading secure savings & daily return wallet protocol.", reviewPrompt: "Rate 5 stars for SAVINGS WALLET to unlock benefits!", reviewPromptSub: "Click on stars on the right to rate now.", tickerLabel: "Supported Cryptocurrencies & Assets",
-                // ALERTS TRONG CÁC THAO TÁC
-                alertFillAuth: "Please enter both username and password!",
-                alertWrongPass: "Incorrect password!",
-                alertAuthSuccess: "Login successful!",
-                alertRateThanks: "Thank you for rating 5 stars for SAVINGS WALLET!",
-                alertLoginRequired: "Please log in to perform this action!",
-                alertCopyAddrSuccess: "Wallet address copied successfully: ",
-                alertSaveLinkSuccess: "Wallet address linked successfully!",
-                alertCycleNotFinished: "24-hour yield cycle is not completed yet!",
-                alertClaimSuccess: "Congratulations! Claimed 24h returns successfully: ",
-                alertMinDeposit: "Minimum deposit value is 100 USDT!",
-                alertDepositSubmitted: "Deposit request submitted! Please wait for ADM approval.",
-                alertActivateSuccess: "Activated new 24h yield accumulation successfully!",
-                alertUnlinkedWallet: "You have NOT LINKED A WALLET ADDRESS! Please complete Section 2 first.",
-                alertInvalidAmount: "Please enter a valid amount!",
-                alertInsuffBalance: "Insufficient available balance!",
-                alertWithdrawSubmitted: "Withdrawal request submitted! Waiting for ADM approval."
+                appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send", certTitle: "SAVINGS DEPOSIT CERTIFICATE", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Operating Since:", valOp: "Year 2021 (5+ Years Active)", lblTech: "Standard:", valTech: "Independent Decentralized Protocol", lblCustody: "Asset Protection:", valCustody: "Self-Custody Wallet", lblNet: "Network:", btnConfirm: "Understood & Confirm", linkWalletTitle: "Link Wallet Address", linkWalletDesc: "Select network & bind your Binance wallet address before withdrawing.", lblWithdrawNet: "WITHDRAWAL NETWORK", lblLinkedTarget: "TARGET WALLET ADDRESS", lblLinkNet: "SELECT YOUR NETWORK", lblLinkAddr: "PERSONAL WALLET ADDRESS", btnSaveLink: "Save Wallet Address", historyTitle: "Withdrawal History (24h Auto-Expiry)", historySubtitle: "Auto-clears after 24h", historyEmpty: "No withdrawal history in the last 24 hours.", lblMyAddr: "Your Wallet Address:", btnCopyText: "Copy", btnLogoutText: "Logout Account", vipSystemTitle: "VIP Tiers System (VIP 1 - 12)", vipSystemSub: "From 100 USDT+", actTitle: "Activate new balance accumulation!", actDesc: "Confirm to activate your deposit and start earning daily returns.", actBtn: "Activate", btnClaim: "Claim Income", timerTitle: "24h Yield Cycle Progress:", startLabel: "Deposit Start", endLabel: "Ready to Claim (100%)", authTitle: "Login / Register", authDesc: "Please login or create a new account", usernameLbl: "Username:", passwordLbl: "Password:", authBtn: "Login / Register Now", modalDepTitle: "Fixed Deposit Hub", modalDepDesc: "Transfer USDT/BNB via BEP-20 network to fixed address (Min 100 USDT):", depAmtLbl: "Deposit Amount (USDT):", depRetLbl: "Expected Return:", depBtn: "Submit Deposit Request (Pending ADM Approval)", badgeSecure: "Secure Vault", welcomeTitle: "Welcome to SAVINGS WALLET!", welcomeSub: "Leading secure savings & daily return wallet protocol.", reviewPrompt: "Rate 5 stars for SAVINGS WALLET to unlock benefits!", reviewPromptSub: "Click on stars on the right to rate now.", tickerLabel: "Supported Cryptocurrencies & Assets", unlinkedWalletText: "Unlinked Wallet Address (Please fill Section 2)", copyBtnText: "Copy",
+                alertFillAuth: "Please enter both username and password!", alertWrongPass: "Incorrect password!", alertAuthSuccess: "Login successful!", alertRateThanks: "Thank you for rating 5 stars for SAVINGS WALLET!", alertLoginRequired: "Please log in to perform this action!", alertCopyAddrSuccess: "Wallet address copied successfully: ", alertSaveLinkSuccess: "Wallet address linked successfully!", alertCycleNotFinished: "24-hour yield cycle is not completed yet!", alertClaimSuccess: "Congratulations! Claimed 24h returns successfully: ", alertMinDeposit: "Minimum deposit value is 100 USDT!", alertDepositSubmitted: "Deposit request submitted! Please wait for ADM approval.", alertActivateSuccess: "Activated new 24h yield accumulation successfully!", alertUnlinkedWallet: "You have NOT LINKED A WALLET ADDRESS! Please complete Section 2 first.", alertInvalidAmount: "Please enter a valid amount!", alertInsuffBalance: "Insufficient available balance!", alertWithdrawSubmitted: "Withdrawal request submitted! Waiting for ADM approval."
             },
             vi: {
-                appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền (Withdrawal)", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút tiền", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi", certTitle: "CHỨNG NHẬN GỬI TIỀN TIẾT KIỆM", certSubtitle: "GIAO THỨC VÍ TIẾT KIỆM", lblOp: "Hoạt động từ:", valOp: "Năm 2021 (Hơn 5 năm hoạt động)", lblTech: "Tiêu chuẩn:", valTech: "Giao thức phi tập trung độc lập", lblCustody: "Bảo vệ tài sản:", valCustody: "Ví tự quản lý (Self-Custody)", lblNet: "Mạng lưới:", btnConfirm: "Đã hiểu & Xác nhận", linkWalletTitle: "Liên kết địa chỉ ví (Link Wallet)", linkWalletDesc: "Khách hàng cần chọn đúng mạng và điền địa chỉ ví Binance/Sàn giao dịch cá nhân trước khi thực hiện rút tiền.", lblWithdrawNet: "MẠNG RÚT TIỀN (NETWORK)", lblLinkedTarget: "VÍ ĐÍCH NHẬN TIỀN", lblLinkNet: "CHỌN MẠNG VÍ CỦA BẠN", lblLinkAddr: "ĐỊA CHỈ VÍ CÁ NHÂN (USDT/BNB)", btnSaveLink: "Lưu địa chỉ ví", historyTitle: "Lịch sử rút tiền (Tự động xóa sau 24h)", historySubtitle: "Tự động xóa sau 24h", historyEmpty: "Chưa có lịch sử rút tiền trong 24 giờ qua.", lblMyAddr: "Địa chỉ ví của bạn:", btnCopyText: "Sao chép", btnLogoutText: "Đăng xuất tài khoản", vipSystemTitle: "Hệ Thống Cấp Độ VIP (VIP 1 - 12)", vipSystemSub: "Từ 100 USDT+", actTitle: "Kích hoạt tích lũy số dư mới!", actDesc: "Xác nhận để kích hoạt khoản nạp và bắt đầu đếm 24h sinh lời.", actBtn: "Kích hoạt", btnClaim: "Rút lợi nhuận", timerTitle: "Tiến trình chu kỳ sinh lời 24h:", startLabel: "Bắt đầu nạp", endLabel: "Đủ 100% để rút", authTitle: "Đăng nhập / Đăng ký", authDesc: "Vui lòng đăng nhập hoặc tạo tài khoản mới", usernameLbl: "Tên đăng nhập:", passwordLbl: "Mật khẩu:", authBtn: "Đăng nhập / Đăng ký ngay", modalDepTitle: "Cổng Nạp Tiền Cố Định", modalDepDesc: "Chuyển USDT/BNB qua mạng BEP-20 vào địa chỉ cố định (Tối thiểu 100 USDT):", depAmtLbl: "Số tiền nạp (USDT):", depRetLbl: "Lợi nhuận dự kiến:", depBtn: "Gửi Yêu Cầu Nạp Tiền (Chờ ADM Duyệt)", badgeSecure: "Kho bảo mật", welcomeTitle: "Chào mừng bạn đã đến với SAVINGS WALLET!", welcomeSub: "Hệ thống ví tiết kiệm và đầu tư lợi nhuận 24h an toàn hàng đầu.", reviewPrompt: "Đánh giá 5 sao cho SAVINGS WALLET để nhận ưu đãi!", reviewPromptSub: "Click vào các ngôi sao bên phải để đánh giá ngay.", tickerLabel: "Các loại tiền điện tử & tài sản được hỗ trợ",
-                alertFillAuth: "Vui lòng nhập đầy đủ tài khoản và mật khẩu!",
-                alertWrongPass: "Mật khẩu không chính xác!",
-                alertAuthSuccess: "Đăng nhập thành công!",
-                alertRateThanks: "Cảm ơn bạn đã đánh giá 5 sao cho SAVINGS WALLET!",
-                alertLoginRequired: "Vui lòng đăng nhập để thực hiện thao tác!",
-                alertCopyAddrSuccess: "Đã sao chép địa chỉ ví thành công: ",
-                alertSaveLinkSuccess: "Đã liên kết địa chỉ ví thành công!",
-                alertCycleNotFinished: "Chu kỳ 24 giờ chưa hoàn tất!",
-                alertClaimSuccess: "Chúc mừng! Đã rút thành công lợi nhuận 24h: ",
-                alertMinDeposit: "Giá trị nạp tối thiểu là 100 USDT!",
-                alertDepositSubmitted: "Đã gửi yêu cầu nạp tiền! Vui lòng chờ ADM kiểm tra và phê duyệt.",
-                alertActivateSuccess: "Đã kích hoạt tích lũy số dư 24h mới thành công!",
-                alertUnlinkedWallet: "Bạn CHƯA LIÊN KẾT ĐỊA CHỈ VÍ! Vui lòng hoàn thành Phần 2 trước.",
-                alertInvalidAmount: "Vui lòng nhập số tiền hợp lệ!",
-                alertInsuffBalance: "Số dư khả dụng không đủ!",
-                alertWithdrawSubmitted: "Lệnh rút đã gửi thành công! Đang chờ ADM duyệt."
+                appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền (Withdrawal)", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút tiền", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi", certTitle: "CHỨNG NHẬN GỬI TIỀN TIẾT KIỆM", certSubtitle: "GIAO THỨC VÍ TIẾT KIỆM", lblOp: "Hoạt động từ:", valOp: "Năm 2021 (Hơn 5 năm hoạt động)", lblTech: "Tiêu chuẩn:", valTech: "Giao thức phi tập trung độc lập", lblCustody: "Bảo vệ tài sản:", valCustody: "Ví tự quản lý (Self-Custody)", lblNet: "Mạng lưới:", btnConfirm: "Đã hiểu & Xác nhận", linkWalletTitle: "Liên kết địa chỉ ví (Link Wallet)", linkWalletDesc: "Khách hàng cần chọn đúng mạng và điền địa chỉ ví Binance/Sàn giao dịch cá nhân trước khi thực hiện rút tiền.", lblWithdrawNet: "MẠNG RÚT TIỀN (NETWORK)", lblLinkedTarget: "VÍ ĐÍCH NHẬN TIỀN", lblLinkNet: "CHỌN MẠNG VÍ CỦA BẠN", lblLinkAddr: "ĐỊA CHỈ VÍ CÁ NHÂN (USDT/BNB)", btnSaveLink: "Lưu địa chỉ ví", historyTitle: "Lịch sử rút tiền (Tự động xóa sau 24h)", historySubtitle: "Tự động xóa sau 24h", historyEmpty: "Chưa có lịch sử rút tiền trong 24 giờ qua.", lblMyAddr: "Địa chỉ ví của bạn:", btnCopyText: "Sao chép", btnLogoutText: "Đăng xuất tài khoản", vipSystemTitle: "Hệ Thống Cấp Độ VIP (VIP 1 - 12)", vipSystemSub: "Từ 100 USDT+", actTitle: "Kích hoạt tích lũy số dư mới!", actDesc: "Xác nhận để kích hoạt khoản nạp và bắt đầu đếm 24h sinh lời.", actBtn: "Kích hoạt", btnClaim: "Rút lợi nhuận", timerTitle: "Tiến trình chu kỳ sinh lời 24h:", startLabel: "Bắt đầu nạp", endLabel: "Đủ 100% để rút", authTitle: "Đăng nhập / Đăng ký", authDesc: "Vui lòng đăng nhập hoặc tạo tài khoản mới", usernameLbl: "Tên đăng nhập:", passwordLbl: "Mật khẩu:", authBtn: "Đăng nhập / Đăng ký ngay", modalDepTitle: "Cổng Nạp Tiền Cố Định", modalDepDesc: "Chuyển USDT/BNB qua mạng BEP-20 vào địa chỉ cố định (Tối thiểu 100 USDT):", depAmtLbl: "Số tiền nạp (USDT):", depRetLbl: "Lợi nhuận dự kiến:", depBtn: "Gửi Yêu Cầu Nạp Tiền (Chờ ADM Duyệt)", badgeSecure: "Kho bảo mật", welcomeTitle: "Chào mừng bạn đã đến với SAVINGS WALLET!", welcomeSub: "Hệ thống ví tiết kiệm và đầu tư lợi nhuận 24h an toàn hàng đầu.", reviewPrompt: "Đánh giá 5 sao cho SAVINGS WALLET để nhận ưu đãi!", reviewPromptSub: "Click vào các ngôi sao bên phải để đánh giá ngay.", tickerLabel: "Các loại tiền điện tử & tài sản được hỗ trợ", unlinkedWalletText: "Chưa liên kết ví (Vui lòng điền ở Phần 2)", copyBtnText: "Sao chép",
+                alertFillAuth: "Vui lòng nhập đầy đủ tài khoản và mật khẩu!", alertWrongPass: "Mật khẩu không chính xác!", alertAuthSuccess: "Đăng nhập thành công!", alertRateThanks: "Cảm ơn bạn đã đánh giá 5 sao cho SAVINGS WALLET!", alertLoginRequired: "Vui lòng đăng nhập để thực hiện thao tác!", alertCopyAddrSuccess: "Đã sao chép địa chỉ ví thành công: ", alertSaveLinkSuccess: "Đã liên kết địa chỉ ví thành công!", alertCycleNotFinished: "Chu kỳ 24 giờ chưa hoàn tất!", alertClaimSuccess: "Chúc mừng! Đã rút thành công lợi nhuận 24h: ", alertMinDeposit: "Giá trị nạp tối thiểu là 100 USDT!", alertDepositSubmitted: "Đã gửi yêu cầu nạp tiền! Vui lòng chờ ADM kiểm tra và phê duyệt.", alertActivateSuccess: "Đã kích hoạt tích lũy số dư 24h mới thành công!", alertUnlinkedWallet: "Bạn CHƯA LIÊN KẾT ĐỊA CHỈ VÍ! Vui lòng hoàn thành Phần 2 trước.", alertInvalidAmount: "Vui lòng nhập số tiền hợp lệ!", alertInsuffBalance: "Số dư khả dụng không đủ!", alertWithdrawSubmitted: "Lệnh rút đã gửi thành công! Đang chờ ADM duyệt."
+            },
+            ja: {
+                appTitle: "SAVINGS WALLET", bannerTitle: "バウチャーを受け取る", bannerSubtitle: "プレッジなし", bannerDesc: "ノードに参加してマイニングを開始", btnCert: "証明書", btnDepositHub: "入金ハブ", poolDataTitle: "プールデータ", totalOutput: "総出力", validNodes: "有効ノード", participants: "参加者", userRevenue: "ユーザー収益", outputDetailsTitle: "出力詳細", tableAddr: "アドレス", tableQty: "数量", withdrawalTitle: "出金", withdrawalLabel: "出金額 (USDT)", withdrawalBtn: "出金を確定", accAccumulated: "累計収入", accToday: "本日の収入", accYield: "市場利回り", accPoolWallet: "プールウォレット", accWalletBal: "ウォレット残高", navHome: "ホーム", navWithdrawal: "出金", navAccount: "アカウント", btnQuickDeposit: "固定ウォレットに入金", tooltipSupport: "24/7サポート!", chatTitle: "24/7 ライブサポート", chatStatus: "● 管理者オンライン", chatWelcomeMsg: "こんにちは！本日はどのようなサポートが必要ですか？", chatPlaceholder: "メッセージを入力...", btnChatSend: "送信", certTitle: "預金証明書", certSubtitle: "セービングプロトコル", lblOp: "運営開始:", valOp: "2021年 (5年以上稼働)", lblTech: "標準:", valTech: "分散型プロトコル", lblCustody: "資産保護:", valCustody: "セルフカストディ", lblNet: "ネットワーク:", btnConfirm: "理解して確認", linkWalletTitle: "ウォレットを連携", linkWalletDesc: "出金前にウォレットアドレスを連携してください。", lblWithdrawNet: "出金ネットワーク", lblLinkedTarget: "宛先ウォレット", lblLinkNet: "ネットワーク選択", lblLinkAddr: "個人ウォレットアドレス", btnSaveLink: "アドレスを保存", historyTitle: "出金履歴 (24時間で自動消去)", historySubtitle: "24時間後に消去", historyEmpty: "出金履歴はありません。", lblMyAddr: "あなたのウォレット:", btnCopyText: "コピー", btnLogoutText: "ログアウト", vipSystemTitle: "VIPシステム (1 - 12)", vipSystemSub: "100 USDT以上", actTitle: "残高の蓄積を有効化！", actDesc: "入金を有効にして収益を受け取ります。", actBtn: "有効化", btnClaim: "収益を請求", timerTitle: "24時間サイクル:", startLabel: "開始", endLabel: "受取可能 (100%)", authTitle: "ログイン / 登録", authDesc: "アカウントにログインまたは作成", usernameLbl: "ユーザー名:", passwordLbl: "パスワード:", authBtn: "今すぐログイン / 登録", modalDepTitle: "固定入金ハブ", modalDepDesc: "BEP-20ネットワーク経由で入金 (最小100 USDT):", depAmtLbl: "金額 (USDT):", depRetLbl: "予想利益:", depBtn: "入金申請を送信", badgeSecure: "セキュア金庫", welcomeTitle: "SAVINGS WALLETへようこそ！", welcomeSub: "安全な貯蓄と毎日のリターンを提供するプロトコル。", reviewPrompt: "5つ星評価をつけて特典をアンロック！", reviewPromptSub: "右側の星をクリックして評価してください。", tickerLabel: "サポートされている暗号通貨と資産", unlinkedWalletText: "ウォレットアドレス未連携（ステップ2で入力してください）", copyBtnText: "コピー",
+                alertFillAuth: "ユーザー名とパスワードを入力してください！", alertWrongPass: "パスワードが正しくありません！", alertAuthSuccess: "ログインに成功しました！", alertRateThanks: "SAVINGS WALLETを5つ星と評価していただきありがとうございます！", alertLoginRequired: "この操作を行うにはログインしてください！", alertCopyAddrSuccess: "ウォレットアドレスを正常にコピーしました: ", alertSaveLinkSuccess: "ウォレットアドレスを正常に連携しました！", alertCycleNotFinished: "24時間の利回りサイクルがまだ完了していません！", alertClaimSuccess: "おめでとうございます！24時間の収益を正常に受け取りました: ", alertMinDeposit: "最低入金額は100 USDTです！", alertDepositSubmitted: "入金申請が送信されました！管理者の承認をお待ちください。", alertActivateSuccess: "新しい24時間収益蓄積を正常に有効化しました！", alertUnlinkedWallet: "ウォレットアドレスが連携されていません！最初にステップ2を完了してください。", alertInvalidAmount: "有効な金額を入力してください！", alertInsuffBalance: "利用可能な残高が不足しています！", alertWithdrawSubmitted: "出金申請が送信されました！管理者の承認を待っています。"
             },
             zh: {
-                appTitle: "储蓄 钱包", bannerTitle: "领取优惠券", bannerSubtitle: "无质押", bannerDesc: "加入节点并开始挖矿", btnCert: "证书", btnDepositHub: "充值中心", poolDataTitle: "池数据", totalOutput: "总产出", validNodes: "有效节点", participants: "参与者", userRevenue: "用户收益", outputDetailsTitle: "产出详情", tableAddr: "地址", tableQty: "数量", withdrawalTitle: "提现", withdrawalLabel: "提现金额 (USDT)", withdrawalBtn: "确认提现", accAccumulated: "累计收入", accToday: "今日收入", accYield: "市场收益", accPoolWallet: "池钱包", accWalletBal: "钱包余额", navHome: "首页", navWithdrawal: "提现", navAccount: "账户", btnQuickDeposit: "存入固定钱包", tooltipSupport: "24/7在线客服!", chatTitle: "24/7 在线客服", chatStatus: "● 管理员在线", chatWelcomeMsg: "您好！管理员今天能为您的储蓄钱包交易提供什么帮助？", chatPlaceholder: "输入您的消息...", btnChatSend: "发送", certTitle: "储蓄存款证书", certSubtitle: "储蓄钱包协议", lblOp: "运营时间:", valOp: "2021年 (已活跃5年以上)", lblTech: "标准:", valTech: "独立去中心化协议", lblCustody: "资产保护:", valCustody: "自我托管钱包", lblNet: "网络:", btnConfirm: "了解并确认", linkWalletTitle: "绑定钱包地址", linkWalletDesc: "提现前请选择网络并绑定您的币安或个人交易所钱包地址。", lblWithdrawNet: "提现网络", lblLinkedTarget: "目标钱包地址", lblLinkNet: "选择您的网络", lblLinkAddr: "个人钱包地址", btnSaveLink: "保存钱包地址", historyTitle: "提现历史 (24小时自动清空)", historySubtitle: "24小时后自动清除", historyEmpty: "过去24小时内无提现记录。", lblMyAddr: "您的钱包地址:", btnCopyText: "复制", btnLogoutText: "退出账户", vipSystemTitle: "VIP 等级系统 (VIP 1 - 12)", vipSystemSub: "100 USDT 起", actTitle: "激活新余额累积！", actDesc: "确认激活您的存款并开始赚取每日收益。", actBtn: "激活", btnClaim: "领取收益", timerTitle: "24小时收益周期进度:", startLabel: "存款开始", endLabel: "准备领取 (100%)", authTitle: "登录 / 注册", authDesc: "请登录或创建新账户", usernameLbl: "用户名:", passwordLbl: "密码:", authBtn: "立即登录 / 注册", modalDepTitle: "固定充值中心", modalDepDesc: "通过 BEP-20 网络将 USDT/BNB 转入固定地址 (最低 100 USDT):", depAmtLbl: "充值金额 (USDT):", depRetLbl: "预期收益:", depBtn: "发送充值请求 (等待管理员审核)", badgeSecure: "安全金库", welcomeTitle: "欢迎来到 SAVINGS WALLET！", welcomeSub: "领先的安全储蓄和每日回报钱包协议。", reviewPrompt: "为 SAVINGS WALLET 评 5 星以解锁福利！", reviewPromptSub: "点击右侧星星立即评分。", tickerLabel: "支持的加密货币和资产",
+                appTitle: "储蓄 钱包", bannerTitle: "领取优惠券", bannerSubtitle: "无质押", bannerDesc: "加入节点并开始挖矿", btnCert: "证书", btnDepositHub: "充值中心", poolDataTitle: "池数据", totalOutput: "总产出", validNodes: "有效节点", participants: "参与者", userRevenue: "用户收益", outputDetailsTitle: "产出详情", tableAddr: "地址", tableQty: "数量", withdrawalTitle: "提现", withdrawalLabel: "提现金额 (USDT)", withdrawalBtn: "确认提现", accAccumulated: "累计收入", accToday: "今日收入", accYield: "市场收益", accPoolWallet: "池钱包", accWalletBal: "钱包余额", navHome: "首页", navWithdrawal: "提现", navAccount: "账户", btnQuickDeposit: "存入固定钱包", tooltipSupport: "24/7在线客服!", chatTitle: "24/7 在线客服", chatStatus: "● 管理员在线", chatWelcomeMsg: "您好！管理员今天能为您的储蓄钱包交易提供什么帮助？", chatPlaceholder: "输入您的消息...", btnChatSend: "发送", certTitle: "储蓄存款证书", certSubtitle: "储蓄钱包协议", lblOp: "运营时间:", valOp: "2021年 (已活跃5年以上)", lblTech: "标准:", valTech: "独立去中心化协议", lblCustody: "资产保护:", valCustody: "自我托管钱包", lblNet: "网络:", btnConfirm: "了解并确认", linkWalletTitle: "绑定钱包地址", linkWalletDesc: "提现前请选择网络并绑定您的币安或个人交易所钱包地址。", lblWithdrawNet: "提现网络", lblLinkedTarget: "目标钱包地址", lblLinkNet: "选择您的网络", lblLinkAddr: "个人钱包地址", btnSaveLink: "保存钱包地址", historyTitle: "提现历史 (24小时自动清空)", historySubtitle: "24小时后自动清除", historyEmpty: "过去24小时内无提现记录。", lblMyAddr: "您的钱包地址:", btnCopyText: "复制", btnLogoutText: "退出账户", vipSystemTitle: "VIP 等级系统 (VIP 1 - 12)", vipSystemSub: "100 USDT 起", actTitle: "激活新余额累积！", actDesc: "确认激活您的存款并开始赚取每日收益。", actBtn: "激活", btnClaim: "领取收益", timerTitle: "24小时收益周期进度:", startLabel: "存款开始", endLabel: "准备领取 (100%)", authTitle: "登录 / 注册", authDesc: "请登录或创建新账户", usernameLbl: "用户名:", passwordLbl: "密码:", authBtn: "立即登录 / 注册", modalDepTitle: "固定充值中心", modalDepDesc: "通过 BEP-20 网络将 USDT/BNB 转入固定地址 (最低 100 USDT):", depAmtLbl: "充值金额 (USDT):", depRetLbl: "预期收益:", depBtn: "发送充值请求 (等待管理员审核)", badgeSecure: "安全金库", welcomeTitle: "欢迎来到 SAVINGS WALLET！", welcomeSub: "领先的安全储蓄和每日回报钱包协议。", reviewPrompt: "为 SAVINGS WALLET 评 5 星以解锁福利！", reviewPromptSub: "点击右侧星星立即评分。", tickerLabel: "支持的加密货币和资产", unlinkedWalletText: "未绑定钱包地址 (请在第 2 部分填写)", copyBtnText: "复制",
                 alertFillAuth: "请输入用户名和密码！", alertWrongPass: "密码错误！", alertAuthSuccess: "登录成功！", alertRateThanks: "感谢您为 SAVINGS WALLET 评价 5 星！", alertLoginRequired: "请登录后操作！", alertCopyAddrSuccess: "成功复制钱包地址: ", alertSaveLinkSuccess: "成功绑定钱包地址！", alertCycleNotFinished: "24小时周期未完成！", alertClaimSuccess: "恭喜！成功领取收益: ", alertMinDeposit: "最低充值金额为 100 USDT！", alertDepositSubmitted: "充值请求已提交，请等待管理员审核！", alertActivateSuccess: "成功激活24小时收益累积！", alertUnlinkedWallet: "您尚未绑定钱包地址，请先完成步骤2！", alertInvalidAmount: "请输入有效金额！", alertInsuffBalance: "可用余额不足！", alertWithdrawSubmitted: "提现申请已提交，等待管理员审核！"
             }
         };
@@ -695,7 +671,7 @@
         let registeredUsers = [];
         let pendingTx = [];
         let chatMessages = [];
-        let currentUser = localStorage.getItem('savings_wallet_currentUser') || null; // LƯU PHIÊN ĐĂNG NHẬP (RELOAD KHÔNG BỊ THOÁT)
+        let currentUser = localStorage.getItem('savings_wallet_currentUser') || null;
         let timerInterval = null;
         let hasRated = false;
 
@@ -739,11 +715,9 @@
             fetchBNBMarketData();
             listenFirebaseData();
             
-            // ÁP DỤNG NGÔN NGỮ ĐÃ LƯU HOẶC MẶC ĐỊNH TIẾNG ANH
-            const savedLangName = currentLang === 'vi' ? 'Tiếng Việt' : (currentLang === 'zh' ? '中文' : 'English (US/UK)');
+            const savedLangName = currentLang === 'vi' ? 'Tiếng Việt' : (currentLang === 'ja' ? '日本語 (日本)' : (currentLang === 'zh' ? '中文 (中国)' : 'English (US/UK)'));
             selectLanguage(currentLang, savedLangName);
 
-            // KIỂM TRA DUY TRÌ PHIÊN ĐĂNG NHẬP KHI LÀM MỚI TRANG
             if (currentUser) {
                 document.getElementById('auth-modal').classList.add('hidden');
                 if (currentUser === 'admin') {
@@ -840,7 +814,6 @@
                 currentUser = user;
             }
 
-            // LƯU TÊN NGƯỜI DÙNG VÀO LOCALSTORAGE
             localStorage.setItem('savings_wallet_currentUser', currentUser);
             document.getElementById('auth-modal').classList.add('hidden');
 
@@ -923,17 +896,26 @@
             alert(t.alertCopyAddrSuccess + addrSpan);
         }
 
+        // HÀM SAO CHÉP ĐỊA CHỈ NẠP CỐ ĐỊNH MỚI
+        function copyFixedDepositAddress() {
+            const t = getTranslation(currentLang);
+            const addr = "TG4EY8MrSMaNFXnaHjGFPNYDQS5v2jDQap";
+            navigator.clipboard.writeText(addr);
+            alert(t.alertCopyAddrSuccess + addr);
+        }
+
         function loadUserWalletInfo(userObj) {
-            if(!userObj) return;
-            document.getElementById('user-unique-address').innerText = userObj.walletAddress;
             const displayBox = document.getElementById('display-linked-wallet');
             const t = getTranslation(currentLang);
-            if(userObj.linkedWallet) {
+            if(userObj && userObj.linkedWallet) {
                 displayBox.innerHTML = `<span class="text-blue-600 font-bold">[${userObj.linkedNetwork || 'BEP20'}]</span> ${userObj.linkedWallet}`;
                 document.getElementById('link-wallet-address').value = userObj.linkedWallet;
                 if(userObj.linkedNetwork) document.getElementById('link-network-select').value = userObj.linkedNetwork;
             } else {
-                displayBox.innerHTML = `<span class="text-red-500 font-semibold">${currentLang === 'vi' ? 'Chưa liên kết ví (Vui lòng điền ở Phần 2)' : 'Unlinked Wallet Address (Please fill Section 2)'}</span>`;
+                displayBox.innerHTML = `<span class="text-red-500 font-semibold">${t.unlinkedWalletText}</span>`;
+            }
+            if(userObj && userObj.walletAddress) {
+                document.getElementById('user-unique-address').innerText = userObj.walletAddress;
             }
         }
 
@@ -1369,7 +1351,6 @@
 
         function toggleLangMenu() { document.getElementById('lang-dropdown').classList.toggle('hidden'); }
         
-        // HÀM CHỌN NGÔN NGỮ & LƯU VÀO LOCALSTORAGE DE DUY TRI KHI RELOAD
         function selectLanguage(code, name) {
             currentLang = code;
             localStorage.setItem('savings_wallet_lang', code);
@@ -1436,6 +1417,7 @@
             document.getElementById('lbl-deposit-amt').innerText = t.depAmtLbl;
             document.getElementById('lbl-deposit-return').innerText = t.depRetLbl;
             document.getElementById('btn-submit-deposit').innerText = t.depBtn;
+            document.getElementById('btn-copy-deposit-addr').innerText = t.copyBtnText;
             
             document.getElementById('welcome-user-title').innerText = t.welcomeTitle;
             document.getElementById('welcome-user-sub').innerText = t.welcomeSub;
@@ -1470,6 +1452,8 @@
             if(currentUser) {
                 const myUserObj = registeredUsers.find(u => u.username === currentUser);
                 if(myUserObj) loadUserWalletInfo(myUserObj);
+            } else {
+                loadUserWalletInfo(null);
             }
         }
 
