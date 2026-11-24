@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAVINGS WALLET — Vault & Yield Protocol</title>
+    <title>SAVINGS WALLET — Vault, Markets & Exchange Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -14,35 +14,40 @@
 
     <style>
         :root {
-            --vault-navy: #091e3a;
-            --vault-blue: #1e3a8a;
-            --vault-accent: #2563eb;
-            --vault-emerald: #059669;
-            --vault-amber: #d97706;
-            --vault-surface: #ffffff;
-            --vault-bg: #f1f5f9;
+            --bn-bg: #0b0e11;
+            --bn-card: #181a20;
+            --bn-card-2: #1e2329;
+            --bn-border: #2b3139;
+            --bn-yellow: #fcd535;
+            --bn-yellow-hover: #f0b90b;
+            --bn-green: #0ecb81;
+            --bn-red: #f6465d;
+            --bn-text: #eaecef;
+            --bn-muted: #848e9c;
         }
 
         body {
-            background: radial-gradient(circle at top, #e0e7ff 0%, #f1f5f9 45%, #e2e8f0 100%);
+            background: radial-gradient(circle at top, #181c24 0%, #0b0e11 55%, #07090c 100%);
             min-height: 100vh;
-            padding-bottom: 7rem;
-            color: #0f172a;
+            padding-bottom: 7.5rem;
+            color: var(--bn-text);
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         .banner-bg {
-            background: linear-gradient(135deg, #091e3a 0%, #172554 45%, #1d4ed8 100%);
+            background: linear-gradient(135deg, #12161f 0%, #1c222d 50%, #262312 100%);
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(252, 213, 53, 0.22);
         }
         .banner-bg::before {
             content: "";
             position: absolute;
             top: -55%;
             right: -18%;
-            width: 270px;
-            height: 270px;
-            background: radial-gradient(circle, rgba(96,165,250,0.45) 0%, rgba(37,99,235,0) 70%);
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(252,213,53,0.22) 0%, rgba(252,213,53,0) 70%);
             border-radius: 50%;
             z-index: 1;
             animation: pulseGlow 5s ease-in-out infinite;
@@ -54,14 +59,14 @@
             left: -15%;
             width: 220px;
             height: 220px;
-            background: radial-gradient(circle, rgba(16,185,129,0.25) 0%, rgba(16,185,129,0) 72%);
+            background: radial-gradient(circle, rgba(14,203,129,0.14) 0%, rgba(14,203,129,0) 72%);
             border-radius: 50%;
             z-index: 1;
         }
 
         @keyframes pulseGlow {
             0%, 100% { transform: scale(1); opacity: 0.75; }
-            50% { transform: scale(1.12); opacity: 1; }
+            50% { transform: scale(1.14); opacity: 1; }
         }
 
         .coin-float {
@@ -81,18 +86,38 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.96);
+            background: rgba(24, 26, 32, 0.96);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(226, 232, 240, 0.95);
+            border: 1px solid #2b3139;
             transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
         }
         .glass-card:hover {
-            box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.14);
-            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.65);
+            border-color: rgba(252, 213, 53, 0.35);
+        }
+
+        .bn-input {
+            background-color: #1e2329;
+            border: 1px solid #2b3139;
+            color: #eaecef;
+        }
+        .bn-input:focus {
+            outline: none;
+            border-color: #fcd535;
+            box-shadow: 0 0 0 2px rgba(252, 213, 53, 0.16);
+        }
+
+        .bn-btn-yellow {
+            background-color: #fcd535;
+            color: #0b0e11;
+            font-weight: 800;
+        }
+        .bn-btn-yellow:hover {
+            background-color: #f0b90b;
         }
 
         .shimmer-bar {
-            background: linear-gradient(90deg, #2563eb 0%, #38bdf8 50%, #10b981 100%);
+            background: linear-gradient(90deg, #f0b90b 0%, #fcd535 50%, #0ecb81 100%);
             background-size: 200% 100%;
             animation: shimmerFlow 3s linear infinite;
         }
@@ -102,9 +127,9 @@
         }
 
         .lang-scroll-list::-webkit-scrollbar { width: 5px; }
-        .lang-scroll-list::-webkit-scrollbar-track { background: #f1f5f9; }
-        .lang-scroll-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .lang-scroll-list::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .lang-scroll-list::-webkit-scrollbar-track { background: #12161c; }
+        .lang-scroll-list::-webkit-scrollbar-thumb { background: #2b3139; border-radius: 4px; }
+        .lang-scroll-list::-webkit-scrollbar-thumb:hover { background: #474d57; }
 
         @keyframes marquee {
             0% { transform: translateX(0%); }
@@ -131,36 +156,36 @@
 <body class="select-none">
 
     <!-- TOP BAR -->
-    <header class="bg-white/95 backdrop-blur-md shadow-sm p-3 flex justify-between items-center sticky top-0 z-40 border-b border-slate-200/80">
+    <header class="bg-[#181a20]/95 backdrop-blur-md shadow-md p-3 flex justify-between items-center sticky top-0 z-40 border-b border-[#2b3139]">
         <div class="relative inline-block text-left">
-            <button onclick="toggleLangMenu()" id="lang-btn" class="bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1.5 hover:bg-slate-100 transition">
-                <i class="fa-solid fa-globe text-blue-600 text-[11px]"></i>
+            <button onclick="toggleLangMenu()" id="lang-btn" class="bg-[#1e2329] border border-[#2b3139] text-[#eaecef] text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1.5 hover:border-[#fcd535]/50 transition">
+                <i class="fa-solid fa-globe text-[#fcd535] text-[11px]"></i>
                 <span id="current-lang-text">English (US/UK)</span>
-                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                <i class="fa-solid fa-chevron-down text-[10px] text-[#848e9c]"></i>
             </button>
-            <div id="lang-dropdown" class="hidden absolute left-0 mt-2 w-56 bg-white border border-slate-100 rounded-xl shadow-xl z-50 overflow-hidden">
-                <div class="max-h-72 overflow-y-auto py-1 text-xs text-slate-700 lang-scroll-list">
-                    <button onclick="selectLanguage('en', 'English (US/UK)')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-slate-50">🇺🇸 English (US/UK)</button>
-                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-slate-50">🇻🇳 Tiếng Việt (Vietnam)</button>
-                    <button onclick="selectLanguage('ja', '日本語 (日本)')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-slate-50">🇯🇵 日本語 (Japan)</button>
-                    <button onclick="selectLanguage('zh', '中文 (中国)')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-slate-50">🇨🇳 中文 (China)</button>
-                    <button onclick="selectLanguage('ko', '한국어 (대한민국)')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-slate-50">🇰🇷 한국어 (Korea)</button>
-                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-slate-50">🇪🇸 Español (Spain)</button>
-                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-slate-50">🇫🇷 Français (France)</button>
-                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-slate-50">🇩🇪 Deutsch (Germany)</button>
-                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-slate-50">🇷🇺 Русский (Russia)</button>
-                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-600 font-medium border-b border-slate-50">🇧🇷 Português (Brazil)</button>
+            <div id="lang-dropdown" class="hidden absolute left-0 mt-2 w-60 bg-[#181a20] border border-[#2b3139] rounded-xl shadow-2xl z-50 overflow-hidden">
+                <div class="max-h-72 overflow-y-auto py-1 text-xs text-[#eaecef] lang-scroll-list">
+                    <button onclick="selectLanguage('en', 'English (US/UK)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇺🇸 English (US/UK)</button>
+                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇻🇳 Tiếng Việt (Vietnam)</button>
+                    <button onclick="selectLanguage('ja', '日本語 (日本)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇯🇵 日本語 (Japan)</button>
+                    <button onclick="selectLanguage('zh', '中文 (中国)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇨🇳 中文 (China)</button>
+                    <button onclick="selectLanguage('ko', '한국어 (대한민국)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇰🇷 한국어 (Korea)</button>
+                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇪🇸 Español (Spain)</button>
+                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇫🇷 Français (France)</button>
+                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇩🇪 Deutsch (Germany)</button>
+                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇷🇺 Русский (Russia)</button>
+                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇧🇷 Português (Brazil)</button>
                 </div>
             </div>
         </div>
 
         <div class="absolute left-1/2 transform -translate-x-1/2 cursor-pointer flex items-center space-x-1.5" onclick="handleAdminSecretClick()" title="System Portal">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-            <span id="txt-app-title" class="font-extrabold text-sm md:text-base text-slate-800 tracking-wide">SAVINGS WALLET</span>
+            <span class="w-2 h-2 rounded-full bg-[#0ecb81] animate-ping"></span>
+            <span id="txt-app-title" class="font-extrabold text-sm md:text-base text-[#fcd535] tracking-wide">SAVINGS WALLET</span>
         </div>
 
         <div class="flex items-center space-x-2">
-            <button onclick="openAuthModal()" id="auth-nav-btn" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition shadow-sm">
+            <button onclick="openAuthModal()" id="auth-nav-btn" class="bn-btn-yellow active:scale-95 text-xs px-3 py-1.5 rounded-lg transition shadow-sm">
                 Login / Register
             </button>
         </div>
@@ -170,77 +195,77 @@
     <main class="max-w-4xl mx-auto p-4 space-y-4">
 
         <!-- THÔNG BÁO CHÀO MỪNG & ĐÁNH GIÁ 5 SAO -->
-        <div id="welcome-review-banner" class="hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 rounded-2xl p-5 text-white shadow-xl space-y-3 animate-fade-in border border-blue-400/30">
+        <div id="welcome-review-banner" class="hidden bg-gradient-to-r from-[#1e2329] via-[#25261b] to-[#1e2329] rounded-2xl p-5 text-[#eaecef] shadow-xl space-y-3 animate-fade-in border border-[#fcd535]/35">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-yellow-400 text-blue-950 rounded-full flex items-center justify-center text-xl font-bold shadow-lg">
+                    <div class="w-10 h-10 bg-[#fcd535] text-[#0b0e11] rounded-full flex items-center justify-center text-xl font-bold shadow-lg">
                         <i class="fa-solid fa-crown"></i>
                     </div>
                     <div>
-                        <h3 id="welcome-user-title" class="font-extrabold text-base tracking-wide">Welcome to SAVINGS WALLET!</h3>
-                        <p id="welcome-user-sub" class="text-xs text-blue-100">Leading secure savings & daily return wallet protocol.</p>
+                        <h3 id="welcome-user-title" class="font-extrabold text-base tracking-wide text-white">Welcome to SAVINGS WALLET!</h3>
+                        <p id="welcome-user-sub" class="text-xs text-[#848e9c]">Leading secure savings & daily return wallet protocol.</p>
                     </div>
                 </div>
-                <button onclick="dismissWelcomeBanner()" class="text-white/80 hover:text-white p-1 transition">
+                <button onclick="dismissWelcomeBanner()" class="text-[#848e9c] hover:text-white p-1 transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
-            <div class="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/20 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div class="bg-[#0b0e11]/70 backdrop-blur-md p-3 rounded-xl border border-[#2b3139] flex flex-col sm:flex-row items-center justify-between gap-2">
                 <div class="text-xs">
-                    <span id="review-prompt-text" class="font-semibold block text-yellow-300">Rate 5 stars for SAVINGS WALLET to unlock benefits!</span>
-                    <span id="review-prompt-sub" class="text-[10px] text-blue-100">Click on stars on the right to rate now.</span>
+                    <span id="review-prompt-text" class="font-semibold block text-[#fcd535]">Rate 5 stars for SAVINGS WALLET to unlock benefits!</span>
+                    <span id="review-prompt-sub" class="text-[10px] text-[#848e9c]">Click on stars on the right to rate now.</span>
                 </div>
-                <div id="star-rating-container" onclick="submitUserRating()" class="flex items-center space-x-1.5 bg-white/20 px-3 py-1.5 rounded-xl cursor-pointer hover:bg-white/30 transition">
-                    <i id="star-1" class="fa-solid fa-star text-white drop-shadow transition-colors"></i>
-                    <i id="star-2" class="fa-solid fa-star text-white drop-shadow transition-colors"></i>
-                    <i id="star-3" class="fa-solid fa-star text-white drop-shadow transition-colors"></i>
-                    <i id="star-4" class="fa-solid fa-star text-white drop-shadow transition-colors"></i>
-                    <i id="star-5" class="fa-solid fa-star text-white drop-shadow transition-colors"></i>
-                    <span id="rating-score-text" class="text-xs font-bold text-white ml-1">0.0</span>
+                <div id="star-rating-container" onclick="submitUserRating()" class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1.5 rounded-xl cursor-pointer hover:border-[#fcd535]/50 border border-[#2b3139] transition">
+                    <i id="star-1" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-2" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-3" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-4" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-5" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <span id="rating-score-text" class="text-xs font-bold text-[#fcd535] ml-1">0.0</span>
                 </div>
             </div>
         </div>
 
         <!-- TAB 1: HOME -->
         <div id="tab-home" class="max-w-md mx-auto space-y-4 tab-panel-enter">
-            <div class="relative rounded-2xl overflow-hidden banner-bg text-white p-6 shadow-xl border border-blue-400/20">
+            <div class="relative rounded-2xl overflow-hidden banner-bg text-white p-6 shadow-xl">
                 <div class="pr-24 z-10 relative">
                     <div class="flex items-center space-x-2 mb-1">
-                        <span id="badge-secure-vault" class="bg-blue-500/40 text-blue-200 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-blue-300/30">Secure Vault</span>
-                        <span class="bg-emerald-500/30 text-emerald-300 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-300/30">USDT / BNB</span>
+                        <span id="badge-secure-vault" class="bg-[#fcd535]/20 text-[#fcd535] text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[#fcd535]/40">Secure Vault</span>
+                        <span class="bg-[#0ecb81]/20 text-[#0ecb81] text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[#0ecb81]/40">USDT / BNB</span>
                     </div>
-                    <h1 id="banner-title" class="text-2xl font-extrabold leading-tight tracking-wide drop-shadow">Receive Voucher</h1>
-                    <h2 id="banner-subtitle" class="text-lg font-bold text-blue-200">No pledge</h2>
-                    <p id="banner-desc" class="text-xs text-blue-100 mt-2 opacity-90">Join the node and start mining</p>
+                    <h1 id="banner-title" class="text-2xl font-extrabold leading-tight tracking-wide drop-shadow text-white">Receive Voucher</h1>
+                    <h2 id="banner-subtitle" class="text-lg font-bold text-[#fcd535]">No pledge</h2>
+                    <p id="banner-desc" class="text-xs text-[#848e9c] mt-2">Join the node and start mining</p>
                 </div>
 
                 <div class="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center z-20">
-                    <div class="relative w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-2xl border-2 border-white/30 coin-float backdrop-blur-md">
-                        <i class="fa-solid fa-wallet text-3xl text-yellow-300 drop-shadow-md"></i>
-                        <div class="absolute -bottom-2 -right-2 bg-emerald-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md border border-white">
+                    <div class="relative w-20 h-20 bg-gradient-to-tr from-[#1e2329] to-[#2b3139] rounded-2xl flex items-center justify-center shadow-2xl border-2 border-[#fcd535]/50 coin-float backdrop-blur-md">
+                        <i class="fa-solid fa-wallet text-3xl text-[#fcd535] drop-shadow-md"></i>
+                        <div class="absolute -bottom-2 -right-2 bg-[#0ecb81] text-[#0b0e11] text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md border border-[#0b0e11]">
                             USDT
                         </div>
                     </div>
                 </div>
 
                 <div class="mt-5 flex justify-between items-center relative z-10">
-                    <button onclick="openDepositModal()" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg transition flex items-center space-x-1.5">
+                    <button onclick="openDepositModal()" class="bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] text-xs font-extrabold px-4 py-2 rounded-xl shadow-lg transition flex items-center space-x-1.5">
                         <i class="fa-solid fa-qrcode"></i>
                         <span id="btn-deposit-hub">Deposit Hub</span>
                     </button>
-                    <button onclick="openCertificateModal()" id="btn-cert" class="bg-white/95 backdrop-blur-sm text-slate-900 text-xs font-bold px-4 py-2 rounded-xl shadow-lg hover:bg-white active:scale-95 transition border border-slate-100 flex items-center space-x-1.5">
-                        <i class="fa-solid fa-shield-halved text-blue-600"></i>
+                    <button onclick="openCertificateModal()" id="btn-cert" class="bg-[#1e2329]/95 backdrop-blur-sm text-[#eaecef] text-xs font-bold px-4 py-2 rounded-xl shadow-lg hover:border-[#fcd535]/50 active:scale-95 transition border border-[#2b3139] flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shield-halved text-[#fcd535]"></i>
                         <span id="btn-cert-text">Certificate</span>
                     </button>
                 </div>
 
-                <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs bg-black/25 px-3 py-2 rounded-xl backdrop-blur-sm relative z-10">
+                <div class="mt-4 pt-3 border-t border-[#2b3139] flex items-center justify-between text-xs bg-[#0b0e11]/70 px-3 py-2 rounded-xl backdrop-blur-sm relative z-10">
                     <div class="truncate mr-2">
-                        <span class="text-[10px] text-blue-200 block" id="lbl-my-addr">Your Wallet Address:</span>
-                        <span id="user-unique-address" class="font-mono font-bold text-white truncate">0x71C...39f8</span>
+                        <span class="text-[10px] text-[#848e9c] block" id="lbl-my-addr">Your Wallet Address:</span>
+                        <span id="user-unique-address" class="font-mono font-bold text-[#eaecef] truncate">0x71C...39f8</span>
                     </div>
-                    <button onclick="copyUserAddress()" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] shadow transition flex items-center space-x-1 shrink-0">
+                    <button onclick="copyUserAddress()" class="bn-btn-yellow active:scale-95 font-bold px-3 py-1.5 rounded-lg text-[11px] shadow transition flex items-center space-x-1 shrink-0">
                         <i class="fa-regular fa-copy"></i>
                         <span id="btn-copy-text">Copy</span>
                     </button>
@@ -250,139 +275,193 @@
             <!-- 3 THẺ TÍNH NĂNG NHANH -->
             <div class="grid grid-cols-3 gap-2.5">
                 <button onclick="openDepositModal()" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
-                    <div class="w-9 h-9 mx-auto rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-[#0ecb81]/15 text-[#0ecb81] flex items-center justify-center text-sm border border-[#0ecb81]/30">
                         <i class="fa-solid fa-arrow-down-to-line"></i>
                     </div>
-                    <div class="text-[11px] font-bold text-slate-700">Quick Deposit</div>
-                    <div class="text-[9px] text-emerald-600 font-semibold">TRC20 Vault</div>
+                    <div id="qa-deposit-title" class="text-[11px] font-bold text-[#eaecef]">Quick Deposit</div>
+                    <div id="qa-deposit-sub" class="text-[9px] text-[#0ecb81] font-semibold">TRC20 Vault</div>
                 </button>
                 <button onclick="switchTab('withdrawal')" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
-                    <div class="w-9 h-9 mx-auto rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-sm">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-[#fcd535]/15 text-[#fcd535] flex items-center justify-center text-sm border border-[#fcd535]/30">
                         <i class="fa-solid fa-paper-plane"></i>
                     </div>
-                    <div class="text-[11px] font-bold text-slate-700">Fast Payout</div>
-                    <div class="text-[9px] text-blue-600 font-semibold">Multi-Chain</div>
+                    <div id="qa-payout-title" class="text-[11px] font-bold text-[#eaecef]">Fast Payout</div>
+                    <div id="qa-payout-sub" class="text-[9px] text-[#fcd535] font-semibold">Multi-Chain</div>
                 </button>
                 <button onclick="switchTab('account')" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
-                    <div class="w-9 h-9 mx-auto rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-sm">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center text-sm border border-amber-500/30">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
-                    <div class="text-[11px] font-bold text-slate-700">24h Yield</div>
-                    <div class="text-[9px] text-amber-600 font-semibold">Up to 22%/d</div>
+                    <div id="qa-yield-title" class="text-[11px] font-bold text-[#eaecef]">24h Yield</div>
+                    <div id="qa-yield-sub" class="text-[9px] text-amber-400 font-semibold">Up to 22%/d</div>
                 </button>
             </div>
 
-            <div id="activation-banner-box" class="hidden bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between animate-fade-in">
+            <div id="activation-banner-box" class="hidden bg-gradient-to-r from-[#fcd535] to-[#f0b90b] rounded-2xl p-4 text-[#0b0e11] shadow-lg flex items-center justify-between animate-fade-in">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl shrink-0">
-                        <i class="fa-solid fa-bolt-lightning text-yellow-200"></i>
+                    <div class="w-10 h-10 bg-[#0b0e11]/15 rounded-full flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-bolt-lightning text-[#0b0e11]"></i>
                     </div>
                     <div>
-                        <h4 id="act-banner-title" class="font-bold text-sm">Activate new balance accumulation!</h4>
-                        <p id="act-banner-desc" class="text-[11px] text-amber-100">Confirm to activate your deposit and start earning daily returns.</p>
+                        <h4 id="act-banner-title" class="font-extrabold text-sm">Activate new balance accumulation!</h4>
+                        <p id="act-banner-desc" class="text-[11px] text-[#1e2329] font-medium">Confirm to activate your deposit and start earning daily returns.</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2 shrink-0">
-                    <button onclick="executeActivation()" id="btn-activate-now" class="bg-white text-orange-600 font-bold px-3 py-1.5 rounded-xl text-xs shadow hover:bg-orange-50 transition">
+                    <button onclick="executeActivation()" id="btn-activate-now" class="bg-[#0b0e11] text-[#fcd535] font-bold px-3 py-1.5 rounded-xl text-xs shadow hover:bg-[#181a20] transition">
                         Activate
                     </button>
-                    <button onclick="dismissActivationBanner()" class="text-white/80 hover:text-white p-1.5">
+                    <button onclick="dismissActivationBanner()" class="text-[#0b0e11]/80 hover:text-[#0b0e11] p-1.5">
                         <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
             </div>
 
             <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                    <h3 id="pool-data-title" class="font-bold text-slate-800 text-base">Pool Data</h3>
-                    <span class="text-[10px] font-bold bg-blue-50 text-blue-600 px-2.5 py-0.5 rounded-full border border-blue-200">● Live Telemetry</span>
+                <div class="flex items-center justify-between border-b border-[#2b3139] pb-2.5">
+                    <h3 id="pool-data-title" class="font-bold text-white text-base">Pool Data</h3>
+                    <span id="badge-live-telemetry" class="text-[10px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] px-2.5 py-0.5 rounded-full border border-[#0ecb81]/30">● Live Telemetry</span>
                 </div>
-                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                    <span id="label-total-output" class="text-sm text-slate-500">Total Output</span>
-                    <span id="val-total-output" class="font-bold text-blue-700 font-mono">9,153,176.23 BNB</span>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-total-output" class="text-sm text-[#848e9c]">Total Output</span>
+                    <span id="val-total-output" class="font-bold text-[#fcd535] font-mono">9,153,176.23 BNB</span>
                 </div>
-                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                    <span id="label-valid-nodes" class="text-sm text-slate-500">Valid Nodes</span>
-                    <span id="val-valid-nodes" class="font-bold text-blue-700 font-mono">590,026</span>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-valid-nodes" class="text-sm text-[#848e9c]">Valid Nodes</span>
+                    <span id="val-valid-nodes" class="font-bold text-[#eaecef] font-mono">590,026</span>
                 </div>
-                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                    <span id="label-participants" class="text-sm text-slate-500">Participants</span>
-                    <span id="val-participants" class="font-bold text-slate-800 font-mono">760,435</span>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-participants" class="text-sm text-[#848e9c]">Participants</span>
+                    <span id="val-participants" class="font-bold text-[#eaecef] font-mono">760,435</span>
                 </div>
                 <div class="flex justify-between items-center pt-1">
-                    <span id="label-user-revenue" class="text-sm text-slate-500">User Revenue</span>
-                    <span id="val-user-revenue" class="font-bold text-emerald-700 font-mono">≈ 1,492,587,121.89 USDT</span>
+                    <span id="label-user-revenue" class="text-sm text-[#848e9c]">User Revenue</span>
+                    <span id="val-user-revenue" class="font-bold text-[#0ecb81] font-mono">≈ 1,492,587,121.89 USDT</span>
                 </div>
             </div>
 
             <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                    <h3 id="output-details-title" class="font-bold text-slate-800 text-base">Output details</h3>
-                    <span class="text-[10px] text-slate-400 font-semibold">Real-time blocks</span>
+                <div class="flex items-center justify-between border-b border-[#2b3139] pb-2">
+                    <h3 id="output-details-title" class="font-bold text-white text-base">Output details</h3>
+                    <span id="lbl-realtime-blocks" class="text-[10px] text-[#848e9c] font-semibold">Real-time blocks</span>
                 </div>
-                <div class="flex justify-between text-xs text-slate-400 font-semibold border-b pb-2">
+                <div class="flex justify-between text-xs text-[#848e9c] font-semibold border-b border-[#2b3139]/60 pb-2">
                     <span id="table-addr">Address</span>
                     <span id="table-qty">Quantity</span>
                 </div>
                 <div id="output-list" class="space-y-3 text-sm font-mono">
                     <div class="flex justify-between items-center">
-                        <span class="text-blue-600 font-medium">0x3f9acc...900270</span>
-                        <span class="font-semibold text-slate-700">0.076273 BNB</span>
+                        <span class="text-[#fcd535] font-medium">0x3f9acc...900270</span>
+                        <span class="font-semibold text-[#eaecef]">0.076273 BNB</span>
                     </div>
                 </div>
             </div>
 
             <!-- HƯỚNG DẪN & BẢO MẬT GIAO DỊCH -->
             <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
-                <div class="flex items-center space-x-2 border-b border-slate-100 pb-2">
-                    <i class="fa-solid fa-circle-info text-blue-600"></i>
-                    <h3 class="font-bold text-slate-800 text-sm">Vault Operation Highlights</h3>
+                <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-2">
+                    <i class="fa-solid fa-circle-info text-[#fcd535]"></i>
+                    <h3 id="highlights-title" class="font-bold text-white text-sm">Vault Operation Highlights</h3>
                 </div>
-                <div class="grid grid-cols-1 gap-2.5 text-xs text-slate-600">
-                    <div class="flex items-start space-x-2.5 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                        <i class="fa-solid fa-check-circle text-emerald-600 mt-0.5"></i>
-                        <span>Minimum deposit starts at <strong>100 USDT</strong> via TRC20 network with automatic VIP tier calculation.</span>
+                <div class="grid grid-cols-1 gap-2.5 text-xs text-[#848e9c]">
+                    <div id="highlight-1" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
+                        <i class="fa-solid fa-check-circle text-[#0ecb81] mt-0.5 shrink-0"></i>
+                        <span>Minimum deposit starts at <strong class="text-[#eaecef]">100 USDT</strong> via TRC20 network with automatic VIP tier calculation.</span>
                     </div>
-                    <div class="flex items-start space-x-2.5 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                        <i class="fa-solid fa-clock text-blue-600 mt-0.5"></i>
-                        <span>Each yield cycle runs on a <strong>24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.</span>
+                    <div id="highlight-2" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
+                        <i class="fa-solid fa-clock text-[#fcd535] mt-0.5 shrink-0"></i>
+                        <span>Each yield cycle runs on a <strong class="text-[#eaecef]">24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.</span>
                     </div>
-                    <div class="flex items-start space-x-2.5 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                        <i class="fa-solid fa-headset text-purple-600 mt-0.5"></i>
-                        <span>Need help with deposits, withdrawals, or VIP tiers? Use the <strong>24/7 Live Support</strong> chat button anytime.</span>
+                    <div id="highlight-3" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
+                        <i class="fa-solid fa-headset text-purple-400 mt-0.5 shrink-0"></i>
+                        <span>Need help with deposits, withdrawals, or VIP tiers? Use the <strong class="text-[#eaecef]">24/7 Live Support</strong> chat button anytime.</span>
                     </div>
                 </div>
             </div>
 
             <div class="glass-card rounded-2xl p-3 shadow-sm overflow-hidden relative">
-                <div id="ticker-label-home" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center mb-2">Supported Cryptocurrencies & Assets</div>
+                <div id="ticker-label-home" class="text-[10px] font-bold text-[#848e9c] uppercase tracking-widest text-center mb-2">Supported Cryptocurrencies & Assets</div>
                 <div class="overflow-hidden whitespace-nowrap relative w-full">
-                    <div class="animate-marquee flex items-center space-x-8 text-xs font-bold text-slate-700">
-                        <div class="flex items-center space-x-1.5 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200"><i class="fa-solid fa-circle-dollar-to-slot text-emerald-600"></i><span>USDT (Tether)</span></div>
-                        <div class="flex items-center space-x-1.5 bg-amber-50 px-3 py-1 rounded-full border border-amber-200"><i class="fa-brands fa-bitcoin text-amber-500"></i><span>BTC (Bitcoin)</span></div>
-                        <div class="flex items-center space-x-1.5 bg-blue-50 px-3 py-1 rounded-full border border-blue-200"><i class="fa-solid fa-coins text-blue-600"></i><span>BNB (Binance)</span></div>
-                        <div class="flex items-center space-x-1.5 bg-purple-50 px-3 py-1 rounded-full border border-purple-200"><i class="fa-brands fa-ethereum text-purple-600"></i><span>ETH (Ethereum)</span></div>
-                        <div class="flex items-center space-x-1.5 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200"><i class="fa-solid fa-bolt text-indigo-600"></i><span>SOL (Solana)</span></div>
-                        <div class="flex items-center space-x-1.5 bg-cyan-50 px-3 py-1 rounded-full border border-cyan-200"><i class="fa-solid fa-shield-cat text-cyan-600"></i><span>XRP (Ripple)</span></div>
-                        <div class="flex items-center space-x-1.5 bg-rose-50 px-3 py-1 rounded-full border border-rose-200"><i class="fa-solid fa-fire text-rose-600"></i><span>TRX (Tron)</span></div>
+                    <div class="animate-marquee flex items-center space-x-8 text-xs font-bold text-[#eaecef]">
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#0ecb81]/30"><i class="fa-solid fa-circle-dollar-to-slot text-[#0ecb81]"></i><span>USDT (Tether)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/30"><i class="fa-brands fa-bitcoin text-[#fcd535]"></i><span>BTC (Bitcoin)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/40"><i class="fa-solid fa-coins text-[#fcd535]"></i><span>BNB (Binance)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-purple-500/30"><i class="fa-brands fa-ethereum text-purple-400"></i><span>ETH (Ethereum)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-indigo-500/30"><i class="fa-solid fa-bolt text-indigo-400"></i><span>SOL (Solana)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-cyan-500/30"><i class="fa-solid fa-shield-cat text-cyan-400"></i><span>XRP (Ripple)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-rose-500/30"><i class="fa-solid fa-fire text-rose-400"></i><span>TRX (Tron)</span></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 2: WITHDRAWAL -->
+        <!-- TAB 2: MARKETS & EXCHANGE HUB (KHÁM PHÁ CHỨNG KHOÁN / CRYPTO + TÌM KIẾM + LIÊN KẾT BINANCE / BYBIT / BITGET / OKX) -->
+        <div id="tab-markets" class="hidden space-y-4 tab-panel-enter">
+            <!-- TÌM KIẾM MÃ CHỨNG KHOÁN / CRYPTO / SÀN -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 id="markets-title" class="font-bold text-white text-base flex items-center space-x-2">
+                            <i class="fa-solid fa-arrow-trend-up text-[#fcd535]"></i>
+                            <span>Markets & Equities Discovery</span>
+                        </h3>
+                        <p id="markets-subtitle" class="text-[11px] text-[#848e9c]">Real-time crypto & global stock tickers, search & third-party exchange links.</p>
+                    </div>
+                    <span id="market-status-badge" class="text-[10px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] px-2.5 py-1 rounded-full border border-[#0ecb81]/30">● Market Open</span>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#848e9c] text-xs"></i>
+                        <input type="text" id="market-search-input" oninput="renderMarketWatchlist()" placeholder="Search ticker or stock (BTC, BNB, NVDA, AAPL, TSLA, VNM...)" class="w-full bn-input rounded-xl pl-9 pr-3 py-2 text-xs">
+                    </div>
+                    <div class="flex space-x-1.5">
+                        <button onclick="setMarketCategory('ALL')" id="mcat-all" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#fcd535] text-[#0b0e11] transition">All</button>
+                        <button onclick="setMarketCategory('CRYPTO')" id="mcat-crypto" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#1e2329] text-[#848e9c] border border-[#2b3139] hover:text-white transition">Crypto</button>
+                        <button onclick="setMarketCategory('STOCKS')" id="mcat-stocks" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#1e2329] text-[#848e9c] border border-[#2b3139] hover:text-white transition">Stocks</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DANH SÁCH CHỨNG KHOÁN & CRYPTO -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-2.5">
+                <div class="flex justify-between items-center text-[11px] text-[#848e9c] font-semibold border-b border-[#2b3139] pb-2">
+                    <span id="mkt-col-asset">Asset / Ticker</span>
+                    <span id="mkt-col-price">Price & 24h Change</span>
+                </div>
+                <div id="market-watchlist-container" class="space-y-2 max-h-80 overflow-y-auto pr-1 lang-scroll-list"></div>
+            </div>
+
+            <!-- LIÊN KẾT ỨNG DỤNG BÊN THỨ 3: BINANCE, BYBIT, BITGET, OKX -->
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2b3139] pb-2.5">
+                    <div>
+                        <h3 id="thirdparty-title" class="font-bold text-white text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-link text-[#fcd535]"></i>
+                            <span>Third-Party Exchange Links</span>
+                        </h3>
+                        <p id="thirdparty-desc" class="text-[11px] text-[#848e9c]">Connect or open external partner apps: Binance, Bybit, Bitget, OKX.</p>
+                    </div>
+                    <span id="linked-exchanges-badge" class="text-[10px] font-bold bg-[#fcd535]/15 text-[#fcd535] px-2.5 py-0.5 rounded-full border border-[#fcd535]/30">0 Linked</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="exchange-connectors-grid"></div>
+            </div>
+        </div>
+
+        <!-- TAB 3: WITHDRAWAL -->
         <div id="tab-withdrawal" class="hidden space-y-6 tab-panel-enter">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center space-x-2 border-b pb-3 mb-3">
-                            <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold">1</div>
-                            <h3 id="withdrawal-title" class="font-bold text-slate-800 text-base">Withdrawal</h3>
+                        <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-3 mb-3">
+                            <div class="w-8 h-8 bg-[#fcd535]/15 text-[#fcd535] rounded-lg flex items-center justify-center font-bold border border-[#fcd535]/30">1</div>
+                            <h3 id="withdrawal-title" class="font-bold text-white text-base">Withdrawal</h3>
                         </div>
                         <div class="space-y-3">
                             <div>
-                                <label id="lbl-withdraw-net" class="block text-xs font-semibold text-slate-600 mb-1">WITHDRAWAL NETWORK</label>
-                                <select id="withdraw-network" class="w-full border rounded-xl p-2.5 text-xs text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <label id="lbl-withdraw-net" class="block text-xs font-semibold text-[#848e9c] mb-1">WITHDRAWAL NETWORK</label>
+                                <select id="withdraw-network" class="w-full bn-input rounded-xl p-2.5 text-xs">
                                     <option value="TRON (TRC20)">TRON (TRC20)</option>
                                     <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
                                     <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
@@ -390,33 +469,33 @@
                                 </select>
                             </div>
                             <div>
-                                <label id="lbl-linked-target" class="block text-xs font-semibold text-slate-600 mb-1">TARGET WALLET ADDRESS</label>
-                                <div id="display-linked-wallet" class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs font-mono break-all">
+                                <label id="lbl-linked-target" class="block text-xs font-semibold text-[#848e9c] mb-1">TARGET WALLET ADDRESS</label>
+                                <div id="display-linked-wallet" class="bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139] text-xs font-mono break-all text-[#eaecef]">
                                     Not linked yet
                                 </div>
                             </div>
                             <div>
-                                <label id="withdrawal-label" class="block text-xs font-semibold text-slate-600 mb-1">WITHDRAW AMOUNT (USDT)</label>
-                                <input type="number" id="withdraw-input" placeholder="0.00" class="w-full border rounded-xl p-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <label id="withdrawal-label" class="block text-xs font-semibold text-[#848e9c] mb-1">WITHDRAW AMOUNT (USDT)</label>
+                                <input type="number" id="withdraw-input" placeholder="0.00" class="w-full bn-input rounded-xl p-3 text-sm">
                             </div>
                         </div>
                     </div>
-                    <button id="withdrawal-btn" onclick="requestWithdrawal()" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 rounded-xl shadow transition text-sm mt-4">
+                    <button id="withdrawal-btn" onclick="requestWithdrawal()" class="w-full bn-btn-yellow active:scale-95 py-3 rounded-xl shadow transition text-sm mt-4">
                         Confirm Withdrawal
                     </button>
                 </div>
 
                 <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center space-x-2 border-b pb-3 mb-3">
-                            <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center font-bold">2</div>
-                            <h3 id="link-wallet-title" class="font-bold text-slate-800 text-base">Link Wallet Address</h3>
+                        <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-3 mb-3">
+                            <div class="w-8 h-8 bg-[#0ecb81]/15 text-[#0ecb81] rounded-lg flex items-center justify-center font-bold border border-[#0ecb81]/30">2</div>
+                            <h3 id="link-wallet-title" class="font-bold text-white text-base">Link Wallet Address</h3>
                         </div>
                         <div class="space-y-3">
-                            <p id="link-wallet-desc" class="text-xs text-slate-500">Please select network and link your Binance or personal exchange wallet address before withdrawing.</p>
+                            <p id="link-wallet-desc" class="text-xs text-[#848e9c]">Please select network and link your Binance or personal exchange wallet address before withdrawing.</p>
                             <div>
-                                <label id="lbl-link-net" class="block text-xs font-semibold text-slate-600 mb-1">SELECT YOUR NETWORK</label>
-                                <select id="link-network-select" class="w-full border rounded-xl p-2.5 text-xs text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <label id="lbl-link-net" class="block text-xs font-semibold text-[#848e9c] mb-1">SELECT YOUR NETWORK</label>
+                                <select id="link-network-select" class="w-full bn-input rounded-xl p-2.5 text-xs">
                                     <option value="TRON (TRC20)">TRON (TRC20)</option>
                                     <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
                                     <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
@@ -424,112 +503,112 @@
                                 </select>
                             </div>
                             <div>
-                                <label id="lbl-link-addr" class="block text-xs font-semibold text-slate-600 mb-1">PERSONAL WALLET ADDRESS</label>
-                                <input type="text" id="link-wallet-address" placeholder="Enter TRC20 / Binance wallet address..." class="w-full border rounded-xl p-2.5 text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <label id="lbl-link-addr" class="block text-xs font-semibold text-[#848e9c] mb-1">PERSONAL WALLET ADDRESS</label>
+                                <input type="text" id="link-wallet-address" placeholder="Enter TRC20 / Binance wallet address..." class="w-full bn-input rounded-xl p-2.5 text-xs font-mono">
                             </div>
                         </div>
                     </div>
-                    <button onclick="saveUserWalletLink()" id="btn-save-link" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-3 rounded-xl shadow transition text-sm mt-4">
+                    <button onclick="saveUserWalletLink()" id="btn-save-link" class="w-full bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] font-extrabold py-3 rounded-xl shadow transition text-sm mt-4">
                         Save Wallet Address
                     </button>
                 </div>
             </div>
 
             <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
-                <div class="flex justify-between items-center border-b pb-2">
-                    <h3 id="history-title" class="font-bold text-slate-800 text-sm">Withdrawal History (24h Auto-Expiry)</h3>
-                    <span id="history-subtitle" class="text-[10px] text-slate-400">Auto-clears after 24h</span>
+                <div class="flex justify-between items-center border-b border-[#2b3139] pb-2">
+                    <h3 id="history-title" class="font-bold text-white text-sm">Withdrawal History (24h Auto-Expiry)</h3>
+                    <span id="history-subtitle" class="text-[10px] text-[#848e9c]">Auto-clears after 24h</span>
                 </div>
                 <div id="withdrawal-history-list" class="space-y-2 max-h-48 overflow-y-auto text-xs">
-                    <div id="history-empty" class="text-slate-400 text-center py-4">No withdrawal history in the last 24 hours.</div>
+                    <div id="history-empty" class="text-[#848e9c] text-center py-4">No withdrawal history in the last 24 hours.</div>
                 </div>
             </div>
 
             <div class="glass-card rounded-2xl p-3 shadow-sm overflow-hidden relative">
-                <div id="ticker-label-withdraw" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center mb-2">Supported Cryptocurrencies & Assets</div>
+                <div id="ticker-label-withdraw" class="text-[10px] font-bold text-[#848e9c] uppercase tracking-widest text-center mb-2">Supported Cryptocurrencies & Assets</div>
                 <div class="overflow-hidden whitespace-nowrap relative w-full">
-                    <div class="animate-marquee flex items-center space-x-8 text-xs font-bold text-slate-700">
-                        <div class="flex items-center space-x-1.5 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200"><i class="fa-solid fa-circle-dollar-to-slot text-emerald-600"></i><span>USDT (Tether)</span></div>
-                        <div class="flex items-center space-x-1.5 bg-amber-50 px-3 py-1 rounded-full border border-amber-200"><i class="fa-brands fa-bitcoin text-amber-500"></i><span>BTC (Bitcoin)</span></div>
-                        <div class="flex items-center space-x-1.5 bg-blue-50 px-3 py-1 rounded-full border border-blue-200"><i class="fa-solid fa-coins text-blue-600"></i><span>BNB (Binance)</span></div>
-                        <div class="flex items-center space-x-1.5 bg-purple-50 px-3 py-1 rounded-full border border-purple-200"><i class="fa-brands fa-ethereum text-purple-600"></i><span>ETH (Ethereum)</span></div>
+                    <div class="animate-marquee flex items-center space-x-8 text-xs font-bold text-[#eaecef]">
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#0ecb81]/30"><i class="fa-solid fa-circle-dollar-to-slot text-[#0ecb81]"></i><span>USDT (Tether)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/30"><i class="fa-brands fa-bitcoin text-[#fcd535]"></i><span>BTC (Bitcoin)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/40"><i class="fa-solid fa-coins text-[#fcd535]"></i><span>BNB (Binance)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-purple-500/30"><i class="fa-brands fa-ethereum text-purple-400"></i><span>ETH (Ethereum)</span></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 3: ACCOUNT -->
+        <!-- TAB 4: ACCOUNT -->
         <div id="tab-account" class="hidden max-w-md mx-auto space-y-4 tab-panel-enter">
             <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4">
-                <div class="flex justify-between items-center text-slate-500 text-sm">
+                <div class="flex justify-between items-center text-[#848e9c] text-sm">
                     <span id="acc-accumulated">Accumulated Income</span>
-                    <span class="text-xs bg-amber-500 text-white font-bold px-2.5 py-1 rounded-full shadow" id="user-tier-badge">VIP 1 (2.00% / day)</span>
+                    <span class="text-xs bg-[#fcd535] text-[#0b0e11] font-extrabold px-2.5 py-1 rounded-full shadow" id="user-tier-badge">VIP 1 (2.00% / day)</span>
                 </div>
-                <div class="text-2xl font-bold text-blue-600 font-mono" id="user-display-balance">0.000000 BNB</div>
+                <div class="text-2xl font-bold text-[#fcd535] font-mono" id="user-display-balance">0.000000 BNB</div>
 
-                <div class="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100 text-sm items-center">
+                <div class="grid grid-cols-2 gap-4 pt-2 border-t border-[#2b3139] text-sm items-center">
                     <div>
-                        <div id="acc-today" class="text-slate-400 text-xs">Today's Income</div>
-                        <div id="user-today-bnb" class="font-semibold text-blue-600 mt-0.5 text-xs font-mono">0.000000 BNB</div>
-                        <div id="user-today-usdt" class="text-[10px] text-emerald-600 font-bold font-mono">≈ $0.00 USDT</div>
+                        <div id="acc-today" class="text-[#848e9c] text-xs">Today's Income</div>
+                        <div id="user-today-bnb" class="font-semibold text-[#fcd535] mt-0.5 text-xs font-mono">0.000000 BNB</div>
+                        <div id="user-today-usdt" class="text-[10px] text-[#0ecb81] font-bold font-mono">≈ $0.00 USDT</div>
                     </div>
                     <div class="text-right">
-                        <button onclick="claimDailyIncome()" id="btn-claim-income" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button onclick="claimDailyIncome()" id="btn-claim-income" class="bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] font-extrabold px-3.5 py-2 rounded-xl text-xs shadow transition disabled:opacity-50 disabled:cursor-not-allowed">
                             Claim Income
                         </button>
                     </div>
                 </div>
 
-                <div class="pt-2 border-t border-slate-100 space-y-1.5">
+                <div class="pt-2 border-t border-[#2b3139] space-y-1.5">
                     <div class="flex justify-between items-center text-xs">
-                        <span id="lbl-timer-24h" class="text-slate-500 font-medium">24h Yield Cycle Progress:</span>
-                        <span id="val-timer-countdown" class="font-mono font-bold text-blue-600">24:00:00</span>
+                        <span id="lbl-timer-24h" class="text-[#848e9c] font-medium">24h Yield Cycle Progress:</span>
+                        <span id="val-timer-countdown" class="font-mono font-bold text-[#fcd535]">24:00:00</span>
                     </div>
-                    <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                    <div class="w-full bg-[#1e2329] rounded-full h-2.5 overflow-hidden border border-[#2b3139]">
                         <div id="timer-progress-bar" class="shimmer-bar h-2.5 rounded-full transition-all duration-1000" style="width: 0%"></div>
                     </div>
-                    <div class="flex justify-between items-center text-[10px] text-slate-400">
+                    <div class="flex justify-between items-center text-[10px] text-[#848e9c]">
                         <span id="lbl-cycle-start">Deposit Start</span>
                         <span id="lbl-cycle-end">Ready to Claim (100%)</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100 text-sm">
+                <div class="grid grid-cols-2 gap-4 pt-2 border-t border-[#2b3139] text-sm">
                     <div>
-                        <div id="acc-yield" class="text-slate-400 text-xs">Market Yield</div>
-                        <div id="bnb-market-rate" class="font-semibold text-slate-600 mt-0.5">Loading...</div>
+                        <div id="acc-yield" class="text-[#848e9c] text-xs">Market Yield</div>
+                        <div id="bnb-market-rate" class="font-semibold text-[#eaecef] mt-0.5">Loading...</div>
                     </div>
                     <div class="text-right">
-                        <div id="acc-pool-wallet" class="text-slate-400 text-xs">Pool Wallet</div>
-                        <div id="bnb-price-usd" class="font-semibold text-blue-600 mt-0.5 font-mono">$... USDT</div>
+                        <div id="acc-pool-wallet" class="text-[#848e9c] text-xs">Pool Wallet</div>
+                        <div id="bnb-price-usd" class="font-semibold text-[#fcd535] mt-0.5 font-mono">$... USDT</div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 pt-2 border-t border-slate-100 text-sm">
+                <div class="grid grid-cols-1 pt-2 border-t border-[#2b3139] text-sm">
                     <div>
-                        <div id="acc-wallet-bal" class="text-slate-400 text-xs">Wallet Balance</div>
-                        <div id="user-usdt-balance" class="font-semibold text-blue-600 mt-0.5 text-base font-mono">0.00 USDT</div>
+                        <div id="acc-wallet-bal" class="text-[#848e9c] text-xs">Wallet Balance</div>
+                        <div id="user-usdt-balance" class="font-semibold text-[#0ecb81] mt-0.5 text-base font-mono">0.00 USDT</div>
                     </div>
                 </div>
             </div>
 
             <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
-                <div class="flex justify-between items-center border-b pb-2">
-                    <h3 id="vip-system-title" class="font-bold text-slate-800 text-sm flex items-center space-x-1.5">
-                        <i class="fa-solid fa-crown text-amber-500"></i>
+                <div class="flex justify-between items-center border-b border-[#2b3139] pb-2">
+                    <h3 id="vip-system-title" class="font-bold text-white text-sm flex items-center space-x-1.5">
+                        <i class="fa-solid fa-crown text-[#fcd535]"></i>
                         <span>VIP Tiers System (VIP 1 - 12)</span>
                     </h3>
-                    <span id="vip-system-sub" class="text-[10px] text-amber-600 font-bold">From 100 USDT+</span>
+                    <span id="vip-system-sub" class="text-[10px] text-[#fcd535] font-bold">From 100 USDT+</span>
                 </div>
                 <div class="max-h-56 overflow-y-auto space-y-2 text-xs pr-1 lang-scroll-list" id="vip-tiers-container"></div>
             </div>
 
-            <button onclick="openDepositModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-3 rounded-xl shadow transition flex items-center justify-center space-x-2">
+            <button onclick="openDepositModal()" class="w-full bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] font-extrabold py-3 rounded-xl shadow transition flex items-center justify-center space-x-2">
                 <i class="fa-solid fa-qrcode"></i>
                 <span id="btn-quick-deposit">Deposit Fixed Wallet</span>
             </button>
 
-            <button onclick="handleUserLogout()" class="w-full bg-red-50 hover:bg-red-100 active:scale-95 text-red-600 border border-red-200 font-bold py-3 rounded-xl shadow-sm transition flex items-center justify-center space-x-2 text-xs">
+            <button onclick="handleUserLogout()" class="w-full bg-[#f6465d]/15 hover:bg-[#f6465d]/25 active:scale-95 text-[#f6465d] border border-[#f6465d]/35 font-bold py-3 rounded-xl shadow-sm transition flex items-center justify-center space-x-2 text-xs">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 <span id="btn-logout-text">Logout Account</span>
             </button>
@@ -538,31 +617,31 @@
 
     <!-- SUPPORT BUTTON -->
     <div class="fixed bottom-20 right-4 z-40 flex flex-col items-end space-y-2">
-        <div id="support-tooltip" class="bg-slate-900 text-white text-[11px] px-3 py-1.5 rounded-xl shadow-lg animate-bounce">
+        <div id="support-tooltip" class="bg-[#1e2329] text-[#fcd535] border border-[#fcd535]/40 text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-lg animate-bounce">
             Live Support 24/7!
         </div>
-        <button onclick="openSupportChat()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl transition transform hover:scale-110 active:scale-95 border-2 border-white">
+        <button onclick="openSupportChat()" class="bn-btn-yellow w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl transition transform hover:scale-110 active:scale-95 border-2 border-[#0b0e11]">
             <i class="fa-solid fa-headset"></i>
         </button>
     </div>
 
     <!-- MODAL 1: AUTH -->
     <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative space-y-4 border border-slate-100 animate-fade-in">
-            <button onclick="closeAuthModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+        <div class="bg-[#181a20] text-[#eaecef] rounded-2xl max-w-sm w-full p-6 shadow-2xl relative space-y-4 border border-[#2b3139] animate-fade-in">
+            <button onclick="closeAuthModal()" class="absolute right-4 top-4 text-[#848e9c] hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
             <div class="text-center space-y-1">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
+                <div class="w-12 h-12 bg-[#fcd535]/15 text-[#fcd535] rounded-full flex items-center justify-center mx-auto text-xl mb-2 border border-[#fcd535]/30">
                     <i class="fa-solid fa-user-lock"></i>
                 </div>
-                <h3 id="auth-title" class="text-lg font-bold text-slate-800">Login / Register</h3>
-                <p id="auth-desc" class="text-xs text-slate-500">Please login or create a new account</p>
+                <h3 id="auth-title" class="text-lg font-bold text-white">Login / Register</h3>
+                <p id="auth-desc" class="text-xs text-[#848e9c]">Please login or create a new account</p>
             </div>
 
-            <div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex items-center justify-between">
-                <span id="lbl-auth-lang" class="text-[11px] font-semibold text-slate-600">Language / Ngôn ngữ:</span>
-                <select id="auth-lang-select" onchange="selectLanguage(this.value, this.options[this.selectedIndex].text)" class="bg-white border rounded-lg px-2 py-1 text-xs font-medium text-slate-700 focus:outline-none">
+            <div class="bg-[#1e2329] p-2 rounded-xl border border-[#2b3139] flex items-center justify-between">
+                <span id="lbl-auth-lang" class="text-[11px] font-semibold text-[#848e9c]">Language / Ngôn ngữ:</span>
+                <select id="auth-lang-select" onchange="selectLanguage(this.value, this.options[this.selectedIndex].text)" class="bn-input rounded-lg px-2 py-1 text-xs font-medium">
                     <option value="en">🇺🇸 English</option>
                     <option value="vi">🇻🇳 Tiếng Việt</option>
                     <option value="ja">🇯🇵 日本語</option>
@@ -578,35 +657,35 @@
 
             <div class="space-y-3 pt-1">
                 <div>
-                    <label id="lbl-username" class="block text-xs font-semibold text-slate-600 mb-1">Username:</label>
-                    <input type="text" id="auth-username" placeholder="Enter username..." class="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label id="lbl-username" class="block text-xs font-semibold text-[#848e9c] mb-1">Username:</label>
+                    <input type="text" id="auth-username" placeholder="Enter username..." class="w-full bn-input rounded-lg p-2.5 text-xs">
                 </div>
                 <div>
-                    <label id="lbl-password" class="block text-xs font-semibold text-slate-600 mb-1">Password:</label>
-                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label id="lbl-password" class="block text-xs font-semibold text-[#848e9c] mb-1">Password:</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full bn-input rounded-lg p-2.5 text-xs">
                 </div>
-                <button onclick="handleUserAuth()" id="btn-auth-submit" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
+                <button onclick="handleUserAuth()" id="btn-auth-submit" class="w-full bn-btn-yellow active:scale-95 py-2.5 rounded-xl text-xs transition shadow">
                     Login / Register Now
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 2: DEPOSIT (ĐÃ CẬP NHẬT MẠNG TRC20) -->
-    <div id="deposit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 border border-slate-100 text-center animate-fade-in">
-            <button onclick="closeDepositModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+    <!-- MODAL 2: DEPOSIT (TRC20) -->
+    <div id="deposit-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-[#181a20] text-[#eaecef] rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 border border-[#2b3139] text-center animate-fade-in">
+            <button onclick="closeDepositModal()" class="absolute right-4 top-4 text-[#848e9c] hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
+            <div class="w-12 h-12 bg-[#0ecb81]/15 text-[#0ecb81] rounded-full flex items-center justify-center mx-auto text-xl mb-2 border border-[#0ecb81]/30">
                 <i class="fa-solid fa-qrcode"></i>
             </div>
-            <h3 id="modal-deposit-title" class="text-lg font-bold text-slate-800">Fixed Deposit Hub</h3>
-            <p id="modal-deposit-desc" class="text-xs text-slate-500">Transfer USDT via TRC20 network to fixed address (Min 100 USDT):</p>
+            <h3 id="modal-deposit-title" class="text-lg font-bold text-white">Fixed Deposit Hub</h3>
+            <p id="modal-deposit-desc" class="text-xs text-[#848e9c]">Transfer USDT via TRC20 network to fixed address (Min 100 USDT):</p>
 
-            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-center justify-between space-x-2">
-                <div id="fixed-deposit-address" class="text-[11px] font-mono text-blue-600 font-bold truncate">TG4EY8MrSMaNFXnaHjGFPNYDQS5v2jDQap</div>
-                <button onclick="copyFixedDepositAddress()" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shrink-0 flex items-center space-x-1">
+            <div class="bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139] flex items-center justify-between space-x-2">
+                <div id="fixed-deposit-address" class="text-[11px] font-mono text-[#fcd535] font-bold truncate">TG4EY8MrSMaNFXnaHjGFPNYDQS5v2jDQap</div>
+                <button onclick="copyFixedDepositAddress()" class="bn-btn-yellow active:scale-95 px-3 py-1.5 rounded-lg text-xs font-bold transition shrink-0 flex items-center space-x-1">
                     <i class="fa-regular fa-copy"></i>
                     <span id="btn-copy-deposit-addr">Copy</span>
                 </button>
@@ -614,135 +693,139 @@
 
             <div class="grid grid-cols-2 gap-2 text-left">
                 <div>
-                    <label id="lbl-deposit-amt" class="block text-[11px] font-semibold text-slate-600 mb-1">Deposit Amount (USDT):</label>
-                    <input type="number" id="deposit-input-amt" oninput="calculateDepositReturn()" placeholder="Min 100" class="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <label id="lbl-deposit-amt" class="block text-[11px] font-semibold text-[#848e9c] mb-1">Deposit Amount (USDT):</label>
+                    <input type="number" id="deposit-input-amt" oninput="calculateDepositReturn()" placeholder="Min 100" class="w-full bn-input rounded-lg p-2.5 text-xs">
                 </div>
                 <div>
-                    <label id="lbl-deposit-return" class="block text-[11px] font-semibold text-emerald-600 mb-1">Expected Return:</label>
-                    <div id="deposit-return-display" class="w-full bg-emerald-50 border border-emerald-200 rounded-lg p-2.5 text-xs font-bold text-emerald-700 flex items-center justify-between">
+                    <label id="lbl-deposit-return" class="block text-[11px] font-semibold text-[#0ecb81] mb-1">Expected Return:</label>
+                    <div id="deposit-return-display" class="w-full bg-[#1e2329] border border-[#0ecb81]/30 rounded-lg p-2.5 text-xs font-bold text-[#0ecb81] flex items-center justify-between">
                         <span>0%</span>
-                        <span class="text-[10px] text-slate-500">~ $0/day</span>
+                        <span class="text-[10px] text-[#848e9c]">~ $0/day</span>
                     </div>
                 </div>
             </div>
 
-            <button onclick="submitDepositRequest()" id="btn-submit-deposit" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-2.5 rounded-xl text-xs transition shadow mt-2">
+            <button onclick="submitDepositRequest()" id="btn-submit-deposit" class="w-full bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] font-extrabold py-2.5 rounded-xl text-xs transition shadow mt-2">
                 Submit Deposit Request (Pending ADM Approval)
             </button>
         </div>
     </div>
 
     <!-- MODAL 3: ADMIN -->
-    <div id="admin-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto animate-fade-in">
-            <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+    <div id="admin-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-[#181a20] text-[#eaecef] rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 border border-[#2b3139] max-h-[90vh] overflow-y-auto animate-fade-in">
+            <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-[#848e9c] hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
             <div class="text-center space-y-1">
-                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
+                <div class="w-12 h-12 bg-[#fcd535]/15 text-[#fcd535] rounded-full flex items-center justify-center mx-auto text-xl mb-2 border border-[#fcd535]/30">
                     <i class="fa-solid fa-user-shield"></i>
                 </div>
-                <h3 id="admin-panel-title" class="text-lg font-bold text-slate-800">ADM Management System</h3>
-                <p id="admin-panel-desc" class="text-xs text-purple-600 font-semibold">User Management, Transaction Approvals & Rewards</p>
+                <h3 id="admin-panel-title" class="text-lg font-bold text-white">ADM Management System</h3>
+                <p id="admin-panel-desc" class="text-xs text-[#fcd535] font-semibold">User Management, Transaction Approvals & Rewards</p>
             </div>
 
-            <div class="flex border-b text-xs font-semibold">
-                <button onclick="switchAdminTab('users')" id="adm-tab-users" class="flex-1 py-2 border-b-2 border-purple-600 text-purple-600">Users</button>
-                <button onclick="switchAdminTab('approval')" id="adm-tab-approval" class="flex-1 py-2 text-slate-400">Approvals (<span id="pending-count">0</span>)</button>
-                <button onclick="switchAdminTab('rewards')" id="adm-tab-rewards" class="flex-1 py-2 text-slate-400">Rewards</button>
-                <button onclick="switchAdminTab('chats')" id="adm-tab-chats" class="flex-1 py-2 text-slate-400">CSKH (<span id="chat-count">0</span>)</button>
+            <div class="flex border-b border-[#2b3139] text-xs font-semibold">
+                <button onclick="switchAdminTab('users')" id="adm-tab-users" class="flex-1 py-2 border-b-2 border-[#fcd535] text-[#fcd535]">Users</button>
+                <button onclick="switchAdminTab('approval')" id="adm-tab-approval" class="flex-1 py-2 text-[#848e9c]">Approvals (<span id="pending-count">0</span>)</button>
+                <button onclick="switchAdminTab('rewards')" id="adm-tab-rewards" class="flex-1 py-2 text-[#848e9c]">Rewards</button>
+                <button onclick="switchAdminTab('chats')" id="adm-tab-chats" class="flex-1 py-2 text-[#848e9c]">CSKH (<span id="chat-count">0</span>)</button>
             </div>
 
             <div id="adm-content-users" class="space-y-2 text-xs">
-                <p id="adm-txt-users" class="text-slate-500 font-medium">All User Credentials and Balances:</p>
-                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-slate-50 space-y-2" id="admin-user-list-container"></div>
+                <p id="adm-txt-users" class="text-[#848e9c] font-medium">All User Credentials and Balances:</p>
+                <div class="max-h-48 overflow-y-auto border border-[#2b3139] rounded-xl p-2 bg-[#1e2329] space-y-2" id="admin-user-list-container"></div>
             </div>
 
             <div id="adm-content-approval" class="hidden space-y-2 text-xs">
-                <p id="adm-txt-approval" class="text-slate-500 font-medium">Pending Deposit / Withdraw Requests:</p>
-                <div class="max-h-48 overflow-y-auto border rounded-xl p-2 bg-slate-50 space-y-2" id="admin-approval-container"></div>
+                <p id="adm-txt-approval" class="text-[#848e9c] font-medium">Pending Deposit / Withdraw Requests:</p>
+                <div class="max-h-48 overflow-y-auto border border-[#2b3139] rounded-xl p-2 bg-[#1e2329] space-y-2" id="admin-approval-container"></div>
             </div>
 
             <div id="adm-content-rewards" class="hidden space-y-3 text-xs">
                 <div>
-                    <label id="adm-lbl-target" class="block font-semibold text-slate-600 mb-1">Select User:</label>
-                    <select id="admin-target-user" class="w-full border rounded-lg p-2 bg-slate-50"></select>
+                    <label id="adm-lbl-target" class="block font-semibold text-[#848e9c] mb-1">Select User:</label>
+                    <select id="admin-target-user" class="w-full bn-input rounded-lg p-2"></select>
                 </div>
                 <div>
-                    <label id="adm-lbl-rewardamt" class="block font-semibold text-slate-600 mb-1">Reward Amount (USDT):</label>
-                    <input type="number" id="admin-reward-amount" placeholder="Ex: 100.00" class="w-full border rounded-lg p-2">
+                    <label id="adm-lbl-rewardamt" class="block font-semibold text-[#848e9c] mb-1">Reward Amount (USDT):</label>
+                    <input type="number" id="admin-reward-amount" placeholder="Ex: 100.00" class="w-full bn-input rounded-lg p-2">
                 </div>
-                <button onclick="adminExecuteReward()" id="adm-btn-reward" class="w-full bg-purple-600 hover:bg-purple-700 active:scale-95 text-white font-bold py-2.5 rounded-xl transition shadow">Confirm Reward</button>
+                <button onclick="adminExecuteReward()" id="adm-btn-reward" class="w-full bn-btn-yellow active:scale-95 py-2.5 rounded-xl transition shadow">Confirm Reward</button>
             </div>
 
             <div id="adm-content-chats" class="hidden space-y-3 text-xs">
-                <p id="adm-txt-chatlist" class="text-slate-500 font-medium">Support Chat History:</p>
-                <div class="max-h-60 overflow-y-auto border rounded-xl p-2 bg-slate-50 space-y-3" id="admin-chat-container"></div>
+                <p id="adm-txt-chatlist" class="text-[#848e9c] font-medium">Support Chat History:</p>
+                <div class="max-h-60 overflow-y-auto border border-[#2b3139] rounded-xl p-2 bg-[#1e2329] space-y-3" id="admin-chat-container"></div>
             </div>
         </div>
     </div>
 
     <!-- MODAL 4: CHAT -->
-    <div id="support-chat-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl relative space-y-3 border border-slate-100 animate-fade-in">
-            <button onclick="closeSupportChat()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+    <div id="support-chat-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-[#181a20] text-[#eaecef] rounded-2xl max-w-sm w-full p-5 shadow-2xl relative space-y-3 border border-[#2b3139] animate-fade-in">
+            <button onclick="closeSupportChat()" class="absolute right-4 top-4 text-[#848e9c] hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <div class="flex items-center space-x-2 border-b pb-2">
-                <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm">
+            <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-2">
+                <div class="w-8 h-8 bg-[#fcd535] text-[#0b0e11] rounded-full flex items-center justify-center text-sm font-bold">
                     <i class="fa-solid fa-headset"></i>
                 </div>
                 <div>
-                    <h4 id="chat-title" class="font-bold text-slate-800 text-sm">24/7 Live Support</h4>
-                    <p id="chat-status" class="text-[10px] text-emerald-600 font-semibold">● ADM Online</p>
+                    <h4 id="chat-title" class="font-bold text-white text-sm">24/7 Live Support</h4>
+                    <p id="chat-status" class="text-[10px] text-[#0ecb81] font-semibold">● ADM Online</p>
                 </div>
             </div>
-            <div id="chat-messages-box" class="h-48 overflow-y-auto border rounded-xl p-2 bg-slate-50 text-xs space-y-2">
-                <div id="chat-welcome-msg" class="bg-blue-50 text-blue-800 p-2 rounded-lg">Hello! How can ADM assist your savings wallet transactions today?</div>
+            <div id="chat-messages-box" class="h-48 overflow-y-auto border border-[#2b3139] rounded-xl p-2 bg-[#1e2329] text-xs space-y-2">
+                <div id="chat-welcome-msg" class="bg-[#fcd535]/15 text-[#fcd535] p-2 rounded-lg border border-[#fcd535]/25">Hello! How can ADM assist your savings wallet transactions today?</div>
             </div>
             <div class="flex space-x-2">
-                <input type="text" id="user-chat-input" placeholder="Type your message..." class="flex-1 border rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button onclick="sendUserMessage()" id="btn-chat-send" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-4 py-2 rounded-xl text-xs font-bold">Send</button>
+                <input type="text" id="user-chat-input" placeholder="Type your message..." class="flex-1 bn-input rounded-xl px-3 py-2 text-xs">
+                <button onclick="sendUserMessage()" id="btn-chat-send" class="bn-btn-yellow active:scale-95 px-4 py-2 rounded-xl text-xs font-bold">Send</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL 5: CERTIFICATE -->
-    <div id="certificate-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto animate-fade-in">
-            <button onclick="closeCertificateModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+    <div id="certificate-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-[#181a20] text-[#eaecef] rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 border border-[#2b3139] max-h-[90vh] overflow-y-auto animate-fade-in">
+            <button onclick="closeCertificateModal()" class="absolute right-4 top-4 text-[#848e9c] hover:text-white">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
             <div class="text-center space-y-1">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-2xl mb-2">
+                <div class="w-12 h-12 bg-[#fcd535]/15 text-[#fcd535] rounded-full flex items-center justify-center mx-auto text-2xl mb-2 border border-[#fcd535]/30">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
-                <h3 id="modal-cert-title" class="text-lg font-bold text-slate-800">SAVINGS DEPOSIT CERTIFICATE</h3>
-                <p id="modal-cert-subtitle" class="text-xs text-blue-600 font-semibold tracking-wide">SAVINGS WALLET PROTOCOL</p>
+                <h3 id="modal-cert-title" class="text-lg font-bold text-white">SAVINGS DEPOSIT CERTIFICATE</h3>
+                <p id="modal-cert-subtitle" class="text-xs text-[#fcd535] font-semibold tracking-wide">SAVINGS WALLET PROTOCOL</p>
             </div>
-            <div class="border-t border-b border-slate-100 py-3 space-y-2 text-xs">
-                <div class="flex justify-between"><span id="modal-lbl-op" class="text-slate-500">Operating Since:</span><span id="modal-val-op" class="font-bold text-slate-800">Year 2021 (5+ Years Active)</span></div>
-                <div class="flex justify-between"><span id="modal-lbl-tech" class="text-slate-500">Standard:</span><span id="modal-val-tech" class="font-semibold text-slate-800">Independent Decentralized Protocol</span></div>
-                <div class="flex justify-between"><span id="modal-lbl-custody" class="text-slate-500">Asset Protection:</span><span id="modal-val-custody" class="font-semibold text-blue-600">Self-Custody Wallet</span></div>
-                <div class="flex justify-between"><span id="modal-lbl-net" class="text-slate-500">Network:</span><span id="modal-lbl-net-val" class="font-semibold text-green-600">TRON (TRC-20)</span></div>
+            <div class="border-t border-b border-[#2b3139] py-3 space-y-2 text-xs">
+                <div class="flex justify-between"><span id="modal-lbl-op" class="text-[#848e9c]">Operating Since:</span><span id="modal-val-op" class="font-bold text-white">Year 2021 (5+ Years Active)</span></div>
+                <div class="flex justify-between"><span id="modal-lbl-tech" class="text-[#848e9c]">Standard:</span><span id="modal-val-tech" class="font-semibold text-[#eaecef]">Independent Decentralized Protocol</span></div>
+                <div class="flex justify-between"><span id="modal-lbl-custody" class="text-[#848e9c]">Asset Protection:</span><span id="modal-val-custody" class="font-semibold text-[#fcd535]">Self-Custody Wallet</span></div>
+                <div class="flex justify-between"><span id="modal-lbl-net" class="text-[#848e9c]">Network:</span><span id="modal-val-net" class="font-semibold text-[#0ecb81]">TRON (TRC-20)</span></div>
             </div>
-            <button onclick="closeCertificateModal()" id="modal-btn-confirm" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">Understood & Confirm</button>
+            <button onclick="closeCertificateModal()" id="modal-btn-confirm" class="w-full bn-btn-yellow active:scale-95 py-2.5 rounded-xl text-xs transition shadow">Understood & Confirm</button>
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 py-2 px-6 flex justify-around items-center z-40 max-w-4xl mx-auto shadow-lg">
-        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-blue-600 font-semibold transition">
-            <i class="fa-solid fa-house text-xl"></i>
-            <span id="nav-home-text" class="text-[11px] mt-1">Home</span>
+    <!-- BOTTOM NAVIGATION (4 TABS: HOME, MARKETS, WITHDRAWAL, ACCOUNT) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#181a20]/95 backdrop-blur-md border-t border-[#2b3139] py-2 px-4 flex justify-around items-center z-40 max-w-4xl mx-auto shadow-2xl">
+        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-[#fcd535] font-bold transition">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span id="nav-home-text" class="text-[10px] mt-1">Home</span>
         </button>
-        <button onclick="switchTab('withdrawal')" id="nav-withdrawal" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium transition">
-            <i class="fa-solid fa-briefcase text-xl"></i>
-            <span id="nav-withdrawal-text" class="text-[11px] mt-1">Withdrawal</span>
+        <button onclick="switchTab('markets')" id="nav-markets" class="flex flex-col items-center text-[#848e9c] hover:text-[#eaecef] font-medium transition">
+            <i class="fa-solid fa-arrow-trend-up text-lg"></i>
+            <span id="nav-markets-text" class="text-[10px] mt-1">Markets</span>
         </button>
-        <button onclick="switchTab('account')" id="nav-account" class="flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium transition">
-            <i class="fa-solid fa-user text-xl"></i>
-            <span id="nav-account-text" class="text-[11px] mt-1">Account</span>
+        <button onclick="switchTab('withdrawal')" id="nav-withdrawal" class="flex flex-col items-center text-[#848e9c] hover:text-[#eaecef] font-medium transition">
+            <i class="fa-solid fa-briefcase text-lg"></i>
+            <span id="nav-withdrawal-text" class="text-[10px] mt-1">Withdrawal</span>
+        </button>
+        <button onclick="switchTab('account')" id="nav-account" class="flex flex-col items-center text-[#848e9c] hover:text-[#eaecef] font-medium transition">
+            <i class="fa-solid fa-user text-lg"></i>
+            <span id="nav-account-text" class="text-[10px] mt-1">Account</span>
         </button>
     </nav>
 
@@ -776,30 +859,93 @@
             { level: 12, min: 120000, rate: 22.00, desc: "~ $26,400+ / day" }
         ];
 
-        const translations = {
+        const marketAssets = [
+            { symbol: "BTC/USDT", name: "Bitcoin Index", type: "CRYPTO", price: 96420.50, change: 3.42, vol: "38.4B" },
+            { symbol: "BNB/USDT", name: "BNB Chain", type: "CRYPTO", price: 648.20, change: 2.85, vol: "2.9B" },
+            { symbol: "ETH/USDT", name: "Ethereum Spot", type: "CRYPTO", price: 3315.80, change: 1.94, vol: "19.1B" },
+            { symbol: "SOL/USDT", name: "Solana Network", type: "CRYPTO", price: 238.40, change: 5.18, vol: "6.7B" },
+            { symbol: "NVDA", name: "NVIDIA Corp. (Equity)", type: "STOCKS", price: 146.75, change: 4.12, vol: "214M" },
+            { symbol: "AAPL", name: "Apple Inc. (Equity)", type: "STOCKS", price: 234.90, change: 1.15, vol: "52M" },
+            { symbol: "TSLA", name: "Tesla Inc. (Equity)", type: "STOCKS", price: 342.10, change: -1.38, vol: "89M" },
+            { symbol: "MSFT", name: "Microsoft Corp. (Equity)", type: "STOCKS", price: 428.60, change: 0.88, vol: "24M" }
+        ];
+
+        const partnerExchanges = [
+            { id: "binance", name: "Binance", tag: "Spot & Earn", url: "https://www.binance.com", icon: "fa-coins", color: "text-[#fcd535]" },
+            { id: "bybit", name: "Bybit", tag: "Derivatives & Web3", url: "https://www.bybit.com", icon: "fa-bolt", color: "text-amber-400" },
+            { id: "bitget", name: "Bitget", tag: "Copy & Vault", url: "https://www.bitget.com", icon: "fa-layer-group", color: "text-cyan-400" },
+            { id: "okx", name: "OKX", tag: "Exchange & Wallet", url: "https://www.okx.com", icon: "fa-wallet", color: "text-white" }
+        ];
+
+        const baseTranslations = {
             en: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send", certTitle: "SAVINGS DEPOSIT CERTIFICATE", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Operating Since:", valOp: "Year 2021 (5+ Years Active)", lblTech: "Standard:", valTech: "Independent Decentralized Protocol", lblCustody: "Asset Protection:", valCustody: "Self-Custody Wallet", lblNet: "Network:", btnConfirm: "Understood & Confirm", linkWalletTitle: "Link Wallet Address", linkWalletDesc: "Select network & bind your TRC20/Binance wallet address before withdrawing.", lblWithdrawNet: "WITHDRAWAL NETWORK", lblLinkedTarget: "TARGET WALLET ADDRESS", lblLinkNet: "SELECT YOUR NETWORK", lblLinkAddr: "PERSONAL WALLET ADDRESS", btnSaveLink: "Save Wallet Address", historyTitle: "Withdrawal History (24h Auto-Expiry)", historySubtitle: "Auto-clears after 24h", historyEmpty: "No withdrawal history in the last 24 hours.", lblMyAddr: "Your Wallet Address:", btnCopyText: "Copy", btnLogoutText: "Logout Account", vipSystemTitle: "VIP Tiers System (VIP 1 - 12)", vipSystemSub: "From 100 USDT+", actTitle: "Activate new balance accumulation!", actDesc: "Confirm to activate your deposit and start earning daily returns.", actBtn: "Activate", btnClaim: "Claim Income", timerTitle: "24h Yield Cycle Progress:", startLabel: "Deposit Start", endLabel: "Ready to Claim (100%)", authTitle: "Login / Register", authDesc: "Please login or create a new account", usernameLbl: "Username:", passwordLbl: "Password:", authBtn: "Login / Register Now", modalDepTitle: "Fixed Deposit Hub", modalDepDesc: "Transfer USDT via TRC20 network to fixed address (Min 100 USDT):", depAmtLbl: "Deposit Amount (USDT):", depRetLbl: "Expected Return:", depBtn: "Submit Deposit Request (Pending ADM Approval)", badgeSecure: "Secure Vault", welcomeTitle: "Welcome to SAVINGS WALLET!", welcomeSub: "Leading secure savings & daily return wallet protocol.", reviewPrompt: "Rate 5 stars for SAVINGS WALLET to unlock benefits!", reviewPromptSub: "Click on stars on the right to rate now.", tickerLabel: "Supported Cryptocurrencies & Assets", unlinkedWalletText: "Unlinked Wallet Address (Please fill Section 2)", copyBtnText: "Copy",
+                appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navMarkets: "Markets", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send", certTitle: "SAVINGS DEPOSIT CERTIFICATE", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Operating Since:", valOp: "Year 2021 (5+ Years Active)", lblTech: "Standard:", valTech: "Independent Decentralized Protocol", lblCustody: "Asset Protection:", valCustody: "Self-Custody Wallet", lblNet: "Network:", valNet: "TRON (TRC-20)", btnConfirm: "Understood & Confirm", linkWalletTitle: "Link Wallet Address", linkWalletDesc: "Select network & bind your TRC20/Binance wallet address before withdrawing.", lblWithdrawNet: "WITHDRAWAL NETWORK", lblLinkedTarget: "TARGET WALLET ADDRESS", lblLinkNet: "SELECT YOUR NETWORK", lblLinkAddr: "PERSONAL WALLET ADDRESS", btnSaveLink: "Save Wallet Address", historyTitle: "Withdrawal History (24h Auto-Expiry)", historySubtitle: "Auto-clears after 24h", historyEmpty: "No withdrawal history in the last 24 hours.", lblMyAddr: "Your Wallet Address:", btnCopyText: "Copy", btnLogoutText: "Logout Account", vipSystemTitle: "VIP Tiers System (VIP 1 - 12)", vipSystemSub: "From 100 USDT+", actTitle: "Activate new balance accumulation!", actDesc: "Confirm to activate your deposit and start earning daily returns.", actBtn: "Activate", btnClaim: "Claim Income", timerTitle: "24h Yield Cycle Progress:", startLabel: "Deposit Start", endLabel: "Ready to Claim (100%)", authTitle: "Login / Register", authDesc: "Please login or create a new account", usernameLbl: "Username:", passwordLbl: "Password:", authBtn: "Login / Register Now", modalDepTitle: "Fixed Deposit Hub", modalDepDesc: "Transfer USDT via TRC20 network to fixed address (Min 100 USDT):", depAmtLbl: "Deposit Amount (USDT):", depRetLbl: "Expected Return:", depBtn: "Submit Deposit Request (Pending ADM Approval)", badgeSecure: "Secure Vault", welcomeTitle: "Welcome to SAVINGS WALLET!", welcomeSub: "Leading secure savings & daily return wallet protocol.", reviewPrompt: "Rate 5 stars for SAVINGS WALLET to unlock benefits!", reviewPromptSub: "Click on stars on the right to rate now.", tickerLabel: "Supported Cryptocurrencies & Assets", unlinkedWalletText: "Unlinked Wallet Address (Please fill Section 2)", copyBtnText: "Copy",
+                qaDepositTitle: "Quick Deposit", qaDepositSub: "TRC20 Vault", qaPayoutTitle: "Fast Payout", qaPayoutSub: "Multi-Chain", qaYieldTitle: "24h Yield", qaYieldSub: "Up to 22%/d", liveTelemetry: "● Live Telemetry", realtimeBlocks: "Real-time blocks", highlightsTitle: "Vault Operation Highlights",
+                highlight1: "Minimum deposit starts at <strong>100 USDT</strong> via TRC20 network with automatic VIP tier calculation.",
+                highlight2: "Each yield cycle runs on a <strong>24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.",
+                highlight3: "Need help with deposits, withdrawals, or VIP tiers? Use the <strong>24/7 Live Support</strong> chat button anytime.",
+                marketsTitle: "Markets & Equities Discovery", marketsSubtitle: "Real-time crypto & global stock tickers, search & third-party exchange links.", marketOpen: "● Market Open", searchPlaceholder: "Search ticker or stock (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "All", filterCrypto: "Crypto", filterStocks: "Stocks", colAsset: "Asset / Ticker", colPrice: "Price & 24h Change", thirdpartyTitle: "Third-Party Exchange Links", thirdpartyDesc: "Connect or open external partner apps: Binance, Bybit, Bitget, OKX.", btnConnectApp: "Link App", btnLinkedApp: "Linked", btnOpenApp: "Open",
                 alertFillAuth: "Please enter both username and password!", alertWrongPass: "Incorrect password!", alertAuthSuccess: "Login successful!", alertRateThanks: "Thank you for rating 5 stars for SAVINGS WALLET!", alertLoginRequired: "Please log in to perform this action!", alertCopyAddrSuccess: "Wallet address copied successfully: ", alertSaveLinkSuccess: "Wallet address linked successfully!", alertCycleNotFinished: "24-hour yield cycle is not completed yet!", alertClaimSuccess: "Congratulations! Claimed 24h returns successfully: ", alertMinDeposit: "Minimum deposit value is 100 USDT!", alertDepositSubmitted: "Deposit request submitted! Please wait for ADM approval.", alertActivateSuccess: "Activated new 24h yield accumulation successfully!", alertUnlinkedWallet: "You have NOT LINKED A WALLET ADDRESS! Please complete Section 2 first.", alertInvalidAmount: "Please enter a valid amount!", alertInsuffBalance: "Insufficient available balance!", alertWithdrawSubmitted: "Withdrawal request submitted! Waiting for ADM approval."
             },
             vi: {
-                appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền (Withdrawal)", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút tiền", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi", certTitle: "CHỨNG NHẬN GỬI TIỀN TIẾT KIỆM", certSubtitle: "GIAO THỨC VÍ TIẾT KIỆM", lblOp: "Hoạt động từ:", valOp: "Năm 2021 (Hơn 5 năm hoạt động)", lblTech: "Tiêu chuẩn:", valTech: "Giao thức phi tập trung độc lập", lblCustody: "Bảo vệ tài sản:", valCustody: "Ví tự quản lý (Self-Custody)", lblNet: "Mạng lưới:", btnConfirm: "Đã hiểu & Xác nhận", linkWalletTitle: "Liên kết địa chỉ ví (Link Wallet)", linkWalletDesc: "Khách hàng cần chọn đúng mạng TRC20 và điền địa chỉ ví cá nhân trước khi thực hiện rút tiền.", lblWithdrawNet: "MẠNG RÚT TIỀN (NETWORK)", lblLinkedTarget: "VÍ ĐÍCH NHẬN TIỀN", lblLinkNet: "CHỌN MẠNG VÍ CỦA BẠN", lblLinkAddr: "ĐỊA CHỈ VÍ CÁ NHÂN (TRC20)", btnSaveLink: "Lưu địa chỉ ví", historyTitle: "Lịch sử rút tiền (Tự động xóa sau 24h)", historySubtitle: "Tự động xóa sau 24h", historyEmpty: "Chưa có lịch sử rút tiền trong 24 giờ qua.", lblMyAddr: "Địa chỉ ví của bạn:", btnCopyText: "Sao chép", btnLogoutText: "Đăng xuất tài khoản", vipSystemTitle: "Hệ Thống Cấp Độ VIP (VIP 1 - 12)", vipSystemSub: "Từ 100 USDT+", actTitle: "Kích hoạt tích lũy số dư mới!", actDesc: "Xác nhận để kích hoạt khoản nạp và bắt đầu đếm 24h sinh lời.", actBtn: "Kích hoạt", btnClaim: "Rút lợi nhuận", timerTitle: "Tiến trình chu kỳ sinh lời 24h:", startLabel: "Bắt đầu nạp", endLabel: "Đủ 100% để rút", authTitle: "Đăng nhập / Đăng ký", authDesc: "Vui lòng đăng nhập hoặc tạo tài khoản mới", usernameLbl: "Tên đăng nhập:", passwordLbl: "Mật khẩu:", authBtn: "Đăng nhập / Đăng ký ngay", modalDepTitle: "Cổng Nạp Tiền Cố Định", modalDepDesc: "Chuyển USDT qua mạng TRC20 vào địa chỉ cố định (Tối thiểu 100 USDT):", depAmtLbl: "Số tiền nạp (USDT):", depRetLbl: "Lợi nhuận dự kiến:", depBtn: "Gửi Yêu Cầu Nạp Tiền (Chờ ADM Duyệt)", badgeSecure: "Kho bảo mật", welcomeTitle: "Chào mừng bạn đã đến với SAVINGS WALLET!", welcomeSub: "Hệ thống ví tiết kiệm và đầu tư lợi nhuận 24h an toàn hàng đầu.", reviewPrompt: "Đánh giá 5 sao cho SAVINGS WALLET để nhận ưu đãi!", reviewPromptSub: "Click vào các ngôi sao bên phải để đánh giá ngay.", tickerLabel: "Các loại tiền điện tử & tài sản được hỗ trợ", unlinkedWalletText: "Chưa liên kết ví (Vui lòng điền ở Phần 2)", copyBtnText: "Sao chép",
+                appTitle: "VÍ TIẾT KIỆM", bannerTitle: "Nhận Voucher", bannerSubtitle: "Không cam kết", bannerDesc: "Tham gia nút và bắt đầu khai thác", btnCert: "Chứng chỉ", btnDepositHub: "Cổng Nạp Tiền", poolDataTitle: "Dữ liệu nhóm", totalOutput: "Tổng sản lượng", validNodes: "Nút hợp lệ", participants: "Người tham gia", userRevenue: "Doanh thu của người dùng", outputDetailsTitle: "Chi tiết đầu ra", tableAddr: "Địa chỉ", tableQty: "Số lượng", withdrawalTitle: "Rút tiền (Withdrawal)", withdrawalLabel: "SỐ TIỀN RÚT (USDT)", withdrawalBtn: "Xác nhận rút tiền", accAccumulated: "Thu nhập tích lũy", accToday: "Thu nhập hôm nay", accYield: "Năng suất thị trường", accPoolWallet: "Ví đựng tiền Pool", accWalletBal: "Số dư ví", navHome: "Trang chủ", navMarkets: "Thị trường", navWithdrawal: "Rút tiền", navAccount: "Tài khoản", btnQuickDeposit: "Nạp Tiền Vào Ví Cố Định", tooltipSupport: "Chat với ADM CSKH 24/7!", chatTitle: "Hỗ Trợ Khách Hàng 24/7", chatStatus: "● ADM đang trực tuyến", chatWelcomeMsg: "Xin chào! ADM có thể hỗ trợ gì cho giao dịch hoặc tài khoản tiết kiệm của bạn?", chatPlaceholder: "Nhập nội dung cần hỗ trợ...", btnChatSend: "Gửi", certTitle: "CHỨNG NHẬN GỬI TIỀN TIẾT KIỆM", certSubtitle: "GIAO THỨC VÍ TIẾT KIỆM", lblOp: "Hoạt động từ:", valOp: "Năm 2021 (Hơn 5 năm hoạt động)", lblTech: "Tiêu chuẩn:", valTech: "Giao thức phi tập trung độc lập", lblCustody: "Bảo vệ tài sản:", valCustody: "Ví tự quản lý (Self-Custody)", lblNet: "Mạng lưới:", valNet: "TRON (TRC-20)", btnConfirm: "Đã hiểu & Xác nhận", linkWalletTitle: "Liên kết địa chỉ ví (Link Wallet)", linkWalletDesc: "Khách hàng cần chọn đúng mạng TRC20 và điền địa chỉ ví cá nhân trước khi thực hiện rút tiền.", lblWithdrawNet: "MẠNG RÚT TIỀN (NETWORK)", lblLinkedTarget: "VÍ ĐÍCH NHẬN TIỀN", lblLinkNet: "CHỌN MẠNG VÍ CỦA BẠN", lblLinkAddr: "ĐỊA CHỈ VÍ CÁ NHÂN (TRC20)", btnSaveLink: "Lưu địa chỉ ví", historyTitle: "Lịch sử rút tiền (Tự động xóa sau 24h)", historySubtitle: "Tự động xóa sau 24h", historyEmpty: "Chưa có lịch sử rút tiền trong 24 giờ qua.", lblMyAddr: "Địa chỉ ví của bạn:", btnCopyText: "Sao chép", btnLogoutText: "Đăng xuất tài khoản", vipSystemTitle: "Hệ Thống Cấp Độ VIP (VIP 1 - 12)", vipSystemSub: "Từ 100 USDT+", actTitle: "Kích hoạt tích lũy số dư mới!", actDesc: "Xác nhận để kích hoạt khoản nạp và bắt đầu đếm 24h sinh lời.", actBtn: "Kích hoạt", btnClaim: "Rút lợi nhuận", timerTitle: "Tiến trình chu kỳ sinh lời 24h:", startLabel: "Bắt đầu nạp", endLabel: "Đủ 100% để rút", authTitle: "Đăng nhập / Đăng ký", authDesc: "Vui lòng đăng nhập hoặc tạo tài khoản mới", usernameLbl: "Tên đăng nhập:", passwordLbl: "Mật khẩu:", authBtn: "Đăng nhập / Đăng ký ngay", modalDepTitle: "Cổng Nạp Tiền Cố Định", modalDepDesc: "Chuyển USDT qua mạng TRC20 vào địa chỉ cố định (Tối thiểu 100 USDT):", depAmtLbl: "Số tiền nạp (USDT):", depRetLbl: "Lợi nhuận dự kiến:", depBtn: "Gửi Yêu Cầu Nạp Tiền (Chờ ADM Duyệt)", badgeSecure: "Kho bảo mật", welcomeTitle: "Chào mừng bạn đã đến với SAVINGS WALLET!", welcomeSub: "Hệ thống ví tiết kiệm và đầu tư lợi nhuận 24h an toàn hàng đầu.", reviewPrompt: "Đánh giá 5 sao cho SAVINGS WALLET để nhận ưu đãi!", reviewPromptSub: "Click vào các ngôi sao bên phải để đánh giá ngay.", tickerLabel: "Các loại tiền điện tử & tài sản được hỗ trợ", unlinkedWalletText: "Chưa liên kết ví (Vui lòng điền ở Phần 2)", copyBtnText: "Sao chép",
+                qaDepositTitle: "Nạp Nhanh", qaDepositSub: "Kho TRC20", qaPayoutTitle: "Rút Nhanh", qaPayoutSub: "Đa chuỗi", qaYieldTitle: "Lợi Nhuận 24h", qaYieldSub: "Tới 22%/ngày", liveTelemetry: "● Dữ liệu trực tiếp", realtimeBlocks: "Khối thời gian thực", highlightsTitle: "Điểm Nổi Bật Vận Hành",
+                highlight1: "Nạp tối thiểu từ <strong class='text-[#eaecef]'>100 USDT</strong> qua mạng TRC20 và tự động tính cấp VIP.",
+                highlight2: "Mỗi chu kỳ sinh lời kéo dài <strong class='text-[#eaecef]'>24 giờ</strong> — rút thưởng khi thanh tiến trình đạt 100%.",
+                highlight3: "Cần hỗ trợ nạp rút hoặc cấp VIP? Bấm nút <strong class='text-[#eaecef]'>Hỗ Trợ 24/7</strong> bất cứ lúc nào.",
+                marketsTitle: "Khám Phá Thị Trường & Chứng Khoán", marketsSubtitle: "Giá Crypto & Chứng khoán trực tiếp, tìm kiếm và liên kết sàn đối tác.", marketOpen: "● Thị Trường Mở", searchPlaceholder: "Tìm mã Crypto hoặc Chứng khoán (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "Tất cả", filterCrypto: "Crypto", filterStocks: "Chứng khoán", colAsset: "Tài sản / Mã", colPrice: "Giá & Biến động 24h", thirdpartyTitle: "Liên Kết Ứng Dụng Bên Thứ 3", thirdpartyDesc: "Kết nối hoặc mở nhanh ứng dụng đối tác: Binance, Bybit, Bitget, OKX.", btnConnectApp: "Liên kết", btnLinkedApp: "Đã liên kết", btnOpenApp: "Mở app",
                 alertFillAuth: "Vui lòng nhập đầy đủ tài khoản và mật khẩu!", alertWrongPass: "Mật khẩu không chính xác!", alertAuthSuccess: "Đăng nhập thành công!", alertRateThanks: "Cảm ơn bạn đã đánh giá 5 sao cho SAVINGS WALLET!", alertLoginRequired: "Vui lòng đăng nhập để thực hiện thao tác!", alertCopyAddrSuccess: "Đã sao chép địa chỉ ví thành công: ", alertSaveLinkSuccess: "Đã liên kết địa chỉ ví thành công!", alertCycleNotFinished: "Chu kỳ 24 giờ chưa hoàn tất!", alertClaimSuccess: "Chúc mừng! Đã rút thành công lợi nhuận 24h: ", alertMinDeposit: "Giá trị nạp tối thiểu là 100 USDT!", alertDepositSubmitted: "Đã gửi yêu cầu nạp tiền! Vui lòng chờ ADM kiểm tra và phê duyệt.", alertActivateSuccess: "Đã kích hoạt tích lũy số dư 24h mới thành công!", alertUnlinkedWallet: "Bạn CHƯA LIÊN KẾT ĐỊA CHỈ VÍ! Vui lòng hoàn thành Phần 2 trước.", alertInvalidAmount: "Vui lòng nhập số tiền hợp lệ!", alertInsuffBalance: "Số dư khả dụng không đủ!", alertWithdrawSubmitted: "Lệnh rút đã gửi thành công! Đang chờ ADM duyệt."
             },
             ja: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "バウチャーを受け取る", bannerSubtitle: "プレッジなし", bannerDesc: "ノードに参加してマイニングを開始", btnCert: "証明書", btnDepositHub: "入金ハブ", poolDataTitle: "プールデータ", totalOutput: "総出力", validNodes: "有効ノード", participants: "参加者", userRevenue: "ユーザー収益", outputDetailsTitle: "出力詳細", tableAddr: "アドレス", tableQty: "数量", withdrawalTitle: "出金", withdrawalLabel: "出金額 (USDT)", withdrawalBtn: "出金を確定", accAccumulated: "累計収入", accToday: "本日の収入", accYield: "市場利回り", accPoolWallet: "プールウォレット", accWalletBal: "ウォレット残高", navHome: "ホーム", navWithdrawal: "出金", navAccount: "アカウント", btnQuickDeposit: "固定ウォレットに入金", tooltipSupport: "24/7サポート!", chatTitle: "24/7 ライブサポート", chatStatus: "● 管理者オンライン", chatWelcomeMsg: "こんにちは！本日はどのようなサポートが必要ですか？", chatPlaceholder: "メッセージを入力...", btnChatSend: "送信", certTitle: "預金証明書", certSubtitle: "セービングプロトコル", lblOp: "運営開始:", valOp: "2021年 (5年以上稼働)", lblTech: "標準:", valTech: "分散型プロトコル", lblCustody: "資産保護:", valCustody: "セルフカストディ", lblNet: "ネットワーク:", btnConfirm: "理解して確認", linkWalletTitle: "ウォレットを連携", linkWalletDesc: "出金前にTRC20ウォレットアドレスを連携してください。", lblWithdrawNet: "出金ネットワーク", lblLinkedTarget: "宛先ウォレット", lblLinkNet: "ネットワーク選択", lblLinkAddr: "個人ウォレットアドレス", btnSaveLink: "アドレスを保存", historyTitle: "出金履歴 (24時間で自動消去)", historySubtitle: "24時間後に消去", historyEmpty: "出金履歴はありません。", lblMyAddr: "あなたのウォレット:", btnCopyText: "コピー", btnLogoutText: "ログアウト", vipSystemTitle: "VIPシステム (1 - 12)", vipSystemSub: "100 USDT以上", actTitle: "残高の蓄積を有効化！", actDesc: "入金を有効にして収益を受け取ります。", actBtn: "有効化", btnClaim: "収益を請求", timerTitle: "24時間サイクル:", startLabel: "開始", endLabel: "受取可能 (100%)", authTitle: "ログイン / 登録", authDesc: "アカウントにログインまたは作成", usernameLbl: "ユーザー名:", passwordLbl: "パスワード:", authBtn: "今すぐログイン / 登録", modalDepTitle: "固定入金ハブ", modalDepDesc: "TRC20ネットワーク経由で入金 (最小100 USDT):", depAmtLbl: "金額 (USDT):", depRetLbl: "予想利益:", depBtn: "入金申請を送信", badgeSecure: "セキュア金庫", welcomeTitle: "SAVINGS WALLETへようこそ！", welcomeSub: "安全な貯蓄と毎日のリターンを提供するプロトコル。", reviewPrompt: "5つ星評価をつけて特典をアンロック！", reviewPromptSub: "右側の星をクリックして評価してください。", tickerLabel: "サポートされている暗号通貨と資産", unlinkedWalletText: "ウォレットアドレス未連携（ステップ2で入力してください）", copyBtnText: "コピー",
+                appTitle: "SAVINGS WALLET", bannerTitle: "バウチャーを受け取る", bannerSubtitle: "プレッジなし", bannerDesc: "ノードに参加してマイニングを開始", btnCert: "証明書", btnDepositHub: "入金ハブ", poolDataTitle: "プールデータ", totalOutput: "総出力", validNodes: "有効ノード", participants: "参加者", userRevenue: "ユーザー収益", outputDetailsTitle: "出力詳細", tableAddr: "アドレス", tableQty: "数量", withdrawalTitle: "出金", withdrawalLabel: "出金額 (USDT)", withdrawalBtn: "出金を確定", accAccumulated: "累計収入", accToday: "本日の収入", accYield: "市場利回り", accPoolWallet: "プールウォレット", accWalletBal: "ウォレット残高", navHome: "ホーム", navMarkets: "マーケット", navWithdrawal: "出金", navAccount: "アカウント", btnQuickDeposit: "固定ウォレットに入金", tooltipSupport: "24/7サポート!", chatTitle: "24/7 ライブサポート", chatStatus: "● 管理者オンライン", chatWelcomeMsg: "こんにちは！本日はどのようなサポートが必要ですか？", chatPlaceholder: "メッセージを入力...", btnChatSend: "送信", certTitle: "預金証明書", certSubtitle: "セービングプロトコル", lblOp: "運営開始:", valOp: "2021年 (5年以上稼働)", lblTech: "標準:", valTech: "分散型プロトコル", lblCustody: "資産保護:", valCustody: "セルフカストディ", lblNet: "ネットワーク:", valNet: "TRON (TRC-20)", btnConfirm: "理解して確認", linkWalletTitle: "ウォレットを連携", linkWalletDesc: "出金前にTRC20ウォレットアドレスを連携してください。", lblWithdrawNet: "出金ネットワーク", lblLinkedTarget: "宛先ウォレット", lblLinkNet: "ネットワーク選択", lblLinkAddr: "個人ウォレットアドレス", btnSaveLink: "アドレスを保存", historyTitle: "出金履歴 (24時間で自動消去)", historySubtitle: "24時間後に消去", historyEmpty: "出金履歴はありません。", lblMyAddr: "あなたのウォレット:", btnCopyText: "コピー", btnLogoutText: "ログアウト", vipSystemTitle: "VIPシステム (1 - 12)", vipSystemSub: "100 USDT以上", actTitle: "残高の蓄積を有効化！", actDesc: "入金を有効にして収益を受け取ります。", actBtn: "有効化", btnClaim: "収益を請求", timerTitle: "24時間サイクル:", startLabel: "開始", endLabel: "受取可能 (100%)", authTitle: "ログイン / 登録", authDesc: "アカウントにログインまたは作成", usernameLbl: "ユーザー名:", passwordLbl: "パスワード:", authBtn: "今すぐログイン / 登録", modalDepTitle: "固定入金ハブ", modalDepDesc: "TRC20ネットワーク経由で入金 (最小100 USDT):", depAmtLbl: "金額 (USDT):", depRetLbl: "予想利益:", depBtn: "入金申請を送信", badgeSecure: "セキュア金庫", welcomeTitle: "SAVINGS WALLETへようこそ！", welcomeSub: "安全な貯蓄と毎日のリターンを提供するプロトコル。", reviewPrompt: "5つ星評価をつけて特典をアンロック！", reviewPromptSub: "右側の星をクリックして評価してください。", tickerLabel: "サポートされている暗号通貨と資産", unlinkedWalletText: "ウォレットアドレス未連携（ステップ2で入力してください）", copyBtnText: "コピー",
+                qaDepositTitle: "クイック入金", qaDepositSub: "TRC20金庫", qaPayoutTitle: "高速出金", qaPayoutSub: "マルチチェーン", qaYieldTitle: "24時間利回り", qaYieldSub: "最大22%/日", liveTelemetry: "● ライブデータ", realtimeBlocks: "リアルタイムブロック", highlightsTitle: "運用ハイライト",
+                highlight1: "最低入金額は<strong class='text-[#eaecef]'>100 USDT</strong>（TRC20）からで、VIPランクが自動適用されます。",
+                highlight2: "各利回りサイクルは<strong class='text-[#eaecef]'>24時間</strong>です。100%になったら請求できます。",
+                highlight3: "入金・出金・VIPに関するご質問は<strong class='text-[#eaecef]'>24/7サポート</strong>をご利用ください。",
+                marketsTitle: "マーケット＆株式ディスカバリー", marketsSubtitle: "暗号資産と株式の銘柄検索、外部取引所アプリ連携。", marketOpen: "● 取引中", searchPlaceholder: "銘柄を検索 (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "すべて", filterCrypto: "暗号資産", filterStocks: "株式", colAsset: "銘柄 / アセット", colPrice: "価格 & 24h変動", thirdpartyTitle: "外部取引所アプリ連携", thirdpartyDesc: "Binance、Bybit、Bitget、OKXと連携または起動します。", btnConnectApp: "連携する", btnLinkedApp: "連携済み", btnOpenApp: "開く",
                 alertFillAuth: "ユーザー名とパスワードを入力してください！", alertWrongPass: "パスワードが正しくありません！", alertAuthSuccess: "ログインに成功しました！", alertRateThanks: "SAVINGS WALLETを5つ星と評価していただきありがとうございます！", alertLoginRequired: "この操作を行うにはログインしてください！", alertCopyAddrSuccess: "ウォレットアドレスを正常にコピーしました: ", alertSaveLinkSuccess: "ウォレットアドレスを正常に連携しました！", alertCycleNotFinished: "24時間の利回りサイクルがまだ完了していません！", alertClaimSuccess: "おめでとうございます！24時間の収益を正常に受け取りました: ", alertMinDeposit: "最低入金額は100 USDTです！", alertDepositSubmitted: "入金申請が送信されました！管理者の承認をお待ちください。", alertActivateSuccess: "新しい24時間収益蓄積を正常に有効化しました！", alertUnlinkedWallet: "ウォレットアドレスが連携されていません！最初にステップ2を完了してください。", alertInvalidAmount: "有効な金額を入力してください！", alertInsuffBalance: "利用可能な残高が不足しています！", alertWithdrawSubmitted: "出金申請が送信されました！管理者の承認を待っています。"
             },
             zh: {
-                appTitle: "储蓄 钱包", bannerTitle: "领取优惠券", bannerSubtitle: "无质押", bannerDesc: "加入节点并开始挖矿", btnCert: "证书", btnDepositHub: "充值中心", poolDataTitle: "池数据", totalOutput: "总产出", validNodes: "有效节点", participants: "参与者", userRevenue: "用户收益", outputDetailsTitle: "产出详情", tableAddr: "地址", tableQty: "数量", withdrawalTitle: "提现", withdrawalLabel: "提现金额 (USDT)", withdrawalBtn: "确认提现", accAccumulated: "累计收入", accToday: "今日收入", accYield: "市场收益", accPoolWallet: "池钱包", accWalletBal: "钱包余额", navHome: "首页", navWithdrawal: "提现", navAccount: "账户", btnQuickDeposit: "存入固定钱包", tooltipSupport: "24/7在线客服!", chatTitle: "24/7 在线客服", chatStatus: "● 管理员在线", chatWelcomeMsg: "您好！管理员今天能为您的储蓄钱包交易提供什么帮助？", chatPlaceholder: "输入您的消息...", btnChatSend: "发送", certTitle: "储蓄存款证书", certSubtitle: "储蓄钱包协议", lblOp: "运营时间:", valOp: "2021年 (已活跃5年以上)", lblTech: "标准:", valTech: "独立去中心化协议", lblCustody: "资产保护:", valCustody: "自我托管钱包", lblNet: "网络:", btnConfirm: "了解并确认", linkWalletTitle: "绑定钱包地址", linkWalletDesc: "提现前请选择TRC20网络并绑定您的个人钱包地址。", lblWithdrawNet: "提现网络", lblLinkedTarget: "目标钱包地址", lblLinkNet: "选择您的网络", lblLinkAddr: "个人钱包地址", btnSaveLink: "保存钱包地址", historyTitle: "提现历史 (24小时自动清空)", historySubtitle: "24小时后自动清除", historyEmpty: "过去24小时内无提现记录。", lblMyAddr: "您的钱包地址:", btnCopyText: "复制", btnLogoutText: "退出账户", vipSystemTitle: "VIP 等级系统 (VIP 1 - 12)", vipSystemSub: "100 USDT 起", actTitle: "激活新余额累积！", actDesc: "确认激活您的存款并开始赚取每日收益。", actBtn: "激活", btnClaim: "领取收益", timerTitle: "24小时收益周期进度:", startLabel: "存款开始", endLabel: "准备领取 (100%)", authTitle: "登录 / 注册", authDesc: "请登录或创建新账户", usernameLbl: "用户名:", passwordLbl: "密码:", authBtn: "立即登录 / 注册", modalDepTitle: "固定充值中心", modalDepDesc: "通过 TRC20 网络将 USDT 转入固定地址 (最低 100 USDT):", depAmtLbl: "充值金额 (USDT):", depRetLbl: "预期收益:", depBtn: "发送充值请求 (等待管理员审核)", badgeSecure: "安全金库", welcomeTitle: "欢迎来到 SAVINGS WALLET！", welcomeSub: "领先的安全储蓄和每日回报钱包协议。", reviewPrompt: "为 SAVINGS WALLET 评 5 星以解锁福利！", reviewPromptSub: "点击右侧星星立即评分。", tickerLabel: "支持的加密货币和资产", unlinkedWalletText: "未绑定钱包地址 (请在第 2 部分填写)", copyBtnText: "复制",
+                appTitle: "储蓄 钱包", bannerTitle: "领取优惠券", bannerSubtitle: "无质押", bannerDesc: "加入节点并开始挖矿", btnCert: "证书", btnDepositHub: "充值中心", poolDataTitle: "池数据", totalOutput: "总产出", validNodes: "有效节点", participants: "参与者", userRevenue: "用户收益", outputDetailsTitle: "产出详情", tableAddr: "地址", tableQty: "数量", withdrawalTitle: "提现", withdrawalLabel: "提现金额 (USDT)", withdrawalBtn: "确认提现", accAccumulated: "累计收入", accToday: "今日收入", accYield: "市场收益", accPoolWallet: "池钱包", accWalletBal: "钱包余额", navHome: "首页", navMarkets: "行情", navWithdrawal: "提现", navAccount: "账户", btnQuickDeposit: "存入固定钱包", tooltipSupport: "24/7在线客服!", chatTitle: "24/7 在线客服", chatStatus: "● 管理员在线", chatWelcomeMsg: "您好！管理员今天能为您的储蓄钱包交易提供什么帮助？", chatPlaceholder: "输入您的消息...", btnChatSend: "发送", certTitle: "储蓄存款证书", certSubtitle: "储蓄钱包协议", lblOp: "运营时间:", valOp: "2021年 (已活跃5年以上)", lblTech: "标准:", valTech: "独立去中心化协议", lblCustody: "资产保护:", valCustody: "自我托管钱包", lblNet: "网络:", valNet: "TRON (TRC-20)", btnConfirm: "了解并确认", linkWalletTitle: "绑定钱包地址", linkWalletDesc: "提现前请选择TRC20网络并绑定您的个人钱包地址。", lblWithdrawNet: "提现网络", lblLinkedTarget: "目标钱包地址", lblLinkNet: "选择您的网络", lblLinkAddr: "个人钱包地址", btnSaveLink: "保存钱包地址", historyTitle: "提现历史 (24小时自动清空)", historySubtitle: "24小时后自动清除", historyEmpty: "过去24小时内无提现记录。", lblMyAddr: "您的钱包地址:", btnCopyText: "复制", btnLogoutText: "退出账户", vipSystemTitle: "VIP 等级系统 (VIP 1 - 12)", vipSystemSub: "100 USDT 起", actTitle: "激活新余额累积！", actDesc: "确认激活您的存款并开始赚取每日收益。", actBtn: "激活", btnClaim: "领取收益", timerTitle: "24小时收益周期进度:", startLabel: "存款开始", endLabel: "准备领取 (100%)", authTitle: "登录 / 注册", authDesc: "请登录或创建新账户", usernameLbl: "用户名:", passwordLbl: "密码:", authBtn: "立即登录 / 注册", modalDepTitle: "固定充值中心", modalDepDesc: "通过 TRC20 网络将 USDT 转入固定地址 (最低 100 USDT):", depAmtLbl: "充值金额 (USDT):", depRetLbl: "预期收益:", depBtn: "发送充值请求 (等待管理员审核)", badgeSecure: "安全金库", welcomeTitle: "欢迎来到 SAVINGS WALLET！", welcomeSub: "领先的安全储蓄和每日回报钱包协议。", reviewPrompt: "为 SAVINGS WALLET 评 5 星以解锁福利！", reviewPromptSub: "点击右侧星星立即评分。", tickerLabel: "支持的加密货币和资产", unlinkedWalletText: "未绑定钱包地址 (请在第 2 部分填写)", copyBtnText: "复制",
+                qaDepositTitle: "快捷充值", qaDepositSub: "TRC20金库", qaPayoutTitle: "快速提现", qaPayoutSub: "多链支持", qaYieldTitle: "24h 收益", qaYieldSub: "高达 22%/天", liveTelemetry: "● 实时数据", realtimeBlocks: "实时区块", highlightsTitle: "金库运行亮点",
+                highlight1: "最低充值 <strong class='text-[#eaecef]'>100 USDT</strong>（TRC20），自动计算 VIP 等级。",
+                highlight2: "每个收益周期为 <strong class='text-[#eaecef]'>24 小时</strong>，进度达 100% 即可领取。",
+                highlight3: "如需充值、提现或 VIP 帮助，请随时点击 <strong class='text-[#eaecef]'>24/7 在线客服</strong>。",
+                marketsTitle: "行情与股票探索", marketsSubtitle: "加密货币与美股行情搜索，关联 Binance / Bybit / Bitget / OKX。", marketOpen: "● 交易中", searchPlaceholder: "搜索代码或股票 (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "全部", filterCrypto: "加密货币", filterStocks: "股票", colAsset: "资产 / 代码", colPrice: "价格与 24h 涨跌", thirdpartyTitle: "第三方交易所应用关联", thirdpartyDesc: "关联或打开合作平台：Binance、Bybit、Bitget、OKX。", btnConnectApp: "关联", btnLinkedApp: "已关联", btnOpenApp: "打开",
                 alertFillAuth: "请输入用户名和密码！", alertWrongPass: "密码错误！", alertAuthSuccess: "登录成功！", alertRateThanks: "感谢您为 SAVINGS WALLET 评价 5 星！", alertLoginRequired: "请登录后操作！", alertCopyAddrSuccess: "成功复制钱包地址: ", alertSaveLinkSuccess: "成功绑定钱包地址！", alertCycleNotFinished: "24小时周期未完成！", alertClaimSuccess: "恭喜！成功领取收益: ", alertMinDeposit: "最低充值金额为 100 USDT！", alertDepositSubmitted: "充值请求已提交，请等待管理员审核！", alertActivateSuccess: "成功激活24小时收益累积！", alertUnlinkedWallet: "您尚未绑定钱包地址，请先完成步骤2！", alertInvalidAmount: "请输入有效金额！", alertInsuffBalance: "可用余额不足！", alertWithdrawSubmitted: "提现申请已提交，等待管理员审核！"
             }
         };
 
+        // Bổ sung đầy đủ các ngôn ngữ ko, es, fr, de, ru, pt dựa trên nền tảng chuẩn en
+        ['ko', 'es', 'fr', 'de', 'ru', 'pt'].forEach(code => {
+            baseTranslations[code] = Object.assign({}, baseTranslations.en);
+        });
+        Object.assign(baseTranslations.ko, {
+            appTitle: "세이빙 월렛", navMarkets: "마켓", marketsTitle: "마켓 & 주식 탐색", filterAll: "전체", filterCrypto: "암호화폐", filterStocks: "주식", thirdpartyTitle: "제3자 거래소 앱 연동"
+        });
+        Object.assign(baseTranslations.es, {
+            appTitle: "SAVINGS WALLET", navMarkets: "Mercados", marketsTitle: "Descubrir Mercados y Acciones", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Acciones", thirdpartyTitle: "Vincular Apps de Terceros"
+        });
+        Object.assign(baseTranslations.fr, {
+            appTitle: "SAVINGS WALLET", navMarkets: "Marchés", marketsTitle: "Explorer Marchés & Actions", filterAll: "Tout", filterCrypto: "Crypto", filterStocks: "Actions", thirdpartyTitle: "Lier des Apps Partenaires"
+        });
+        Object.assign(baseTranslations.de, {
+            appTitle: "SAVINGS WALLET", navMarkets: "Märkte", marketsTitle: "Märkte & Aktien entdecken", filterAll: "Alle", filterCrypto: "Krypto", filterStocks: "Aktien", thirdpartyTitle: "Drittanbieter-Apps verknüpfen"
+        });
+        Object.assign(baseTranslations.ru, {
+            appTitle: "SAVINGS WALLET", navMarkets: "Рынки", marketsTitle: "Рынки и Акции", filterAll: "Все", filterCrypto: "Крипто", filterStocks: "Акции", thirdpartyTitle: "Привязка Партнёрских Бирж"
+        });
+        Object.assign(baseTranslations.pt, {
+            appTitle: "SAVINGS WALLET", navMarkets: "Mercados", marketsTitle: "Explorar Mercados e Ações", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Ações", thirdpartyTitle: "Vincular Apps de Terceiros"
+        });
+
         function getTranslation(langCode) {
-            return translations[langCode] || translations['en'];
+            return baseTranslations[langCode] || baseTranslations['en'];
         }
 
         let currentLang = localStorage.getItem('savings_wallet_lang') || 'en';
+        let currentMarketCat = 'ALL';
+        let linkedPartners = JSON.parse(localStorage.getItem('savings_wallet_partners') || '{}');
         let adminClickCount = 0;
         let registeredUsers = [];
         let pendingTx = [];
@@ -807,6 +953,96 @@
         let currentUser = localStorage.getItem('savings_wallet_currentUser') || null;
         let timerInterval = null;
         let hasRated = false;
+
+        function setMarketCategory(cat) {
+            currentMarketCat = cat;
+            const mapIds = { ALL: 'mcat-all', CRYPTO: 'mcat-crypto', STOCKS: 'mcat-stocks' };
+            Object.keys(mapIds).forEach(k => {
+                const el = document.getElementById(mapIds[k]);
+                if (!el) return;
+                el.className = (k === cat)
+                    ? "px-3 py-2 rounded-xl text-xs font-bold bg-[#fcd535] text-[#0b0e11] transition"
+                    : "px-3 py-2 rounded-xl text-xs font-bold bg-[#1e2329] text-[#848e9c] border border-[#2b3139] hover:text-white transition";
+            });
+            renderMarketWatchlist();
+        }
+
+        function renderMarketWatchlist() {
+            const container = document.getElementById('market-watchlist-container');
+            if (!container) return;
+            const q = (document.getElementById('market-search-input')?.value || '').trim().toLowerCase();
+
+            const filtered = marketAssets.filter(item => {
+                const matchCat = (currentMarketCat === 'ALL') || (item.type === currentMarketCat);
+                const matchQuery = !q || item.symbol.toLowerCase().includes(q) || item.name.toLowerCase().includes(q);
+                return matchCat && matchQuery;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="text-center text-xs text-[#848e9c] py-6">No matching assets found.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const isUp = item.change >= 0;
+                const badgeColor = item.type === 'CRYPTO' ? 'text-[#fcd535] bg-[#fcd535]/10 border-[#fcd535]/25' : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/25';
+                return `
+                    <div class="flex items-center justify-between bg-[#1e2329] p-3 rounded-xl border border-[#2b3139] hover:border-[#fcd535]/40 transition">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold text-white text-xs">${item.symbol}</span>
+                                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded border ${badgeColor}">${item.type}</span>
+                            </div>
+                            <div class="text-[11px] text-[#848e9c] mt-0.5">${item.name} · Vol ${item.vol}</div>
+                        </div>
+                        <div class="text-right font-mono">
+                            <div class="text-xs font-bold text-white">$${item.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                            <div class="text-[11px] font-bold ${isUp ? 'text-[#0ecb81]' : 'text-[#f6465d]'}">${isUp ? '+' : ''}${item.change.toFixed(2)}%</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderExchangeConnectors() {
+            const grid = document.getElementById('exchange-connectors-grid');
+            const badge = document.getElementById('linked-exchanges-badge');
+            if (!grid) return;
+            const t = getTranslation(currentLang);
+            const count = Object.values(linkedPartners).filter(Boolean).length;
+            if (badge) badge.innerText = `${count} ${t.btnLinkedApp}`;
+
+            grid.innerHTML = partnerExchanges.map(ex => {
+                const isLinked = Boolean(linkedPartners[ex.id]);
+                return `
+                    <div class="bg-[#1e2329] p-3.5 rounded-xl border ${isLinked ? 'border-[#0ecb81]/50' : 'border-[#2b3139]'} flex items-center justify-between gap-2">
+                        <div class="flex items-center space-x-2.5 min-w-0">
+                            <div class="w-9 h-9 rounded-xl bg-[#181a20] border border-[#2b3139] flex items-center justify-center ${ex.color} shrink-0">
+                                <i class="fa-solid ${ex.icon}"></i>
+                            </div>
+                            <div class="truncate">
+                                <div class="text-xs font-bold text-white truncate">${ex.name}</div>
+                                <div class="text-[10px] text-[#848e9c] truncate">${ex.tag}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-1.5 shrink-0">
+                            <button onclick="togglePartnerLink('${ex.id}')" class="px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition ${isLinked ? 'bg-[#0ecb81]/20 text-[#0ecb81] border border-[#0ecb81]/40' : 'bg-[#2b3139] text-[#eaecef] hover:bg-[#373e47]'}">
+                                ${isLinked ? t.btnLinkedApp : t.btnConnectApp}
+                            </button>
+                            <a href="${ex.url}" target="_blank" rel="noopener noreferrer" class="bn-btn-yellow px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition">
+                                ${t.btnOpenApp}
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function togglePartnerLink(id) {
+            linkedPartners[id] = !linkedPartners[id];
+            localStorage.setItem('savings_wallet_partners', JSON.stringify(linkedPartners));
+            renderExchangeConnectors();
+        }
 
         function listenFirebaseData() {
             db.collection('users').onSnapshot(snapshot => {
@@ -849,11 +1085,17 @@
 
         window.onload = function() {
             renderVipTiers();
+            renderMarketWatchlist();
+            renderExchangeConnectors();
             fetchBNBMarketData();
             listenFirebaseData();
 
-            const savedLangName = currentLang === 'vi' ? 'Tiếng Việt' : (currentLang === 'ja' ? '日本語 (日本)' : (currentLang === 'zh' ? '中文 (中国)' : 'English (US/UK)'));
-            selectLanguage(currentLang, savedLangName);
+            const langNames = {
+                en: 'English (US/UK)', vi: 'Tiếng Việt', ja: '日本語 (日本)', zh: '中文 (中国)',
+                ko: '한국어 (대한민국)', es: 'Español', fr: 'Français', de: 'Deutsch',
+                ru: 'Русский', pt: 'Português'
+            };
+            selectLanguage(currentLang, langNames[currentLang] || 'English (US/UK)');
 
             if (currentUser) {
                 document.getElementById('auth-modal').classList.add('hidden');
@@ -874,12 +1116,12 @@
             container.innerHTML = '';
             vipConfig.forEach(item => {
                 container.innerHTML += `
-                    <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-200 hover:border-amber-300 transition">
+                    <div class="flex justify-between items-center bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139] hover:border-[#fcd535]/40 transition">
                         <div>
-                            <span class="font-bold text-amber-600">VIP ${item.level}</span>
-                            <span class="text-[10px] text-slate-500 ml-1">(≥ ${item.min.toLocaleString()} USDT)</span>
+                            <span class="font-bold text-[#fcd535]">VIP ${item.level}</span>
+                            <span class="text-[10px] text-[#848e9c] ml-1">(≥ ${item.min.toLocaleString()} USDT)</span>
                         </div>
-                        <div class="font-bold text-emerald-600">+${item.rate.toFixed(2)}% / day</div>
+                        <div class="font-bold text-[#0ecb81]">+${item.rate.toFixed(2)}% / day</div>
                     </div>
                 `;
             });
@@ -898,15 +1140,15 @@
             const amt = parseFloat(document.getElementById('deposit-input-amt').value) || 0;
             const display = document.getElementById('deposit-return-display');
             if (amt < 100 && amt > 0) {
-                display.innerHTML = `<span class="text-red-500 text-[10px]">Min 100 USDT</span>`;
+                display.innerHTML = `<span class="text-[#f6465d] text-[10px]">Min 100 USDT</span>`;
                 return;
             }
             if (amt <= 0) {
-                display.innerHTML = `<span>0%</span><span class="text-[10px] text-slate-500">~ $0/day</span>`;
+                display.innerHTML = `<span>0%</span><span class="text-[10px] text-[#848e9c]">~ $0/day</span>`;
                 return;
             }
             const vip = calculateVipLevel(amt);
-            display.innerHTML = `<span class="text-emerald-700 font-bold">${vip.rate}%</span><span class="text-[10px] text-emerald-600">${vip.desc}</span>`;
+            display.innerHTML = `<span class="text-[#0ecb81] font-bold">${vip.rate}%</span><span class="text-[10px] text-[#848e9c]">${vip.desc}</span>`;
         }
 
         function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
@@ -984,8 +1226,8 @@
             hasRated = true;
             for(let i=1; i<=5; i++) {
                 const star = document.getElementById(`star-${i}`);
-                star.classList.remove('text-white');
-                star.classList.add('text-yellow-300');
+                star.classList.remove('text-[#848e9c]');
+                star.classList.add('text-[#fcd535]');
             }
             document.getElementById('rating-score-text').innerText = "5.0";
             alert(t.alertRateThanks);
@@ -994,8 +1236,8 @@
         function resetStarDisplayToWhite() {
             for(let i=1; i<=5; i++) {
                 const star = document.getElementById(`star-${i}`);
-                star.classList.remove('text-yellow-300');
-                star.classList.add('text-white');
+                star.classList.remove('text-[#fcd535]');
+                star.classList.add('text-[#848e9c]');
             }
             document.getElementById('rating-score-text').innerText = "0.0";
         }
@@ -1044,11 +1286,11 @@
             const displayBox = document.getElementById('display-linked-wallet');
             const t = getTranslation(currentLang);
             if(userObj && userObj.linkedWallet) {
-                displayBox.innerHTML = `<span class="text-blue-600 font-bold">[${userObj.linkedNetwork || 'TRON (TRC20)'}]</span> ${userObj.linkedWallet}`;
+                displayBox.innerHTML = `<span class="text-[#fcd535] font-bold">[${userObj.linkedNetwork || 'TRON (TRC20)'}]</span> ${userObj.linkedWallet}`;
                 document.getElementById('link-wallet-address').value = userObj.linkedWallet;
                 if(userObj.linkedNetwork) document.getElementById('link-network-select').value = userObj.linkedNetwork;
             } else {
-                displayBox.innerHTML = `<span class="text-red-500 font-semibold">${t.unlinkedWalletText}</span>`;
+                displayBox.innerHTML = `<span class="text-[#f6465d] font-semibold">${t.unlinkedWalletText}</span>`;
             }
             if(userObj && userObj.walletAddress) {
                 document.getElementById('user-unique-address').innerText = userObj.walletAddress;
@@ -1104,7 +1346,7 @@
                 if (remaining <= 0) {
                     clearInterval(timerInterval);
                     timerLabel.innerText = "00:00:00 (Completed)";
-                    timerLabel.className = "font-mono font-bold text-emerald-600 animate-pulse";
+                    timerLabel.className = "font-mono font-bold text-[#0ecb81] animate-pulse";
                     progressBar.style.width = "100%";
                     document.getElementById('user-today-bnb').innerText = (full24hUsdt / 600).toFixed(6) + " BNB";
                     document.getElementById('user-today-usdt').innerText = `≈ $${full24hUsdt.toFixed(2)} USDT`;
@@ -1114,7 +1356,7 @@
                     const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
                     timerLabel.innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                    timerLabel.className = "font-mono font-bold text-blue-600";
+                    timerLabel.className = "font-mono font-bold text-[#fcd535]";
                     const progressPercent = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
                     progressBar.style.width = progressPercent.toFixed(2) + "%";
                     const currentUsdtYield = full24hUsdt * (progressPercent / 100);
@@ -1167,7 +1409,7 @@
 
             closeDepositModal();
             document.getElementById('deposit-input-amt').value = '';
-            document.getElementById('deposit-return-display').innerHTML = `<span>0%</span><span class="text-[10px] text-slate-500">~ $0/day</span>`;
+            document.getElementById('deposit-return-display').innerHTML = `<span>0%</span><span class="text-[10px] text-[#848e9c]">~ $0/day</span>`;
             alert(t.alertDepositSubmitted);
         }
 
@@ -1236,20 +1478,20 @@
 
             const t = getTranslation(currentLang);
             if(myHistory.length === 0) {
-                container.innerHTML = `<div id="history-empty" class="text-slate-400 text-center py-4">${t.historyEmpty}</div>`;
+                container.innerHTML = `<div id="history-empty" class="text-[#848e9c] text-center py-4">${t.historyEmpty}</div>`;
                 return;
             }
 
             container.innerHTML = myHistory.map(t => {
-                let statusBadge = '<span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-bold">Pending</span>';
-                if(t.status === 'APPROVED') statusBadge = '<span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-bold">Approved</span>';
-                if(t.status === 'REJECTED') statusBadge = '<span class="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold">Rejected</span>';
+                let statusBadge = '<span class="bg-[#fcd535]/20 text-[#fcd535] px-2 py-0.5 rounded font-bold">Pending</span>';
+                if(t.status === 'APPROVED') statusBadge = '<span class="bg-[#0ecb81]/20 text-[#0ecb81] px-2 py-0.5 rounded font-bold">Approved</span>';
+                if(t.status === 'REJECTED') statusBadge = '<span class="bg-[#f6465d]/20 text-[#f6465d] px-2 py-0.5 rounded font-bold">Rejected</span>';
                 const timeStr = new Date(t.timestamp || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 return `
-                    <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <div class="flex justify-between items-center bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
                         <div>
-                            <div class="font-bold text-slate-800">${t.amount} USDT <span class="text-[10px] text-blue-600">(${t.network || 'TRON (TRC20)'})</span></div>
-                            <div class="text-[10px] text-slate-400 font-mono">Ví: ${t.targetWallet ? t.targetWallet.substring(0,10) + '...' : 'Cố định'} | ${timeStr}</div>
+                            <div class="font-bold text-white">${t.amount} USDT <span class="text-[10px] text-[#fcd535]">(${t.network || 'TRON (TRC20)'})</span></div>
+                            <div class="text-[10px] text-[#848e9c] font-mono">Ví: ${t.targetWallet ? t.targetWallet.substring(0,10) + '...' : 'Cố định'} | ${timeStr}</div>
                         </div>
                         <div>${statusBadge}</div>
                     </div>
@@ -1273,23 +1515,23 @@
             document.getElementById('adm-content-rewards').classList.add('hidden');
             document.getElementById('adm-content-chats').classList.add('hidden');
 
-            document.getElementById('adm-tab-users').className = "flex-1 py-2 text-slate-400";
-            document.getElementById('adm-tab-approval').className = "flex-1 py-2 text-slate-400";
-            document.getElementById('adm-tab-rewards').className = "flex-1 py-2 text-slate-400";
-            document.getElementById('adm-tab-chats').className = "flex-1 py-2 text-slate-400";
+            document.getElementById('adm-tab-users').className = "flex-1 py-2 text-[#848e9c]";
+            document.getElementById('adm-tab-approval').className = "flex-1 py-2 text-[#848e9c]";
+            document.getElementById('adm-tab-rewards').className = "flex-1 py-2 text-[#848e9c]";
+            document.getElementById('adm-tab-chats').className = "flex-1 py-2 text-[#848e9c]";
 
             if(tab === 'users') {
                 document.getElementById('adm-content-users').classList.remove('hidden');
-                document.getElementById('adm-tab-users').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+                document.getElementById('adm-tab-users').className = "flex-1 py-2 border-b-2 border-[#fcd535] text-[#fcd535]";
             } else if(tab === 'approval') {
                 document.getElementById('adm-content-approval').classList.remove('hidden');
-                document.getElementById('adm-tab-approval').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+                document.getElementById('adm-tab-approval').className = "flex-1 py-2 border-b-2 border-[#fcd535] text-[#fcd535]";
             } else if(tab === 'rewards') {
                 document.getElementById('adm-content-rewards').classList.remove('hidden');
-                document.getElementById('adm-tab-rewards').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+                document.getElementById('adm-tab-rewards').className = "flex-1 py-2 border-b-2 border-[#fcd535] text-[#fcd535]";
             } else if(tab === 'chats') {
                 document.getElementById('adm-content-chats').classList.remove('hidden');
-                document.getElementById('adm-tab-chats').className = "flex-1 py-2 border-b-2 border-purple-600 text-purple-600";
+                document.getElementById('adm-tab-chats').className = "flex-1 py-2 border-b-2 border-[#fcd535] text-[#fcd535]";
             }
         }
 
@@ -1303,12 +1545,12 @@
 
             registeredUsers.filter(u => u && u.username && !u.isAdmin).forEach(u => {
                 userContainer.innerHTML += `
-                    <div class="bg-white p-2.5 rounded-lg border shadow-sm space-y-1">
+                    <div class="bg-[#181a20] p-2.5 rounded-lg border border-[#2b3139] shadow-sm space-y-1">
                         <div class="flex justify-between items-center">
-                            <div><b>User:</b> <span class="text-blue-600">${u.username}</span> | <b>Pass:</b> <span class="text-red-500 font-mono">${u.password || ''}</span></div>
-                            <div class="text-emerald-600 font-bold">${(Number(u.balance) || 0).toFixed(2)} USDT</div>
+                            <div><b>User:</b> <span class="text-[#fcd535]">${u.username}</span> | <b>Pass:</b> <span class="text-[#f6465d] font-mono">${u.password || ''}</span></div>
+                            <div class="text-[#0ecb81] font-bold">${(Number(u.balance) || 0).toFixed(2)} USDT</div>
                         </div>
-                        <div class="text-[10px] text-slate-500 font-mono">Ví cá nhân: <span class="text-blue-600">${u.walletAddress || 'N/A'}</span></div>
+                        <div class="text-[10px] text-[#848e9c] font-mono">Ví cá nhân: <span class="text-[#eaecef]">${u.walletAddress || 'N/A'}</span></div>
                     </div>
                 `;
                 selectTarget.innerHTML += `<option value="${u.username}">${u.username}</option>`;
@@ -1319,24 +1561,24 @@
             document.getElementById('pending-count').innerText = pendingList.length;
 
             if(pendingList.length === 0) {
-                approvalContainer.innerHTML = '<div class="text-slate-400 text-center py-4">No pending requests.</div>';
+                approvalContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">No pending requests.</div>';
             } else {
                 approvalContainer.innerHTML = '';
                 pendingList.forEach(t => {
-                    const badgeClass = t.type === 'DEPOSIT' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700';
+                    const badgeClass = t.type === 'DEPOSIT' ? 'bg-[#0ecb81]/20 text-[#0ecb81]' : 'bg-[#f6465d]/20 text-[#f6465d]';
                     approvalContainer.innerHTML += `
-                        <div class="bg-white p-2.5 rounded-lg border shadow-sm space-y-2">
+                        <div class="bg-[#181a20] p-2.5 rounded-lg border border-[#2b3139] shadow-sm space-y-2">
                             <div class="flex justify-between items-center">
                                 <div>
                                     <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${badgeClass}">${t.type}</span>
-                                    <b class="ml-1 text-slate-800">${t.username}</b>: <span class="text-blue-600 font-bold">${t.amount} USDT</span>
+                                    <b class="ml-1 text-white">${t.username}</b>: <span class="text-[#fcd535] font-bold">${t.amount} USDT</span>
                                 </div>
                                 <div class="flex space-x-1">
-                                    <button onclick="approveTransaction('${t.firestoreId}')" class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded hover:bg-emerald-700">Approve</button>
-                                    <button onclick="rejectTransaction('${t.firestoreId}')" class="bg-slate-400 text-white text-[10px] font-bold px-2 py-1 rounded hover:bg-slate-500">Reject</button>
+                                    <button onclick="approveTransaction('${t.firestoreId}')" class="bg-[#0ecb81] text-[#0b0e11] text-[10px] font-extrabold px-2 py-1 rounded hover:bg-[#0bb572]">Approve</button>
+                                    <button onclick="rejectTransaction('${t.firestoreId}')" class="bg-[#2b3139] text-[#eaecef] text-[10px] font-bold px-2 py-1 rounded hover:bg-[#373e47]">Reject</button>
                                 </div>
                             </div>
-                            ${t.type === 'WITHDRAW' ? `<div class="text-[10px] text-slate-500 font-mono">Network: <b class="text-blue-600">${t.network}</b> | Wallet: <b class="text-purple-600">${t.targetWallet}</b></div>` : ''}
+                            ${t.type === 'WITHDRAW' ? `<div class="text-[10px] text-[#848e9c] font-mono">Network: <b class="text-[#fcd535]">${t.network}</b> | Wallet: <b class="text-[#eaecef]">${t.targetWallet}</b></div>` : ''}
                         </div>
                     `;
                 });
@@ -1345,7 +1587,7 @@
             document.getElementById('chat-count').innerText = chatMessages.length;
             const chatContainer = document.getElementById('admin-chat-container');
             if(chatMessages.length === 0) {
-                chatContainer.innerHTML = '<div class="text-slate-400 text-center py-4">No support chat records.</div>';
+                chatContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">No support chat records.</div>';
             } else {
                 chatContainer.innerHTML = '';
                 const grouped = {};
@@ -1357,18 +1599,18 @@
 
                 for(let uname in grouped) {
                     let historyHTML = grouped[uname].map(msg => `
-                        <div class="text-[11px] ${msg.isAdmin ? 'text-purple-700 font-semibold text-right bg-purple-50 p-1 rounded' : 'text-slate-700 text-left bg-white p-1 rounded border'}">
+                        <div class="text-[11px] ${msg.isAdmin ? 'text-[#fcd535] font-semibold text-right bg-[#fcd535]/10 p-1 rounded' : 'text-[#eaecef] text-left bg-[#181a20] p-1 rounded border border-[#2b3139]'}">
                             <b>${msg.isAdmin ? 'ADM' : uname}:</b> ${msg.text}
                         </div>
                     `).join('');
 
                     chatContainer.innerHTML += `
-                        <div class="bg-white p-3 rounded-xl border shadow-sm space-y-2">
-                            <div class="font-bold text-blue-600 border-b pb-1">User: ${uname}</div>
-                            <div class="space-y-1 max-h-32 overflow-y-auto bg-slate-50 p-2 rounded">${historyHTML}</div>
+                        <div class="bg-[#181a20] p-3 rounded-xl border border-[#2b3139] shadow-sm space-y-2">
+                            <div class="font-bold text-[#fcd535] border-b border-[#2b3139] pb-1">User: ${uname}</div>
+                            <div class="space-y-1 max-h-32 overflow-y-auto bg-[#1e2329] p-2 rounded">${historyHTML}</div>
                             <div class="flex space-x-1 pt-1">
-                                <input type="text" id="adm-reply-${uname}" placeholder="Type reply..." class="flex-1 border rounded px-2 py-1 text-xs">
-                                <button onclick="adminSendReply('${uname}')" class="bg-purple-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-purple-700">Send</button>
+                                <input type="text" id="adm-reply-${uname}" placeholder="Type reply..." class="flex-1 bn-input rounded px-2 py-1 text-xs">
+                                <button onclick="adminSendReply('${uname}')" class="bn-btn-yellow px-3 py-1 rounded text-xs font-bold">Send</button>
                             </div>
                         </div>
                     `;
@@ -1457,15 +1699,15 @@
         function loadUserChatHistory() {
             const box = document.getElementById('chat-messages-box');
             const t = getTranslation(currentLang);
-            box.innerHTML = `<div id="chat-welcome-msg" class="bg-blue-50 text-blue-800 p-2 rounded-lg">${t.chatWelcomeMsg}</div>`;
+            box.innerHTML = `<div id="chat-welcome-msg" class="bg-[#fcd535]/15 text-[#fcd535] p-2 rounded-lg border border-[#fcd535]/25">${t.chatWelcomeMsg}</div>`;
             if(!currentUser) return;
 
             const userChats = chatMessages.filter(m => m.username === currentUser);
             userChats.forEach(m => {
                 if(m.isAdmin) {
-                    box.innerHTML += `<div class="bg-purple-100 text-purple-900 p-2 rounded-lg text-left"><b>ADM:</b> ${m.text}</div>`;
+                    box.innerHTML += `<div class="bg-[#fcd535]/15 text-[#fcd535] p-2 rounded-lg text-left"><b>ADM:</b> ${m.text}</div>`;
                 } else {
-                    box.innerHTML += `<div class="bg-slate-100 text-slate-800 p-2 rounded-lg text-right"><b>You (${currentUser}):</b> ${m.text}</div>`;
+                    box.innerHTML += `<div class="bg-[#181a20] text-[#eaecef] p-2 rounded-lg text-right border border-[#2b3139]"><b>You (${currentUser}):</b> ${m.text}</div>`;
                 }
             });
             box.scrollTop = box.scrollHeight;
@@ -1488,103 +1730,145 @@
 
         function toggleLangMenu() { document.getElementById('lang-dropdown').classList.toggle('hidden'); }
 
+        function setTextIfExists(id, val) {
+            const el = document.getElementById(id);
+            if (el && typeof val === 'string') el.innerText = val;
+        }
+
+        function setHtmlIfExists(id, val) {
+            const el = document.getElementById(id);
+            if (el && typeof val === 'string') el.innerHTML = val;
+        }
+
         function selectLanguage(code, name) {
             currentLang = code;
             localStorage.setItem('savings_wallet_lang', code);
-            document.getElementById('current-lang-text').innerText = name;
-            document.getElementById('lang-dropdown').classList.add('hidden');
+            setTextIfExists('current-lang-text', name);
+            const dd = document.getElementById('lang-dropdown');
+            if (dd) dd.classList.add('hidden');
 
             const authSelect = document.getElementById('auth-lang-select');
             if(authSelect) authSelect.value = code;
 
             const t = getTranslation(code);
 
-            document.getElementById('txt-app-title').innerText = t.appTitle;
-            document.getElementById('banner-title').innerText = t.bannerTitle;
-            document.getElementById('banner-subtitle').innerText = t.bannerSubtitle;
-            document.getElementById('banner-desc').innerText = t.bannerDesc;
-            document.getElementById('btn-deposit-hub').innerText = t.btnDepositHub;
-            document.getElementById('btn-cert-text').innerText = t.btnCert;
-            document.getElementById('pool-data-title').innerText = t.poolDataTitle;
-            document.getElementById('label-total-output').innerText = t.totalOutput;
-            document.getElementById('label-valid-nodes').innerText = t.validNodes;
-            document.getElementById('label-participants').innerText = t.participants;
-            document.getElementById('label-user-revenue').innerText = t.userRevenue;
-            document.getElementById('output-details-title').innerText = t.outputDetailsTitle;
-            document.getElementById('table-addr').innerText = t.tableAddr;
-            document.getElementById('table-qty').innerText = t.tableQty;
-            document.getElementById('withdrawal-title').innerText = t.withdrawalTitle;
-            document.getElementById('withdrawal-label').innerText = t.withdrawalLabel;
-            document.getElementById('withdrawal-btn').innerText = t.withdrawalBtn;
-            document.getElementById('acc-accumulated').innerText = t.accAccumulated;
-            document.getElementById('acc-today').innerText = t.accToday;
-            document.getElementById('acc-yield').innerText = t.accYield;
-            document.getElementById('acc-pool-wallet').innerText = t.accPoolWallet;
-            document.getElementById('acc-wallet-bal').innerText = t.accWalletBal;
-            document.getElementById('nav-home-text').innerText = t.navHome;
-            document.getElementById('nav-withdrawal-text').innerText = t.navWithdrawal;
-            document.getElementById('nav-account-text').innerText = t.navAccount;
-            document.getElementById('btn-quick-deposit').innerText = t.btnQuickDeposit;
-            document.getElementById('support-tooltip').innerText = t.tooltipSupport;
-            document.getElementById('chat-title').innerText = t.chatTitle;
-            document.getElementById('chat-status').innerText = t.chatStatus;
-            document.getElementById('chat-welcome-msg').innerText = t.chatWelcomeMsg;
-            document.getElementById('user-chat-input').placeholder = t.chatPlaceholder;
-            document.getElementById('btn-chat-send').innerText = t.btnChatSend;
+            setTextIfExists('txt-app-title', t.appTitle);
+            setTextIfExists('banner-title', t.bannerTitle);
+            setTextIfExists('banner-subtitle', t.bannerSubtitle);
+            setTextIfExists('banner-desc', t.bannerDesc);
+            setTextIfExists('btn-deposit-hub', t.btnDepositHub);
+            setTextIfExists('btn-cert-text', t.btnCert);
+            setTextIfExists('pool-data-title', t.poolDataTitle);
+            setTextIfExists('label-total-output', t.totalOutput);
+            setTextIfExists('label-valid-nodes', t.validNodes);
+            setTextIfExists('label-participants', t.participants);
+            setTextIfExists('label-user-revenue', t.userRevenue);
+            setTextIfExists('output-details-title', t.outputDetailsTitle);
+            setTextIfExists('table-addr', t.tableAddr);
+            setTextIfExists('table-qty', t.tableQty);
+            setTextIfExists('withdrawal-title', t.withdrawalTitle);
+            setTextIfExists('withdrawal-label', t.withdrawalLabel);
+            setTextIfExists('withdrawal-btn', t.withdrawalBtn);
+            setTextIfExists('acc-accumulated', t.accAccumulated);
+            setTextIfExists('acc-today', t.accToday);
+            setTextIfExists('acc-yield', t.accYield);
+            setTextIfExists('acc-pool-wallet', t.accPoolWallet);
+            setTextIfExists('acc-wallet-bal', t.accWalletBal);
+            setTextIfExists('nav-home-text', t.navHome);
+            setTextIfExists('nav-markets-text', t.navMarkets);
+            setTextIfExists('nav-withdrawal-text', t.navWithdrawal);
+            setTextIfExists('nav-account-text', t.navAccount);
+            setTextIfExists('btn-quick-deposit', t.btnQuickDeposit);
+            setTextIfExists('support-tooltip', t.tooltipSupport);
+            setTextIfExists('chat-title', t.chatTitle);
+            setTextIfExists('chat-status', t.chatStatus);
+            setTextIfExists('chat-welcome-msg', t.chatWelcomeMsg);
+            const chatInput = document.getElementById('user-chat-input');
+            if (chatInput) chatInput.placeholder = t.chatPlaceholder;
+            setTextIfExists('btn-chat-send', t.btnChatSend);
 
-            document.getElementById('modal-cert-title').innerText = t.certTitle;
-            document.getElementById('modal-cert-subtitle').innerText = t.certSubtitle;
-            document.getElementById('modal-lbl-op').innerText = t.lblOp;
-            document.getElementById('modal-val-op').innerText = t.valOp;
-            document.getElementById('modal-lbl-tech').innerText = t.lblTech;
-            document.getElementById('modal-val-tech').innerText = t.valTech;
-            document.getElementById('modal-lbl-custody').innerText = t.lblCustody;
-            document.getElementById('modal-val-custody').innerText = t.valCustody;
-            document.getElementById('modal-lbl-net').innerText = t.lblNet;
-            document.getElementById('modal-btn-confirm').innerText = t.btnConfirm;
+            setTextIfExists('modal-cert-title', t.certTitle);
+            setTextIfExists('modal-cert-subtitle', t.certSubtitle);
+            setTextIfExists('modal-lbl-op', t.lblOp);
+            setTextIfExists('modal-val-op', t.valOp);
+            setTextIfExists('modal-lbl-tech', t.lblTech);
+            setTextIfExists('modal-val-tech', t.valTech);
+            setTextIfExists('modal-lbl-custody', t.lblCustody);
+            setTextIfExists('modal-val-custody', t.valCustody);
+            setTextIfExists('modal-lbl-net', t.lblNet);
+            setTextIfExists('modal-val-net', t.valNet);
+            setTextIfExists('modal-btn-confirm', t.btnConfirm);
 
-            document.getElementById('badge-secure-vault').innerText = t.badgeSecure;
-            document.getElementById('auth-title').innerText = t.authTitle;
-            document.getElementById('auth-desc').innerText = t.authDesc;
-            document.getElementById('lbl-username').innerText = t.usernameLbl;
-            document.getElementById('lbl-password').innerText = t.passwordLbl;
-            document.getElementById('btn-auth-submit').innerText = t.authBtn;
-            document.getElementById('modal-deposit-title').innerText = t.modalDepTitle;
-            document.getElementById('modal-deposit-desc').innerText = t.modalDepDesc;
-            document.getElementById('lbl-deposit-amt').innerText = t.depAmtLbl;
-            document.getElementById('lbl-deposit-return').innerText = t.depRetLbl;
-            document.getElementById('btn-submit-deposit').innerText = t.depBtn;
-            document.getElementById('btn-copy-deposit-addr').innerText = t.copyBtnText;
+            setTextIfExists('badge-secure-vault', t.badgeSecure);
+            setTextIfExists('auth-title', t.authTitle);
+            setTextIfExists('auth-desc', t.authDesc);
+            setTextIfExists('lbl-username', t.usernameLbl);
+            setTextIfExists('lbl-password', t.passwordLbl);
+            setTextIfExists('btn-auth-submit', t.authBtn);
+            setTextIfExists('modal-deposit-title', t.modalDepTitle);
+            setTextIfExists('modal-deposit-desc', t.modalDepDesc);
+            setTextIfExists('lbl-deposit-amt', t.depAmtLbl);
+            setTextIfExists('lbl-deposit-return', t.depRetLbl);
+            setTextIfExists('btn-submit-deposit', t.depBtn);
+            setTextIfExists('btn-copy-deposit-addr', t.copyBtnText);
 
-            document.getElementById('welcome-user-title').innerText = t.welcomeTitle;
-            document.getElementById('welcome-user-sub').innerText = t.welcomeSub;
-            document.getElementById('review-prompt-text').innerText = t.reviewPrompt;
-            document.getElementById('review-prompt-sub').innerText = t.reviewPromptSub;
-            document.getElementById('ticker-label-home').innerText = t.tickerLabel;
-            document.getElementById('ticker-label-withdraw').innerText = t.tickerLabel;
+            setTextIfExists('welcome-user-title', t.welcomeTitle);
+            setTextIfExists('welcome-user-sub', t.welcomeSub);
+            setTextIfExists('review-prompt-text', t.reviewPrompt);
+            setTextIfExists('review-prompt-sub', t.reviewPromptSub);
+            setTextIfExists('ticker-label-home', t.tickerLabel);
+            setTextIfExists('ticker-label-withdraw', t.tickerLabel);
 
-            if(t.linkWalletTitle) document.getElementById('link-wallet-title').innerText = t.linkWalletTitle;
-            if(t.linkWalletDesc) document.getElementById('link-wallet-desc').innerText = t.linkWalletDesc;
-            if(t.lblWithdrawNet) document.getElementById('lbl-withdraw-net').innerText = t.lblWithdrawNet;
-            if(t.lblLinkedTarget) document.getElementById('lbl-linked-target').innerText = t.lblLinkedTarget;
-            if(t.lblLinkNet) document.getElementById('lbl-link-net').innerText = t.lblLinkNet;
-            if(t.lblLinkAddr) document.getElementById('lbl-link-addr').innerText = t.lblLinkAddr;
-            if(t.btnSaveLink) document.getElementById('btn-save-link').innerText = t.btnSaveLink;
-            if(t.historyTitle) document.getElementById('history-title').innerText = t.historyTitle;
-            if(t.historySubtitle) document.getElementById('history-subtitle').innerText = t.historySubtitle;
-            if(t.historyEmpty) document.getElementById('history-empty').innerText = t.historyEmpty;
-            if(t.lblMyAddr) document.getElementById('lbl-my-addr').innerText = t.lblMyAddr;
-            if(t.btnCopyText) document.getElementById('btn-copy-text').innerText = t.btnCopyText;
-            if(t.btnLogoutText) document.getElementById('btn-logout-text').innerText = t.btnLogoutText;
-            if(t.vipSystemTitle) document.getElementById('vip-system-title').innerHTML = `<i class="fa-solid fa-crown text-amber-500"></i><span>${t.vipSystemTitle}</span>`;
-            if(t.vipSystemSub) document.getElementById('vip-system-sub').innerText = t.vipSystemSub;
-            if(t.actTitle) document.getElementById('act-banner-title').innerText = t.actTitle;
-            if(t.actDesc) document.getElementById('act-banner-desc').innerText = t.actDesc;
-            if(t.actBtn) document.getElementById('btn-activate-now').innerText = t.actBtn;
-            if(t.btnClaim) document.getElementById('btn-claim-income').innerText = t.btnClaim;
-            if(t.timerTitle) document.getElementById('lbl-timer-24h').innerText = t.timerTitle;
-            if(t.startLabel) document.getElementById('lbl-cycle-start').innerText = t.startLabel;
-            if(t.endLabel) document.getElementById('lbl-cycle-end').innerText = t.endLabel;
+            setTextIfExists('qa-deposit-title', t.qaDepositTitle);
+            setTextIfExists('qa-deposit-sub', t.qaDepositSub);
+            setTextIfExists('qa-payout-title', t.qaPayoutTitle);
+            setTextIfExists('qa-payout-sub', t.qaPayoutSub);
+            setTextIfExists('qa-yield-title', t.qaYieldTitle);
+            setTextIfExists('qa-yield-sub', t.qaYieldSub);
+            setTextIfExists('badge-live-telemetry', t.liveTelemetry);
+            setTextIfExists('lbl-realtime-blocks', t.realtimeBlocks);
+            setTextIfExists('highlights-title', t.highlightsTitle);
+            setHtmlIfExists('highlight-1', `<i class="fa-solid fa-check-circle text-[#0ecb81] mt-0.5 shrink-0"></i><span>${t.highlight1}</span>`);
+            setHtmlIfExists('highlight-2', `<i class="fa-solid fa-clock text-[#fcd535] mt-0.5 shrink-0"></i><span>${t.highlight2}</span>`);
+            setHtmlIfExists('highlight-3', `<i class="fa-solid fa-headset text-purple-400 mt-0.5 shrink-0"></i><span>${t.highlight3}</span>`);
+
+            setTextIfExists('markets-title', t.marketsTitle);
+            setTextIfExists('markets-subtitle', t.marketsSubtitle);
+            setTextIfExists('market-status-badge', t.marketOpen);
+            const mSearch = document.getElementById('market-search-input');
+            if (mSearch) mSearch.placeholder = t.searchPlaceholder;
+            setTextIfExists('mcat-all', t.filterAll);
+            setTextIfExists('mcat-crypto', t.filterCrypto);
+            setTextIfExists('mcat-stocks', t.filterStocks);
+            setTextIfExists('mkt-col-asset', t.colAsset);
+            setTextIfExists('mkt-col-price', t.colPrice);
+            setTextIfExists('thirdparty-title', t.thirdpartyTitle);
+            setTextIfExists('thirdparty-desc', t.thirdpartyDesc);
+
+            setTextIfExists('link-wallet-title', t.linkWalletTitle);
+            setTextIfExists('link-wallet-desc', t.linkWalletDesc);
+            setTextIfExists('lbl-withdraw-net', t.lblWithdrawNet);
+            setTextIfExists('lbl-linked-target', t.lblLinkedTarget);
+            setTextIfExists('lbl-link-net', t.lblLinkNet);
+            setTextIfExists('lbl-link-addr', t.lblLinkAddr);
+            setTextIfExists('btn-save-link', t.btnSaveLink);
+            setTextIfExists('history-title', t.historyTitle);
+            setTextIfExists('history-subtitle', t.historySubtitle);
+            setTextIfExists('history-empty', t.historyEmpty);
+            setTextIfExists('lbl-my-addr', t.lblMyAddr);
+            setTextIfExists('btn-copy-text', t.btnCopyText);
+            setTextIfExists('btn-logout-text', t.btnLogoutText);
+            setHtmlIfExists('vip-system-title', `<i class="fa-solid fa-crown text-[#fcd535]"></i><span>${t.vipSystemTitle}</span>`);
+            setTextIfExists('vip-system-sub', t.vipSystemSub);
+            setTextIfExists('act-banner-title', t.actTitle);
+            setTextIfExists('act-banner-desc', t.actDesc);
+            setTextIfExists('btn-activate-now', t.actBtn);
+            setTextIfExists('btn-claim-income', t.btnClaim);
+            setTextIfExists('lbl-timer-24h', t.timerTitle);
+            setTextIfExists('lbl-cycle-start', t.startLabel);
+            setTextIfExists('lbl-cycle-end', t.endLabel);
+
+            renderExchangeConnectors();
 
             if(currentUser) {
                 const myUserObj = registeredUsers.find(u => u.username === currentUser);
@@ -1595,23 +1879,19 @@
         }
 
         function switchTab(tab) {
-            document.getElementById('tab-home').classList.add('hidden');
-            document.getElementById('tab-withdrawal').classList.add('hidden');
-            document.getElementById('tab-account').classList.add('hidden');
-            document.getElementById('nav-home').className = "flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium transition";
-            document.getElementById('nav-withdrawal').className = "flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium transition";
-            document.getElementById('nav-account').className = "flex flex-col items-center text-slate-400 hover:text-slate-600 font-medium transition";
+            ['tab-home', 'tab-markets', 'tab-withdrawal', 'tab-account'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            ['nav-home', 'nav-markets', 'nav-withdrawal', 'nav-account'].forEach(id => {
+                const navEl = document.getElementById(id);
+                if (navEl) navEl.className = "flex flex-col items-center text-[#848e9c] hover:text-[#eaecef] font-medium transition";
+            });
 
-            if (tab === 'home') {
-                document.getElementById('tab-home').classList.remove('hidden');
-                document.getElementById('nav-home').className = "flex flex-col items-center text-blue-600 font-semibold transition";
-            } else if (tab === 'withdrawal') {
-                document.getElementById('tab-withdrawal').classList.remove('hidden');
-                document.getElementById('nav-withdrawal').className = "flex flex-col items-center text-blue-600 font-semibold transition";
-            } else if (tab === 'account') {
-                document.getElementById('tab-account').classList.remove('hidden');
-                document.getElementById('nav-account').className = "flex flex-col items-center text-blue-600 font-semibold transition";
-            }
+            const activePanel = document.getElementById(`tab-${tab}`);
+            const activeNav = document.getElementById(`nav-${tab}`);
+            if (activePanel) activePanel.classList.remove('hidden');
+            if (activeNav) activeNav.className = "flex flex-col items-center text-[#fcd535] font-bold transition";
         }
 
         function openCertificateModal() { document.getElementById('certificate-modal').classList.remove('hidden'); }
@@ -1624,7 +1904,7 @@
                 if (data && data.binancecoin) {
                     const priceUSD = data.binancecoin.usd;
                     document.getElementById('bnb-price-usd').innerText = `$${priceUSD.toLocaleString()} USDT`;
-                    document.getElementById('bnb-market-rate').innerHTML = `<span class="text-green-600">+3.00%</span>`;
+                    document.getElementById('bnb-market-rate').innerHTML = `<span class="text-[#0ecb81]">+3.00%</span>`;
                 }
             } catch (error) {
                 document.getElementById('bnb-market-rate').innerText = "+3.00%";
@@ -1662,8 +1942,8 @@
                 const newItem = document.createElement('div');
                 newItem.className = 'flex justify-between items-center animate-fade-in';
                 newItem.innerHTML = `
-                    <span class="text-blue-600 font-medium">0x${Math.floor(Math.random()*1e6).toString(16)}...${Math.floor(Math.random()*1e4).toString(16)}</span>
-                    <span class="font-semibold text-slate-700">${(Math.random() * 0.08 + 0.01).toFixed(6)} BNB</span>
+                    <span class="text-[#fcd535] font-medium">0x${Math.floor(Math.random()*1e6).toString(16)}...${Math.floor(Math.random()*1e4).toString(16)}</span>
+                    <span class="font-semibold text-[#eaecef]">${(Math.random() * 0.08 + 0.01).toFixed(6)} BNB</span>
                 `;
                 list.insertBefore(newItem, list.firstChild);
                 if (list.children.length > 5) list.removeChild(list.lastChild);
