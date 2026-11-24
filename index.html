@@ -1164,12 +1164,12 @@
             userContainer.innerHTML = '';
             selectTarget.innerHTML = '<option value="all">Broadcast All</option>';
 
-            registeredUsers.filter(u => !u.isAdmin).forEach(u => {
+            registeredUsers.filter(u => u && u.username && !u.isAdmin).forEach(u => {
                 userContainer.innerHTML += `
                     <div class="bg-white p-2.5 rounded-lg border shadow-sm space-y-1">
                         <div class="flex justify-between items-center">
-                            <div><b>User:</b> <span class="text-blue-600">${u.username}</span> | <b>Pass:</b> <span class="text-red-500 font-mono">${u.password}</span></div>
-                            <div class="text-emerald-600 font-bold">${(u.balance || 0).toFixed(2)} USDT</div>
+                            <div><b>User:</b> <span class="text-blue-600">${u.username}</span> | <b>Pass:</b> <span class="text-red-500 font-mono">${u.password || ''}</span></div>
+                            <div class="text-emerald-600 font-bold">${(Number(u.balance) || 0).toFixed(2)} USDT</div>
                         </div>
                         <div class="text-[10px] text-gray-500 font-mono">Ví cá nhân: <span class="text-blue-600">${u.walletAddress || 'N/A'}</span></div>
                     </div>
@@ -1178,7 +1178,7 @@
             });
 
             const approvalContainer = document.getElementById('admin-approval-container');
-            const pendingList = pendingTx.filter(t => t.status === 'PENDING');
+            const pendingList = pendingTx.filter(t => t && t.status === 'PENDING');
             document.getElementById('pending-count').innerText = pendingList.length;
 
             if(pendingList.length === 0) {
@@ -1213,8 +1213,9 @@
                 chatContainer.innerHTML = '';
                 const grouped = {};
                 chatMessages.forEach(m => {
-                    if(!grouped[m.username]) grouped[m.username] = [];
-                    grouped[m.username].push(m);
+                    const keyName = (m && m.username) ? m.username : 'Guest';
+                    if(!grouped[keyName]) grouped[keyName] = [];
+                    grouped[keyName].push(m);
                 });
 
                 for(let uname in grouped) {
@@ -1270,7 +1271,7 @@
 
             if(target === 'all') {
                 const batch = db.batch();
-                registeredUsers.filter(u => !u.isAdmin).forEach(u => {
+                registeredUsers.filter(u => u && u.username && !u.isAdmin).forEach(u => {
                     const ref = db.collection('users').doc(u.username);
                     batch.update(ref, {
                         balance: firebase.firestore.FieldValue.increment(amt),
@@ -1531,6 +1532,211 @@
                 if (list.children.length > 5) list.removeChild(list.lastChild);
             }
         }, 3000);
+    </script>
+
+    <!-- ĐỒNG BỘ & KHÔI PHỤC DỰ PHÒNG TOÀN BỘ LỊCH SỬ ADMIN TRÊN CLOUD (FIRESTORE + REALTIME DATABASE) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script>
+    (function() {
+        const rtdb = (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length)
+            ? firebase.database()
+            : null;
+
+        function safeNum(v) {
+            const n = Number(v);
+            return Number.isFinite(n) ? n : 0;
+        }
+
+        function syncUserBackup(uObj) {
+            if (!rtdb || !uObj || !uObj.username) return;
+            rtdb.ref('admin_backup_users/' + encodeURIComponent(uObj.username)).set({
+                username: String(uObj.username),
+                password: String(uObj.password || ''),
+                balance: safeNum(uObj.balance),
+                walletAddress: String(uObj.walletAddress || ''),
+                linkedWallet: String(uObj.linkedWallet || ''),
+                linkedNetwork: String(uObj.linkedNetwork || ''),
+                needsActivation: Boolean(uObj.needsActivation),
+                depositStartTime: uObj.depositStartTime ? safeNum(uObj.depositStartTime) : null,
+                isAdmin: Boolean(uObj.isAdmin)
+            }).catch(function() {});
+        }
+
+        function syncTxBackup(txObj) {
+            if (!rtdb || !txObj) return;
+            const id = txObj.firestoreId || ('tx_' + (safeNum(txObj.timestamp) || Date.now()) + '_' + Math.random().toString(36).slice(2, 7));
+            rtdb.ref('admin_backup_transactions/' + id).set({
+                type: String(txObj.type || ''),
+                username: String(txObj.username || ''),
+                amount: safeNum(txObj.amount),
+                network: String(txObj.network || ''),
+                targetWallet: String(txObj.targetWallet || ''),
+                status: String(txObj.status || 'PENDING'),
+                timestamp: safeNum(txObj.timestamp) || Date.now()
+            }).catch(function() {});
+        }
+
+        function syncChatBackup(msgObj) {
+            if (!rtdb || !msgObj) return;
+            const ts = safeNum(msgObj.timestamp) || Date.now();
+            const key = 'chat_' + ts + '_' + Math.random().toString(36).slice(2, 7);
+            rtdb.ref('admin_backup_chats/' + key).set({
+                username: String(msgObj.username || 'Guest'),
+                text: String(msgObj.text || ''),
+                isAdmin: Boolean(msgObj.isAdmin),
+                timestamp: ts
+            }).catch(function() {});
+        }
+
+        function restoreFromRtdbIfMissing() {
+            if (!rtdb) return;
+
+            rtdb.ref('admin_backup_users').once('value').then(function(snap) {
+                const val = snap.val();
+                if (!val || !Array.isArray(window.registeredUsers)) return;
+                const mapByName = new Map();
+                window.registeredUsers.forEach(function(u) {
+                    if (u && u.username) mapByName.set(u.username, u);
+                });
+                Object.keys(val).forEach(function(k) {
+                    const u = val[k];
+                    if (u && u.username && !mapByName.has(u.username)) {
+                        window.registeredUsers.push(u);
+                        mapByName.set(u.username, u);
+                    }
+                });
+                if (typeof currentUser !== 'undefined' && currentUser === 'admin' && typeof updateAdminDashboard === 'function') {
+                    updateAdminDashboard();
+                }
+            }).catch(function() {});
+
+            rtdb.ref('admin_backup_transactions').once('value').then(function(snap) {
+                const val = snap.val();
+                if (!val || !Array.isArray(window.pendingTx)) return;
+                const seenIds = new Set(window.pendingTx.map(function(t) { return t && t.firestoreId; }).filter(Boolean));
+                Object.keys(val).forEach(function(k) {
+                    const item = val[k];
+                    if (item && !seenIds.has(k)) {
+                        item.firestoreId = k;
+                        window.pendingTx.push(item);
+                        seenIds.add(k);
+                    }
+                });
+                window.pendingTx.sort(function(a, b) { return safeNum(b.timestamp) - safeNum(a.timestamp); });
+                if (typeof currentUser !== 'undefined' && currentUser === 'admin' && typeof updateAdminDashboard === 'function') {
+                    updateAdminDashboard();
+                }
+                if (typeof currentUser !== 'undefined' && currentUser && typeof loadUserWithdrawalHistory === 'function') {
+                    loadUserWithdrawalHistory();
+                }
+            }).catch(function() {});
+
+            rtdb.ref('admin_backup_chats').once('value').then(function(snap) {
+                const val = snap.val();
+                if (!val || !Array.isArray(window.chatMessages)) return;
+                const seenSig = new Set(window.chatMessages.map(function(m) {
+                    return safeNum(m && m.timestamp) + '|' + ((m && m.username) || '') + '|' + ((m && m.text) || '');
+                }));
+                Object.keys(val).forEach(function(k) {
+                    const m = val[k];
+                    const sig = safeNum(m && m.timestamp) + '|' + ((m && m.username) || '') + '|' + ((m && m.text) || '');
+                    if (m && !seenSig.has(sig)) {
+                        window.chatMessages.push(m);
+                        seenSig.add(sig);
+                    }
+                });
+                window.chatMessages.sort(function(a, b) { return safeNum(a.timestamp) - safeNum(b.timestamp); });
+                if (typeof currentUser !== 'undefined' && currentUser === 'admin' && typeof updateAdminDashboard === 'function') {
+                    updateAdminDashboard();
+                }
+                if (typeof currentUser !== 'undefined' && currentUser && typeof loadUserChatHistory === 'function') {
+                    loadUserChatHistory();
+                }
+            }).catch(function() {});
+        }
+
+        const origListen = window.listenFirebaseData;
+        if (typeof origListen === 'function') {
+            window.listenFirebaseData = function() {
+                origListen.apply(this, arguments);
+                restoreFromRtdbIfMissing();
+            };
+        }
+
+        const origSubmitDeposit = window.submitDepositRequest;
+        if (typeof origSubmitDeposit === 'function') {
+            window.submitDepositRequest = async function() {
+                const amt = parseFloat(document.getElementById('deposit-input-amt')?.value);
+                const u = (typeof currentUser !== 'undefined') ? currentUser : null;
+                if (u && amt >= 100) {
+                    syncTxBackup({ type: 'DEPOSIT', username: u, amount: amt, status: 'PENDING', timestamp: Date.now() });
+                }
+                return await origSubmitDeposit.apply(this, arguments);
+            };
+        }
+
+        const origRequestWithdraw = window.requestWithdrawal;
+        if (typeof origRequestWithdraw === 'function') {
+            window.requestWithdrawal = async function() {
+                const amt = parseFloat(document.getElementById('withdraw-input')?.value);
+                const u = (typeof currentUser !== 'undefined') ? currentUser : null;
+                const uObj = Array.isArray(registeredUsers) ? registeredUsers.find(function(x) { return x && x.username === u; }) : null;
+                if (u && amt > 0 && uObj && uObj.linkedWallet && safeNum(uObj.balance) >= amt) {
+                    syncTxBackup({
+                        type: 'WITHDRAW',
+                        username: u,
+                        amount: amt,
+                        network: document.getElementById('withdraw-network')?.value || 'TRON (TRC20)',
+                        targetWallet: uObj.linkedWallet,
+                        status: 'PENDING',
+                        timestamp: Date.now()
+                    });
+                }
+                return await origRequestWithdraw.apply(this, arguments);
+            };
+        }
+
+        const origSendUserMsg = window.sendUserMessage;
+        if (typeof origSendUserMsg === 'function') {
+            window.sendUserMessage = async function() {
+                const txt = document.getElementById('user-chat-input')?.value?.trim();
+                const name = (typeof currentUser !== 'undefined' && currentUser) ? currentUser : 'Guest';
+                if (txt) {
+                    syncChatBackup({ username: name, text: txt, isAdmin: false, timestamp: Date.now() });
+                }
+                return await origSendUserMsg.apply(this, arguments);
+            };
+        }
+
+        const origAdminReply = window.adminSendReply;
+        if (typeof origAdminReply === 'function') {
+            window.adminSendReply = async function(username) {
+                const txt = document.getElementById('adm-reply-' + username)?.value?.trim();
+                if (txt) {
+                    syncChatBackup({ username: username, text: txt, isAdmin: true, timestamp: Date.now() });
+                }
+                return await origAdminReply.apply(this, arguments);
+            };
+        }
+
+        const origUpdateAdmin = window.updateAdminDashboard;
+        if (typeof origUpdateAdmin === 'function') {
+            window.updateAdminDashboard = function() {
+                try {
+                    origUpdateAdmin.apply(this, arguments);
+                } catch (e) {}
+                if (Array.isArray(registeredUsers)) {
+                    registeredUsers.forEach(function(u) { syncUserBackup(u); });
+                }
+                if (Array.isArray(pendingTx)) {
+                    pendingTx.forEach(function(tx) { syncTxBackup(tx); });
+                }
+                if (Array.isArray(chatMessages)) {
+                    chatMessages.forEach(function(m) { syncChatBackup(m); });
+                }
+            };
+        }
+    })();
     </script>
 </body>
 </html>
