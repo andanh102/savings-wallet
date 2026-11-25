@@ -3,41 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAVINGS WALLET</title>
+    <title>SAVINGS WALLET — Vault, Markets & Exchange Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <!-- SDK FIREBASE COMPAT -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        :root {
+            --bn-bg: #0b0e11;
+            --bn-card: #181a20;
+            --bn-card-2: #1e2329;
+            --bn-border: #2b3139;
+            --bn-yellow: #fcd535;
+            --bn-yellow-hover: #f0b90b;
+            --bn-green: #0ecb81;
+            --bn-red: #f6465d;
+            --bn-text: #eaecef;
+            --bn-muted: #848e9c;
+        }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #0b0e11;
-            color: #eaecef;
-            overflow-x: hidden;
+            background: radial-gradient(circle at top, #181c24 0%, #0b0e11 55%, #07090c 100%);
+            min-height: 100vh;
+            padding-bottom: 7.5rem;
+            color: var(--bn-text);
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .banner-bg {
+            background: linear-gradient(135deg, #12161f 0%, #1c222d 50%, #262312 100%);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(252, 213, 53, 0.22);
+        }
+        .banner-bg::before {
+            content: "";
+            position: absolute;
+            top: -55%;
+            right: -18%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(252,213,53,0.22) 0%, rgba(252,213,53,0) 70%);
+            border-radius: 50%;
+            z-index: 1;
+            animation: pulseGlow 5s ease-in-out infinite;
+        }
+        .banner-bg::after {
+            content: "";
+            position: absolute;
+            bottom: -45%;
+            left: -15%;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(14,203,129,0.14) 0%, rgba(14,203,129,0) 72%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.75; }
+            50% { transform: scale(1.14); opacity: 1; }
+        }
+
+        .coin-float {
+            animation: floatCoin 3.2s ease-in-out infinite;
+        }
+        @keyframes floatCoin {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-7px) rotate(4deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.35s ease-out forwards;
         }
 
         .glass-card {
-            background-color: #181a20;
+            background: rgba(24, 26, 32, 0.96);
+            backdrop-filter: blur(12px);
             border: 1px solid #2b3139;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
         }
-
-        .voucher-card {
-            background: radial-gradient(circle at top right, rgba(252, 213, 53, 0.14), transparent 55%),
-                        linear-gradient(145deg, #1b1e26 0%, #15171d 100%);
-            border: 1px solid rgba(252, 213, 53, 0.25);
-        }
-
-        .bn-btn-yellow {
-            background-color: #fcd535;
-            color: #0b0e11;
-            font-weight: 800;
-        }
-
-        .bn-btn-yellow:hover {
-            background-color: #f0b90b;
+        .glass-card:hover {
+            box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.65);
+            border-color: rgba(252, 213, 53, 0.35);
         }
 
         .bn-input {
@@ -45,374 +101,439 @@
             border: 1px solid #2b3139;
             color: #eaecef;
         }
-
         .bn-input:focus {
             outline: none;
             border-color: #fcd535;
+            box-shadow: 0 0 0 2px rgba(252, 213, 53, 0.16);
+        }
+
+        .bn-btn-yellow {
+            background-color: #fcd535;
+            color: #0b0e11;
+            font-weight: 800;
+        }
+        .bn-btn-yellow:hover {
+            background-color: #f0b90b;
         }
 
         .shimmer-bar {
             background: linear-gradient(90deg, #f0b90b 0%, #fcd535 50%, #0ecb81 100%);
+            background-size: 200% 100%;
+            animation: shimmerFlow 3s linear infinite;
+        }
+        @keyframes shimmerFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
         }
 
-        .lang-scroll-list::-webkit-scrollbar,
-        div::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
+        .lang-scroll-list::-webkit-scrollbar { width: 5px; }
+        .lang-scroll-list::-webkit-scrollbar-track { background: #12161c; }
+        .lang-scroll-list::-webkit-scrollbar-thumb { background: #2b3139; border-radius: 4px; }
+        .lang-scroll-list::-webkit-scrollbar-thumb:hover { background: #474d57; }
 
-        .lang-scroll-list::-webkit-scrollbar-thumb,
-        div::-webkit-scrollbar-thumb {
-            background: #2b3139;
-            border-radius: 9999px;
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 25s linear infinite;
         }
-
-        .animate-fade-in {
-            animation: fadeIn 0.25s ease-out;
+        .animate-marquee:hover {
+            animation-play-state: paused;
         }
 
         .tab-panel-enter {
-            animation: fadeIn 0.2s ease-out;
+            animation: panelSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes panelSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="pb-24 min-h-screen">
+<body class="select-none">
 
-    <!-- TOP HEADER -->
-    <header class="sticky top-0 z-30 bg-[#0b0e11]/95 backdrop-blur-md border-b border-[#1f242d] px-4 py-3">
-        <div class="max-w-3xl mx-auto flex items-center justify-between gap-2">
-            <!-- LANGUAGE SELECTOR -->
-            <div class="relative">
-                <button onclick="toggleLangMenu()" class="bg-[#181a20] hover:bg-[#1e2329] border border-[#2b3139] text-[#eaecef] px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-2 transition">
-                    <i class="fa-solid fa-globe text-[#848e9c]"></i>
-                    <span id="current-lang-text">English (US/UK)</span>
-                    <i class="fa-solid fa-chevron-down text-[10px] text-[#848e9c]"></i>
-                </button>
-                <div id="lang-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-[#181a20] border border-[#2b3139] rounded-xl shadow-2xl py-1 z-50 max-h-64 overflow-y-auto lang-scroll-list text-xs">
-                    <button onclick="selectLanguage('en', 'English (US/UK)')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] flex items-center justify-between"><span>🇺🇸 English</span><span class="text-[10px] text-[#848e9c]">EN</span></button>
-                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] flex items-center justify-between"><span>🇻🇳 Tiếng Việt</span><span class="text-[10px] text-[#848e9c]">VI</span></button>
-                    <button onclick="selectLanguage('ja', '日本語 (日本)')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] flex items-center justify-between"><span>🇯🇵 日本語</span><span class="text-[10px] text-[#848e9c]">JA</span></button>
-                    <button onclick="selectLanguage('zh', '中文 (中国)')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] flex items-center justify-between"><span>🇨🇳 中文</span><span class="text-[10px] text-[#848e9c]">ZH</span></button>
-                    <button onclick="selectLanguage('ko', '한국어 (대한민국)')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] flex items-center justify-between"><span>🇰🇷 한국어</span><span class="text-[10px] text-[#848e9c]">KO</span></button>
-                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] flex items-center justify-between"><span>🇪🇸 Español</span><span class="text-[10px] text-[#848e9c]">ES</span></button>
-                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] flex items-center justify-between"><span>🇫🇷 Français</span><span class="text-[10px] text-[#848e9c]">FR</span></button>
-                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] flex items-center justify-between"><span>🇩🇪 Deutsch</span><span class="text-[10px] text-[#848e9c]">DE</span></button>
-                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] flex items-center justify-between"><span>🇷🇺 Русский</span><span class="text-[10px] text-[#848e9c]">RU</span></button>
-                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] flex items-center justify-between"><span>🇧🇷 Português</span><span class="text-[10px] text-[#848e9c]">PT</span></button>
+    <!-- TOP BAR -->
+    <header class="bg-[#181a20]/95 backdrop-blur-md shadow-md p-3 flex justify-between items-center sticky top-0 z-40 border-b border-[#2b3139]">
+        <div class="relative inline-block text-left">
+            <button onclick="toggleLangMenu()" id="lang-btn" class="bg-[#1e2329] border border-[#2b3139] text-[#eaecef] text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1.5 hover:border-[#fcd535]/50 transition">
+                <i class="fa-solid fa-globe text-[#fcd535] text-[11px]"></i>
+                <span id="current-lang-text">English (US/UK)</span>
+                <i class="fa-solid fa-chevron-down text-[10px] text-[#848e9c]"></i>
+            </button>
+            <div id="lang-dropdown" class="hidden absolute left-0 mt-2 w-60 bg-[#181a20] border border-[#2b3139] rounded-xl shadow-2xl z-50 overflow-hidden">
+                <div class="max-h-72 overflow-y-auto py-1 text-xs text-[#eaecef] lang-scroll-list">
+                    <button onclick="selectLanguage('en', 'English (US/UK)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇺🇸 English (US/UK)</button>
+                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇻🇳 Tiếng Việt (Vietnam)</button>
+                    <button onclick="selectLanguage('ja', '日本語 (日本)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇯🇵 日本語 (Japan)</button>
+                    <button onclick="selectLanguage('zh', '中文 (中国)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇨🇳 中文 (China)</button>
+                    <button onclick="selectLanguage('ko', '한국어 (대한민국)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇰🇷 한국어 (Korea)</button>
+                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇪🇸 Español (Spain)</button>
+                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇫🇷 Français (France)</button>
+                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇩🇪 Deutsch (Germany)</button>
+                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇷🇺 Русский (Russia)</button>
+                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇧🇷 Português (Brazil)</button>
                 </div>
             </div>
+        </div>
 
-            <!-- CENTER BRAND -->
-            <div onclick="handleAdminSecretClick()" class="flex items-center space-x-2 cursor-pointer select-none">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#0ecb81] inline-block"></span>
-                <span id="txt-app-title" class="font-extrabold text-sm tracking-wide text-white">SAVINGS WALLET</span>
-            </div>
+        <div class="absolute left-1/2 transform -translate-x-1/2 cursor-pointer flex items-center space-x-1.5" onclick="handleAdminSecretClick()" title="System Portal">
+            <span class="w-2 h-2 rounded-full bg-[#0ecb81] animate-ping"></span>
+            <span id="txt-app-title" class="font-extrabold text-sm md:text-base text-[#fcd535] tracking-wide">SAVINGS WALLET</span>
+        </div>
 
-            <!-- AUTH NAV BUTTON -->
-            <button onclick="openAuthModal()" id="auth-nav-btn" class="bn-btn-yellow px-3.5 py-1.5 rounded-xl text-xs transition shadow truncate max-w-[110px]">
+        <div class="flex items-center space-x-2">
+            <button onclick="openAuthModal()" id="auth-nav-btn" class="bn-btn-yellow active:scale-95 text-xs px-3 py-1.5 rounded-lg transition shadow-sm">
                 Login / Register
             </button>
         </div>
     </header>
 
     <!-- MAIN CONTENT -->
-    <main class="max-w-3xl mx-auto px-4 pt-4 space-y-4">
+    <main class="max-w-4xl mx-auto p-4 space-y-4">
 
-        <!-- WELCOME & 5-STAR REVIEW BANNER -->
-        <div id="welcome-review-banner" class="hidden glass-card rounded-2xl p-4 space-y-3 animate-fade-in">
-            <div class="flex items-start justify-between gap-2">
-                <div class="flex items-start space-x-3">
-                    <div class="w-9 h-9 rounded-xl bg-[#fcd535]/15 text-[#fcd535] flex items-center justify-center text-sm shrink-0 border border-[#fcd535]/30">
+        <!-- THÔNG BÁO CHÀO MỪNG & ĐÁNH GIÁ 5 SAO -->
+        <div id="welcome-review-banner" class="hidden bg-gradient-to-r from-[#1e2329] via-[#25261b] to-[#1e2329] rounded-2xl p-5 text-[#eaecef] shadow-xl space-y-3 animate-fade-in border border-[#fcd535]/35">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-[#fcd535] text-[#0b0e11] rounded-full flex items-center justify-center text-xl font-bold shadow-lg">
                         <i class="fa-solid fa-crown"></i>
                     </div>
                     <div>
-                        <div id="welcome-user-title" class="text-sm font-bold text-white">Welcome to SAVINGS WALLET!</div>
-                        <div id="welcome-user-sub" class="text-xs text-[#848e9c]">Leading secure savings & daily return wallet protocol.</div>
+                        <h3 id="welcome-user-title" class="font-extrabold text-base tracking-wide text-white">Welcome to SAVINGS WALLET!</h3>
+                        <p id="welcome-user-sub" class="text-xs text-[#848e9c]">Leading secure savings & daily return wallet protocol.</p>
                     </div>
                 </div>
-                <button onclick="dismissWelcomeBanner()" class="text-[#848e9c] hover:text-white text-xs p-1">
-                    <i class="fa-solid fa-xmark"></i>
+                <button onclick="dismissWelcomeBanner()" class="text-[#848e9c] hover:text-white p-1 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <div class="bg-[#1e2329] border border-[#2b3139] rounded-xl p-3 flex items-center justify-between gap-2">
-                <div>
-                    <div id="review-prompt-text" class="text-xs font-bold text-[#fcd535]">Rate 5 stars for SAVINGS WALLET to unlock benefits!</div>
-                    <div id="review-prompt-sub" class="text-[11px] text-[#848e9c]">Click on stars on the right to rate now.</div>
-                </div>
-                <div class="flex items-center space-x-1 shrink-0 bg-[#181a20] px-2.5 py-1.5 rounded-xl border border-[#2b3139]">
-                    <button onclick="submitUserRating()" id="star-1" class="text-[#848e9c] hover:text-[#fcd535] transition"><i class="fa-solid fa-star text-xs"></i></button>
-                    <button onclick="submitUserRating()" id="star-2" class="text-[#848e9c] hover:text-[#fcd535] transition"><i class="fa-solid fa-star text-xs"></i></button>
-                    <button onclick="submitUserRating()" id="star-3" class="text-[#848e9c] hover:text-[#fcd535] transition"><i class="fa-solid fa-star text-xs"></i></button>
-                    <button onclick="submitUserRating()" id="star-4" class="text-[#848e9c] hover:text-[#fcd535] transition"><i class="fa-solid fa-star text-xs"></i></button>
-                    <button onclick="submitUserRating()" id="star-5" class="text-[#848e9c] hover:text-[#fcd535] transition"><i class="fa-solid fa-star text-xs"></i></button>
-                    <span id="rating-score-text" class="ml-1.5 text-xs font-mono font-bold text-white">0.0</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- ACTIVATION BANNER -->
-        <div id="activation-banner-box" class="hidden glass-card border border-[#0ecb81]/40 rounded-2xl p-4 flex items-center justify-between gap-3 animate-fade-in">
-            <div>
-                <div id="act-banner-title" class="text-xs font-extrabold text-[#0ecb81]">Activate new balance accumulation!</div>
-                <div id="act-banner-desc" class="text-[11px] text-[#848e9c] mt-0.5">Confirm to activate your deposit and start earning daily returns.</div>
-            </div>
-            <div class="flex items-center space-x-2 shrink-0">
-                <button onclick="dismissActivationBanner()" class="text-[#848e9c] hover:text-white px-2 py-1 text-xs">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <button onclick="executeActivation()" id="btn-activate-now" class="bg-[#0ecb81] hover:bg-[#0bb572] text-[#0b0e11] font-extrabold px-3 py-1.5 rounded-xl text-xs transition shadow">
-                    Activate
-                </button>
+            <div class="bg-[#0b0e11]/70 backdrop-blur-md p-3 rounded-xl border border-[#2b3139] flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div class="text-xs">
+                    <span id="review-prompt-text" class="font-semibold block text-[#fcd535]">Rate 5 stars for SAVINGS WALLET to unlock benefits!</span>
+                    <span id="review-prompt-sub" class="text-[10px] text-[#848e9c]">Click on stars on the right to rate now.</span>
+                </div>
+                <div id="star-rating-container" onclick="submitUserRating()" class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1.5 rounded-xl cursor-pointer hover:border-[#fcd535]/50 border border-[#2b3139] transition">
+                    <i id="star-1" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-2" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-3" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-4" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-5" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <span id="rating-score-text" class="text-xs font-bold text-[#fcd535] ml-1">0.0</span>
+                </div>
             </div>
         </div>
 
         <!-- TAB 1: HOME -->
         <div id="tab-home" class="max-w-md mx-auto space-y-4 tab-panel-enter">
-            <!-- HERO VOUCHER CARD -->
-            <div class="voucher-card rounded-2xl p-5 relative overflow-hidden space-y-4 shadow-xl">
-                <div class="flex items-center space-x-2">
-                    <span id="badge-secure-vault" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#fcd535]/15 text-[#fcd535] border border-[#fcd535]/30">
-                        Secure Vault
-                    </span>
-                    <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#0ecb81]/15 text-[#0ecb81] border border-[#0ecb81]/30">
-                        USDT / BNB
-                    </span>
+            <div class="relative rounded-2xl overflow-hidden banner-bg text-white p-6 shadow-xl">
+                <div class="pr-24 z-10 relative">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <span id="badge-secure-vault" class="bg-[#fcd535]/20 text-[#fcd535] text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[#fcd535]/40">Secure Vault</span>
+                        <span class="bg-[#0ecb81]/20 text-[#0ecb81] text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[#0ecb81]/40">USDT / BNB</span>
+                    </div>
+                    <h1 id="banner-title" class="text-2xl font-extrabold leading-tight tracking-wide drop-shadow text-white">Receive Voucher</h1>
+                    <h2 id="banner-subtitle" class="text-lg font-bold text-[#fcd535]">No pledge</h2>
+                    <p id="banner-desc" class="text-xs text-[#848e9c] mt-2">Join the node and start mining</p>
                 </div>
 
-                <div class="relative z-10 flex items-center justify-between gap-3">
-                    <div>
-                        <h1 id="banner-title" class="text-2xl font-extrabold text-white leading-tight">Receive Voucher</h1>
-                        <div id="banner-subtitle" class="text-xl font-extrabold text-[#fcd535] mt-0.5">No pledge</div>
-                        <p id="banner-desc" class="text-xs text-[#848e9c] mt-1.5">Join the node and start mining</p>
-                    </div>
-                    <div class="w-16 h-16 rounded-2xl bg-[#1e2329]/90 border border-[#fcd535]/30 flex items-center justify-center text-[#fcd535] text-2xl relative shrink-0 shadow-lg">
-                        <i class="fa-solid fa-wallet"></i>
-                        <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-[#0ecb81] text-[#0b0e11] absolute -bottom-1.5">USDT</span>
+                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center z-20">
+                    <div class="relative w-20 h-20 bg-gradient-to-tr from-[#1e2329] to-[#2b3139] rounded-2xl flex items-center justify-center shadow-2xl border-2 border-[#fcd535]/50 coin-float backdrop-blur-md">
+                        <i class="fa-solid fa-wallet text-3xl text-[#fcd535] drop-shadow-md"></i>
+                        <div class="absolute -bottom-2 -right-2 bg-[#0ecb81] text-[#0b0e11] text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md border border-[#0b0e11]">
+                            USDT
+                        </div>
                     </div>
                 </div>
 
-                <div class="relative z-10 flex items-center gap-2.5 pt-1">
-                    <button onclick="openDepositModal()" class="bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] font-extrabold px-4 py-2.5 rounded-xl text-xs transition shadow flex items-center space-x-2">
+                <div class="mt-5 flex justify-between items-center relative z-10">
+                    <button onclick="openDepositModal()" class="bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] text-xs font-extrabold px-4 py-2 rounded-xl shadow-lg transition flex items-center space-x-1.5">
                         <i class="fa-solid fa-qrcode"></i>
                         <span id="btn-deposit-hub">Deposit Hub</span>
                     </button>
-                    <button onclick="openCertificateModal()" class="bg-[#181a20]/90 hover:bg-[#2b3139] active:scale-95 text-[#eaecef] border border-[#2b3139] font-bold px-4 py-2.5 rounded-xl text-xs transition flex items-center space-x-2">
+                    <button onclick="openCertificateModal()" id="btn-cert" class="bg-[#1e2329]/95 backdrop-blur-sm text-[#eaecef] text-xs font-bold px-4 py-2 rounded-xl shadow-lg hover:border-[#fcd535]/50 active:scale-95 transition border border-[#2b3139] flex items-center space-x-1.5">
                         <i class="fa-solid fa-shield-halved text-[#fcd535]"></i>
                         <span id="btn-cert-text">Certificate</span>
                     </button>
                 </div>
 
-                <!-- WALLET ADDRESS BOX INSIDE VOUCHER CARD -->
-                <div class="relative z-10 bg-[#12141a]/90 border border-[#2b3139] rounded-xl p-3 flex items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <div id="lbl-my-addr" class="text-[10px] text-[#848e9c] font-medium">Your Wallet Address:</div>
-                        <div id="user-unique-address" class="text-xs font-mono font-bold text-[#eaecef] truncate mt-0.5">0x71C...39f8</div>
+                <div class="mt-4 pt-3 border-t border-[#2b3139] flex items-center justify-between text-xs bg-[#0b0e11]/70 px-3 py-2 rounded-xl backdrop-blur-sm relative z-10">
+                    <div class="truncate mr-2">
+                        <span class="text-[10px] text-[#848e9c] block" id="lbl-my-addr">Your Wallet Address:</span>
+                        <span id="user-unique-address" class="font-mono font-bold text-[#eaecef] truncate">0x71C...39f8</span>
                     </div>
-                    <button onclick="copyUserAddress()" class="bn-btn-yellow active:scale-95 px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 flex items-center space-x-1">
+                    <button onclick="copyUserAddress()" class="bn-btn-yellow active:scale-95 font-bold px-3 py-1.5 rounded-lg text-[11px] shadow transition flex items-center space-x-1 shrink-0">
                         <i class="fa-regular fa-copy"></i>
                         <span id="btn-copy-text">Copy</span>
                     </button>
                 </div>
             </div>
-            <!-- QUICK ACTIONS (3 CARDS) -->
-            <div class="grid grid-cols-3 gap-2.5">
-                <button onclick="openDepositModal()" class="glass-card hover:border-[#0ecb81]/50 rounded-2xl p-3 text-center transition flex flex-col items-center justify-center">
-                    <div class="w-8 h-8 rounded-xl bg-[#0ecb81]/15 text-[#0ecb81] flex items-center justify-center text-sm mb-2 border border-[#0ecb81]/25">
-                        <i class="fa-solid fa-wallet"></i>
-                    </div>
-                    <div id="qa-deposit-title" class="text-[11px] font-bold text-white leading-tight">Quick Deposit</div>
-                    <div id="qa-deposit-sub" class="text-[10px] text-[#0ecb81] font-semibold mt-0.5 leading-tight">TRC20 Vault</div>
-                </button>
 
-                <button onclick="switchTab('withdrawal')" class="glass-card hover:border-[#fcd535]/50 rounded-2xl p-3 text-center transition flex flex-col items-center justify-center">
-                    <div class="w-8 h-8 rounded-xl bg-[#fcd535]/15 text-[#fcd535] flex items-center justify-center text-sm mb-2 border border-[#fcd535]/25">
+            <!-- 3 THẺ TÍNH NĂNG NHANH -->
+            <div class="grid grid-cols-3 gap-2.5">
+                <button onclick="openDepositModal()" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-[#0ecb81]/15 text-[#0ecb81] flex items-center justify-center text-sm border border-[#0ecb81]/30">
+                        <i class="fa-solid fa-arrow-down-to-line"></i>
+                    </div>
+                    <div id="qa-deposit-title" class="text-[11px] font-bold text-[#eaecef]">Quick Deposit</div>
+                    <div id="qa-deposit-sub" class="text-[9px] text-[#0ecb81] font-semibold">TRC20 Vault</div>
+                </button>
+                <button onclick="switchTab('withdrawal')" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-[#fcd535]/15 text-[#fcd535] flex items-center justify-center text-sm border border-[#fcd535]/30">
                         <i class="fa-solid fa-paper-plane"></i>
                     </div>
-                    <div id="qa-payout-title" class="text-[11px] font-bold text-white leading-tight">Fast Payout</div>
-                    <div id="qa-payout-sub" class="text-[10px] text-[#fcd535] font-semibold mt-0.5 leading-tight">Multi-Chain</div>
+                    <div id="qa-payout-title" class="text-[11px] font-bold text-[#eaecef]">Fast Payout</div>
+                    <div id="qa-payout-sub" class="text-[9px] text-[#fcd535] font-semibold">Multi-Chain</div>
                 </button>
-
-                <button onclick="switchTab('account')" class="glass-card hover:border-purple-400/50 rounded-2xl p-3 text-center transition flex flex-col items-center justify-center">
-                    <div class="w-8 h-8 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center text-sm mb-2 border border-purple-500/25">
+                <button onclick="switchTab('account')" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center text-sm border border-amber-500/30">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
-                    <div id="qa-yield-title" class="text-[11px] font-bold text-white leading-tight">24h Yield</div>
-                    <div id="qa-yield-sub" class="text-[10px] text-purple-300 font-semibold mt-0.5 leading-tight">Up to 22%/d</div>
+                    <div id="qa-yield-title" class="text-[11px] font-bold text-[#eaecef]">24h Yield</div>
+                    <div id="qa-yield-sub" class="text-[9px] text-amber-400 font-semibold">Up to 22%/d</div>
                 </button>
             </div>
 
-            <!-- POOL DATA -->
-            <div class="glass-card rounded-2xl p-5 space-y-3">
+            <div id="activation-banner-box" class="hidden bg-gradient-to-r from-[#fcd535] to-[#f0b90b] rounded-2xl p-4 text-[#0b0e11] shadow-lg flex items-center justify-between animate-fade-in">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-[#0b0e11]/15 rounded-full flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-bolt-lightning text-[#0b0e11]"></i>
+                    </div>
+                    <div>
+                        <h4 id="act-banner-title" class="font-extrabold text-sm">Activate new balance accumulation!</h4>
+                        <p id="act-banner-desc" class="text-[11px] text-[#1e2329] font-medium">Confirm to activate your deposit and start earning daily returns.</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 shrink-0">
+                    <button onclick="executeActivation()" id="btn-activate-now" class="bg-[#0b0e11] text-[#fcd535] font-bold px-3 py-1.5 rounded-xl text-xs shadow hover:bg-[#181a20] transition">
+                        Activate
+                    </button>
+                    <button onclick="dismissActivationBanner()" class="text-[#0b0e11]/80 hover:text-[#0b0e11] p-1.5">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-[#2b3139] pb-2.5">
-                    <h2 id="pool-data-title" class="text-sm font-bold text-white">Pool Data</h2>
-                    <span id="badge-live-telemetry" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#0ecb81]/15 text-[#0ecb81] border border-[#0ecb81]/30">
-                        ● Live Telemetry
-                    </span>
+                    <h3 id="pool-data-title" class="font-bold text-white text-base">Pool Data</h3>
+                    <span id="badge-live-telemetry" class="text-[10px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] px-2.5 py-0.5 rounded-full border border-[#0ecb81]/30">● Live Telemetry</span>
                 </div>
-
-                <div class="space-y-2.5 text-xs">
-                    <div class="flex items-center justify-between py-1 border-b border-[#2b3139]/50">
-                        <span id="label-total-output" class="text-[#848e9c]">Total Output</span>
-                        <span id="val-total-output" class="font-bold text-[#fcd535] font-mono text-sm">9,153,176.23 BNB</span>
-                    </div>
-                    <div class="flex items-center justify-between py-1 border-b border-[#2b3139]/50">
-                        <span id="label-valid-nodes" class="text-[#848e9c]">Valid Nodes</span>
-                        <span id="val-valid-nodes" class="font-bold text-white font-mono text-sm">590,026</span>
-                    </div>
-                    <div class="flex items-center justify-between py-1 border-b border-[#2b3139]/50">
-                        <span id="label-participants" class="text-[#848e9c]">Participants</span>
-                        <span id="val-participants" class="font-bold text-white font-mono text-sm">760,435</span>
-                    </div>
-                    <div class="flex items-center justify-between py-1">
-                        <span id="label-user-revenue" class="text-[#848e9c]">User Revenue</span>
-                        <span id="val-user-revenue" class="font-bold text-[#0ecb81] font-mono text-sm">≈ 1,492,587,121.89 USDT</span>
-                    </div>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-total-output" class="text-sm text-[#848e9c]">Total Output</span>
+                    <span id="val-total-output" class="font-bold text-[#fcd535] font-mono">9,153,176.23 BNB</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-valid-nodes" class="text-sm text-[#848e9c]">Valid Nodes</span>
+                    <span id="val-valid-nodes" class="font-bold text-[#eaecef] font-mono">590,026</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-participants" class="text-sm text-[#848e9c]">Participants</span>
+                    <span id="val-participants" class="font-bold text-[#eaecef] font-mono">760,435</span>
+                </div>
+                <div class="flex justify-between items-center pt-1">
+                    <span id="label-user-revenue" class="text-sm text-[#848e9c]">User Revenue</span>
+                    <span id="val-user-revenue" class="font-bold text-[#0ecb81] font-mono">≈ 1,492,587,121.89 USDT</span>
                 </div>
             </div>
 
-            <!-- OUTPUT DETAILS -->
-            <div class="glass-card rounded-2xl p-5 space-y-3">
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
                 <div class="flex items-center justify-between border-b border-[#2b3139] pb-2">
-                    <h2 id="output-details-title" class="text-sm font-bold text-white">Output details</h2>
-                    <div class="flex space-x-6 text-[11px] font-semibold text-[#848e9c]">
-                        <span id="table-addr">Address</span>
-                        <span id="table-qty">Quantity</span>
+                    <h3 id="output-details-title" class="font-bold text-white text-base">Output details</h3>
+                    <span id="lbl-realtime-blocks" class="text-[10px] text-[#848e9c] font-semibold">Real-time blocks</span>
+                </div>
+                <div class="flex justify-between text-xs text-[#848e9c] font-semibold border-b border-[#2b3139]/60 pb-2">
+                    <span id="table-addr">Address</span>
+                    <span id="table-qty">Quantity</span>
+                </div>
+                <div id="output-list" class="space-y-3 text-sm font-mono">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[#fcd535] font-medium">0x3f9acc...900270</span>
+                        <span class="font-semibold text-[#eaecef]">0.076273 BNB</span>
                     </div>
                 </div>
-                <div id="output-list" class="space-y-2 text-xs font-mono">
-                    <div class="flex justify-between items-center"><span class="text-[#fcd535] font-medium">0x8a92c1...44b9</span><span class="font-semibold text-[#eaecef]">0.042150 BNB</span></div>
-                    <div class="flex justify-between items-center"><span class="text-[#fcd535] font-medium">0x3f71d8...91e2</span><span class="font-semibold text-[#eaecef]">0.018920 BNB</span></div>
-                    <div class="flex justify-between items-center"><span class="text-[#fcd535] font-medium">0x9d10a4...77c5</span><span class="font-semibold text-[#eaecef]">0.065400 BNB</span></div>
-                    <div class="flex justify-between items-center"><span class="text-[#fcd535] font-medium">0x5b44e2...18a0</span><span class="font-semibold text-[#eaecef]">0.029810 BNB</span></div>
-                    <div class="flex justify-between items-center"><span class="text-[#fcd535] font-medium">0x2c89f7...63d1</span><span class="font-semibold text-[#eaecef]">0.051230 BNB</span></div>
-                </div>
-                <div class="pt-1 text-right text-[10px] text-[#848e9c]" id="lbl-realtime-blocks">Real-time blocks</div>
             </div>
 
-            <!-- HIGHLIGHTS -->
-            <div class="glass-card rounded-2xl p-5 space-y-2.5">
-                <h3 id="highlights-title" class="text-sm font-bold text-white">Vault Operation Highlights</h3>
-                <div id="highlight-1" class="flex items-start space-x-2 text-xs text-[#848e9c]">
-                    <i class="fa-solid fa-check-circle text-[#0ecb81] mt-0.5 shrink-0"></i>
-                    <span>Minimum deposit starts at <strong>100 USDT</strong> via TRC20 network with automatic VIP tier calculation.</span>
+            <!-- HƯỚNG DẪN & BẢO MẬT GIAO DỊCH -->
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
+                <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-2">
+                    <i class="fa-solid fa-circle-info text-[#fcd535]"></i>
+                    <h3 id="highlights-title" class="font-bold text-white text-sm">Vault Operation Highlights</h3>
                 </div>
-                <div id="highlight-2" class="flex items-start space-x-2 text-xs text-[#848e9c]">
-                    <i class="fa-solid fa-clock text-[#fcd535] mt-0.5 shrink-0"></i>
-                    <span>Each yield cycle runs on a <strong>24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.</span>
-                </div>
-                <div id="highlight-3" class="flex items-start space-x-2 text-xs text-[#848e9c]">
-                    <i class="fa-solid fa-headset text-purple-400 mt-0.5 shrink-0"></i>
-                    <span>Need help with deposits, withdrawals, or VIP tiers? Use the <strong>24/7 Live Support</strong> chat button anytime.</span>
+                <div class="grid grid-cols-1 gap-2.5 text-xs text-[#848e9c]">
+                    <div id="highlight-1" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
+                        <i class="fa-solid fa-check-circle text-[#0ecb81] mt-0.5 shrink-0"></i>
+                        <span>Minimum deposit starts at <strong class="text-[#eaecef]">100 USDT</strong> via TRC20 network with automatic VIP tier calculation.</span>
+                    </div>
+                    <div id="highlight-2" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
+                        <i class="fa-solid fa-clock text-[#fcd535] mt-0.5 shrink-0"></i>
+                        <span>Each yield cycle runs on a <strong class="text-[#eaecef]">24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.</span>
+                    </div>
+                    <div id="highlight-3" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
+                        <i class="fa-solid fa-headset text-purple-400 mt-0.5 shrink-0"></i>
+                        <span>Need help with deposits, withdrawals, or VIP tiers? Use the <strong class="text-[#eaecef]">24/7 Live Support</strong> chat button anytime.</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="text-center text-[11px] text-[#848e9c] py-1">
-                <span id="ticker-label-home">Supported Cryptocurrencies & Assets</span> · USDT (TRC20) · BNB · BTC · ETH · SOL
+            <div class="glass-card rounded-2xl p-3 shadow-sm overflow-hidden relative">
+                <div id="ticker-label-home" class="text-[10px] font-bold text-[#848e9c] uppercase tracking-widest text-center mb-2">Supported Cryptocurrencies & Assets</div>
+                <div class="overflow-hidden whitespace-nowrap relative w-full">
+                    <div class="animate-marquee flex items-center space-x-8 text-xs font-bold text-[#eaecef]">
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#0ecb81]/30"><i class="fa-solid fa-circle-dollar-to-slot text-[#0ecb81]"></i><span>USDT (Tether)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/30"><i class="fa-brands fa-bitcoin text-[#fcd535]"></i><span>BTC (Bitcoin)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/40"><i class="fa-solid fa-coins text-[#fcd535]"></i><span>BNB (Binance)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-purple-500/30"><i class="fa-brands fa-ethereum text-purple-400"></i><span>ETH (Ethereum)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-indigo-500/30"><i class="fa-solid fa-bolt text-indigo-400"></i><span>SOL (Solana)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-cyan-500/30"><i class="fa-solid fa-shield-cat text-cyan-400"></i><span>XRP (Ripple)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-rose-500/30"><i class="fa-solid fa-fire text-rose-400"></i><span>TRX (Tron)</span></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- TAB 2: MARKETS -->
-        <div id="tab-markets" class="hidden max-w-md mx-auto space-y-4 tab-panel-enter">
-            <div class="glass-card rounded-2xl p-5 space-y-4">
-                <div class="flex items-center justify-between gap-2">
+        <!-- TAB 2: MARKETS & EXCHANGE HUB (KHÁM PHÁ CHỨNG KHOÁN / CRYPTO + TÌM KIẾM + LIÊN KẾT BINANCE / BYBIT / BITGET / OKX) -->
+        <div id="tab-markets" class="hidden space-y-4 tab-panel-enter">
+            <!-- TÌM KIẾM MÃ CHỨNG KHOÁN / CRYPTO / SÀN -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
                     <div>
-                        <h2 id="markets-title" class="text-base font-bold text-white">Markets & Equities Discovery</h2>
-                        <p id="markets-subtitle" class="text-xs text-[#848e9c]">Real-time crypto & global stock tickers, search & third-party exchange links.</p>
+                        <h3 id="markets-title" class="font-bold text-white text-base flex items-center space-x-2">
+                            <i class="fa-solid fa-arrow-trend-up text-[#fcd535]"></i>
+                            <span>Markets & Equities Discovery</span>
+                        </h3>
+                        <p id="markets-subtitle" class="text-[11px] text-[#848e9c]">Real-time crypto & global stock tickers, search & third-party exchange links.</p>
                     </div>
-                    <span id="market-status-badge" class="text-[11px] font-bold text-[#0ecb81] shrink-0">● Market Open</span>
+                    <span id="market-status-badge" class="text-[10px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] px-2.5 py-1 rounded-full border border-[#0ecb81]/30">● Market Open</span>
                 </div>
 
-                <div class="flex flex-col gap-2">
-                    <input type="text" id="market-search-input" oninput="renderMarketWatchlist()" placeholder="Search ticker or stock (BTC, BNB, NVDA, AAPL, TSLA...)" class="w-full bn-input rounded-xl px-3.5 py-2 text-xs">
-                    <div class="flex items-center space-x-1.5">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#848e9c] text-xs"></i>
+                        <input type="text" id="market-search-input" oninput="renderMarketWatchlist()" placeholder="Search ticker or stock (BTC, BNB, NVDA, AAPL, TSLA, VNM...)" class="w-full bn-input rounded-xl pl-9 pr-3 py-2 text-xs">
+                    </div>
+                    <div class="flex space-x-1.5">
                         <button onclick="setMarketCategory('ALL')" id="mcat-all" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#fcd535] text-[#0b0e11] transition">All</button>
                         <button onclick="setMarketCategory('CRYPTO')" id="mcat-crypto" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#1e2329] text-[#848e9c] border border-[#2b3139] hover:text-white transition">Crypto</button>
                         <button onclick="setMarketCategory('STOCKS')" id="mcat-stocks" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#1e2329] text-[#848e9c] border border-[#2b3139] hover:text-white transition">Stocks</button>
                     </div>
                 </div>
+            </div>
 
-                <div class="flex justify-between text-[11px] font-semibold text-[#848e9c] px-1">
+            <!-- DANH SÁCH CHỨNG KHOÁN & CRYPTO -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-2.5">
+                <div class="flex justify-between items-center text-[11px] text-[#848e9c] font-semibold border-b border-[#2b3139] pb-2">
                     <span id="mkt-col-asset">Asset / Ticker</span>
                     <span id="mkt-col-price">Price & 24h Change</span>
                 </div>
-
-                <div id="market-watchlist-container" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
+                <div id="market-watchlist-container" class="space-y-2 max-h-80 overflow-y-auto pr-1 lang-scroll-list"></div>
             </div>
 
-            <div class="glass-card rounded-2xl p-5 space-y-3">
-                <div class="flex items-center justify-between gap-2">
+            <!-- LIÊN KẾT ỨNG DỤNG BÊN THỨ 3: BINANCE, BYBIT, BITGET, OKX -->
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2b3139] pb-2.5">
                     <div>
-                        <h3 id="thirdparty-title" class="text-sm font-bold text-white">Third-Party Exchange Links</h3>
-                        <p id="thirdparty-desc" class="text-xs text-[#848e9c]">Connect or open external partner apps: Binance, Bybit, Bitget, OKX.</p>
+                        <h3 id="thirdparty-title" class="font-bold text-white text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-link text-[#fcd535]"></i>
+                            <span>Third-Party Exchange Links</span>
+                        </h3>
+                        <p id="thirdparty-desc" class="text-[11px] text-[#848e9c]">Connect or open external partner apps: Binance, Bybit, Bitget, OKX.</p>
                     </div>
-                    <span id="linked-exchanges-badge" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-[#1e2329] text-[#fcd535] border border-[#2b3139] shrink-0">0 Linked</span>
+                    <span id="linked-exchanges-badge" class="text-[10px] font-bold bg-[#fcd535]/15 text-[#fcd535] px-2.5 py-0.5 rounded-full border border-[#fcd535]/30">0 Linked</span>
                 </div>
-                <div id="exchange-connectors-grid" class="grid grid-cols-1 gap-2.5"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="exchange-connectors-grid"></div>
             </div>
         </div>
 
         <!-- TAB 3: WITHDRAWAL -->
-        <div id="tab-withdrawal" class="hidden max-w-md mx-auto space-y-4 tab-panel-enter">
-            <div class="glass-card rounded-2xl p-5 space-y-3">
-                <div>
-                    <h3 id="link-wallet-title" class="text-sm font-bold text-white">Link Wallet Address</h3>
-                    <p id="link-wallet-desc" class="text-xs text-[#848e9c] mt-0.5">Select network & bind your TRC20/Binance wallet address before withdrawing.</p>
+        <div id="tab-withdrawal" class="hidden space-y-6 tab-panel-enter">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-3 mb-3">
+                            <div class="w-8 h-8 bg-[#fcd535]/15 text-[#fcd535] rounded-lg flex items-center justify-center font-bold border border-[#fcd535]/30">1</div>
+                            <h3 id="withdrawal-title" class="font-bold text-white text-base">Withdrawal</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <label id="lbl-withdraw-net" class="block text-xs font-semibold text-[#848e9c] mb-1">WITHDRAWAL NETWORK</label>
+                                <select id="withdraw-network" class="w-full bn-input rounded-xl p-2.5 text-xs">
+                                    <option value="TRON (TRC20)">TRON (TRC20)</option>
+                                    <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
+                                    <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
+                                    <option value="Polygon (MATIC)">Polygon (MATIC)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label id="lbl-linked-target" class="block text-xs font-semibold text-[#848e9c] mb-1">TARGET WALLET ADDRESS</label>
+                                <div id="display-linked-wallet" class="bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139] text-xs font-mono break-all text-[#eaecef]">
+                                    Not linked yet
+                                </div>
+                            </div>
+                            <div>
+                                <label id="withdrawal-label" class="block text-xs font-semibold text-[#848e9c] mb-1">WITHDRAW AMOUNT (USDT)</label>
+                                <input type="number" id="withdraw-input" placeholder="0.00" class="w-full bn-input rounded-xl p-3 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="withdrawal-btn" onclick="requestWithdrawal()" class="w-full bn-btn-yellow active:scale-95 py-3 rounded-xl shadow transition text-sm mt-4">
+                        Confirm Withdrawal
+                    </button>
                 </div>
-                <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139] space-y-1">
-                    <div id="lbl-linked-target" class="text-[10px] font-bold text-[#848e9c] uppercase">TARGET WALLET ADDRESS</div>
-                    <div id="display-linked-wallet" class="text-xs font-mono text-[#f6465d] font-semibold break-all">Unlinked Wallet Address (Please fill Section 2)</div>
+
+                <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-3 mb-3">
+                            <div class="w-8 h-8 bg-[#0ecb81]/15 text-[#0ecb81] rounded-lg flex items-center justify-center font-bold border border-[#0ecb81]/30">2</div>
+                            <h3 id="link-wallet-title" class="font-bold text-white text-base">Link Wallet Address</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <p id="link-wallet-desc" class="text-xs text-[#848e9c]">Please select network and link your Binance or personal exchange wallet address before withdrawing.</p>
+                            <div>
+                                <label id="lbl-link-net" class="block text-xs font-semibold text-[#848e9c] mb-1">SELECT YOUR NETWORK</label>
+                                <select id="link-network-select" class="w-full bn-input rounded-xl p-2.5 text-xs">
+                                    <option value="TRON (TRC20)">TRON (TRC20)</option>
+                                    <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
+                                    <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
+                                    <option value="Polygon (MATIC)">Polygon (MATIC)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label id="lbl-link-addr" class="block text-xs font-semibold text-[#848e9c] mb-1">PERSONAL WALLET ADDRESS</label>
+                                <input type="text" id="link-wallet-address" placeholder="Enter TRC20 / Binance wallet address..." class="w-full bn-input rounded-xl p-2.5 text-xs font-mono">
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="saveUserWalletLink()" id="btn-save-link" class="w-full bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] font-extrabold py-3 rounded-xl shadow transition text-sm mt-4">
+                        Save Wallet Address
+                    </button>
                 </div>
-                <div>
-                    <label id="lbl-link-net" class="block text-[11px] font-semibold text-[#848e9c] mb-1">SELECT YOUR NETWORK</label>
-                    <select id="link-network-select" class="w-full bn-input rounded-xl p-2.5 text-xs">
-                        <option value="TRON (TRC20)">TRON (TRC20)</option>
-                        <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
-                    </select>
-                </div>
-                <div>
-                    <label id="lbl-link-addr" class="block text-[11px] font-semibold text-[#848e9c] mb-1">PERSONAL WALLET ADDRESS</label>
-                    <input type="text" id="link-wallet-address" placeholder="PERSONAL WALLET ADDRESS" class="w-full bn-input rounded-xl p-2.5 text-xs font-mono">
-                </div>
-                <button onclick="saveUserWalletLink()" id="btn-save-link" class="w-full bg-[#2b3139] hover:bg-[#373e47] active:scale-95 text-white font-bold py-2.5 rounded-xl text-xs transition">
-                    Save Wallet Address
-                </button>
             </div>
 
-            <div class="glass-card rounded-2xl p-5 space-y-3">
-                <h2 id="withdrawal-title" class="text-base font-bold text-white">Withdrawal</h2>
-                <div>
-                    <label id="lbl-withdraw-net" class="block text-[11px] font-semibold text-[#848e9c] mb-1">WITHDRAWAL NETWORK</label>
-                    <select id="withdraw-network" class="w-full bn-input rounded-xl p-2.5 text-xs">
-                        <option value="TRON (TRC20)">TRON (TRC20)</option>
-                        <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
-                    </select>
-                </div>
-                <div>
-                    <label id="withdrawal-label" class="block text-[11px] font-semibold text-[#848e9c] mb-1">WITHDRAW AMOUNT (USDT)</label>
-                    <input type="number" id="withdraw-input" placeholder="0.00" class="w-full bn-input rounded-xl p-2.5 text-xs font-mono">
-                </div>
-                <button onclick="requestWithdrawal()" id="withdrawal-btn" class="w-full bn-btn-yellow active:scale-95 py-3 rounded-xl text-xs transition shadow">
-                    Confirm Withdrawal
-                </button>
-            </div>
-
-            <div class="glass-card rounded-2xl p-5 space-y-3">
-                <div class="flex items-center justify-between">
-                    <h3 id="history-title" class="text-xs font-bold text-white">Withdrawal History (24h Auto-Expiry)</h3>
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
+                <div class="flex justify-between items-center border-b border-[#2b3139] pb-2">
+                    <h3 id="history-title" class="font-bold text-white text-sm">Withdrawal History (24h Auto-Expiry)</h3>
                     <span id="history-subtitle" class="text-[10px] text-[#848e9c]">Auto-clears after 24h</span>
                 </div>
-                <div id="withdrawal-history-list" class="space-y-2 text-xs">
+                <div id="withdrawal-history-list" class="space-y-2 max-h-48 overflow-y-auto text-xs">
                     <div id="history-empty" class="text-[#848e9c] text-center py-4">No withdrawal history in the last 24 hours.</div>
                 </div>
             </div>
 
-            <div class="text-center text-[11px] text-[#848e9c] py-1">
-                <span id="ticker-label-withdraw">Supported Cryptocurrencies & Assets</span> · USDT (TRC20) · BNB
+            <div class="glass-card rounded-2xl p-3 shadow-sm overflow-hidden relative">
+                <div id="ticker-label-withdraw" class="text-[10px] font-bold text-[#848e9c] uppercase tracking-widest text-center mb-2">Supported Cryptocurrencies & Assets</div>
+                <div class="overflow-hidden whitespace-nowrap relative w-full">
+                    <div class="animate-marquee flex items-center space-x-8 text-xs font-bold text-[#eaecef]">
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#0ecb81]/30"><i class="fa-solid fa-circle-dollar-to-slot text-[#0ecb81]"></i><span>USDT (Tether)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/30"><i class="fa-brands fa-bitcoin text-[#fcd535]"></i><span>BTC (Bitcoin)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/40"><i class="fa-solid fa-coins text-[#fcd535]"></i><span>BNB (Binance)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-purple-500/30"><i class="fa-brands fa-ethereum text-purple-400"></i><span>ETH (Ethereum)</span></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -493,6 +614,7 @@
             </button>
         </div>
     </main>
+
     <!-- SUPPORT BUTTON -->
     <div class="fixed bottom-20 right-4 z-40 flex flex-col items-end space-y-2">
         <div id="support-tooltip" class="bg-[#1e2329] text-[#fcd535] border border-[#fcd535]/40 text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-lg animate-bounce">
@@ -688,7 +810,7 @@
     </div>
 
     <!-- BOTTOM NAVIGATION (4 TABS: HOME, MARKETS, WITHDRAWAL, ACCOUNT) -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-[#181a20]/95 backdrop-blur-md border-t border-[#2b3139] py-2 px-4 flex justify-around items-center z-40 max-w-3xl mx-auto shadow-2xl">
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#181a20]/95 backdrop-blur-md border-t border-[#2b3139] py-2 px-4 flex justify-around items-center z-40 max-w-4xl mx-auto shadow-2xl">
         <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-[#fcd535] font-bold transition">
             <i class="fa-solid fa-house text-lg"></i>
             <span id="nav-home-text" class="text-[10px] mt-1">Home</span>
@@ -794,26 +916,27 @@
             }
         };
 
+        // Bổ sung đầy đủ các ngôn ngữ ko, es, fr, de, ru, pt dựa trên nền tảng chuẩn en
         ['ko', 'es', 'fr', 'de', 'ru', 'pt'].forEach(code => {
             baseTranslations[code] = Object.assign({}, baseTranslations.en);
         });
         Object.assign(baseTranslations.ko, {
-            appTitle: "세이빙 월렛", navHome: "홈", navMarkets: "마켓", navWithdrawal: "출금", navAccount: "계정", btnLogoutText: "로그아웃", btnClaim: "수익 받기", btnQuickDeposit: "고정 지갑 입금", marketsTitle: "마켓 & 주식 탐색", filterAll: "전체", filterCrypto: "암호화폐", filterStocks: "주식", thirdpartyTitle: "제3자 거래소 앱 연동"
+            appTitle: "세이빙 월렛", navMarkets: "마켓", marketsTitle: "마켓 & 주식 탐색", filterAll: "전체", filterCrypto: "암호화폐", filterStocks: "주식", thirdpartyTitle: "제3자 거래소 앱 연동"
         });
         Object.assign(baseTranslations.es, {
-            appTitle: "SAVINGS WALLET", navHome: "Inicio", navMarkets: "Mercados", navWithdrawal: "Retiro", navAccount: "Cuenta", btnLogoutText: "Cerrar sesión", btnClaim: "Reclamar ingresos", btnQuickDeposit: "Depositar en billetera fija", marketsTitle: "Descubrir Mercados y Acciones", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Acciones", thirdpartyTitle: "Vincular Apps de Terceros"
+            appTitle: "SAVINGS WALLET", navMarkets: "Mercados", marketsTitle: "Descubrir Mercados y Acciones", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Acciones", thirdpartyTitle: "Vincular Apps de Terceros"
         });
         Object.assign(baseTranslations.fr, {
-            appTitle: "SAVINGS WALLET", navHome: "Accueil", navMarkets: "Marchés", navWithdrawal: "Retrait", navAccount: "Compte", btnLogoutText: "Déconnexion", btnClaim: "Réclamer les gains", btnQuickDeposit: "Déposer sur portefeuille fixe", marketsTitle: "Explorer Marchés & Actions", filterAll: "Tout", filterCrypto: "Crypto", filterStocks: "Actions", thirdpartyTitle: "Lier des Apps Partenaires"
+            appTitle: "SAVINGS WALLET", navMarkets: "Marchés", marketsTitle: "Explorer Marchés & Actions", filterAll: "Tout", filterCrypto: "Crypto", filterStocks: "Actions", thirdpartyTitle: "Lier des Apps Partenaires"
         });
         Object.assign(baseTranslations.de, {
-            appTitle: "SAVINGS WALLET", navHome: "Start", navMarkets: "Märkte", navWithdrawal: "Auszahlung", navAccount: "Konto", btnLogoutText: "Abmelden", btnClaim: "Ertrag beanspruchen", btnQuickDeposit: "Festes Wallet einzahlen", marketsTitle: "Märkte & Aktien entdecken", filterAll: "Alle", filterCrypto: "Krypto", filterStocks: "Aktien", thirdpartyTitle: "Drittanbieter-Apps verknüpfen"
+            appTitle: "SAVINGS WALLET", navMarkets: "Märkte", marketsTitle: "Märkte & Aktien entdecken", filterAll: "Alle", filterCrypto: "Krypto", filterStocks: "Aktien", thirdpartyTitle: "Drittanbieter-Apps verknüpfen"
         });
         Object.assign(baseTranslations.ru, {
-            appTitle: "SAVINGS WALLET", navHome: "Главная", navMarkets: "Рынки", navWithdrawal: "Вывод", navAccount: "Аккаунт", btnLogoutText: "Выйти", btnClaim: "Забрать доход", btnQuickDeposit: "Пополнить кошелёк", marketsTitle: "Рынки и Акции", filterAll: "Все", filterCrypto: "Крипто", filterStocks: "Акции", thirdpartyTitle: "Привязка Партнёрских Бирж"
+            appTitle: "SAVINGS WALLET", navMarkets: "Рынки", marketsTitle: "Рынки и Акции", filterAll: "Все", filterCrypto: "Крипто", filterStocks: "Акции", thirdpartyTitle: "Привязка Партнёрских Бирж"
         });
         Object.assign(baseTranslations.pt, {
-            appTitle: "SAVINGS WALLET", navHome: "Início", navMarkets: "Mercados", navWithdrawal: "Saque", navAccount: "Conta", btnLogoutText: "Sair da conta", btnClaim: "Resgatar lucro", btnQuickDeposit: "Depositar na carteira fixa", marketsTitle: "Explorar Mercados e Ações", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Ações", thirdpartyTitle: "Vincular Apps de Terceiros"
+            appTitle: "SAVINGS WALLET", navMarkets: "Mercados", marketsTitle: "Explorar Mercados e Ações", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Ações", thirdpartyTitle: "Vincular Apps de Terceiros"
         });
 
         function getTranslation(langCode) {
@@ -830,6 +953,7 @@
         let currentUser = localStorage.getItem('savings_wallet_currentUser') || null;
         let timerInterval = null;
         let hasRated = false;
+
         function setMarketCategory(cat) {
             currentMarketCat = cat;
             const mapIds = { ALL: 'mcat-all', CRYPTO: 'mcat-crypto', STOCKS: 'mcat-stocks' };
@@ -1027,19 +1151,14 @@
             display.innerHTML = `<span class="text-[#0ecb81] font-bold">${vip.rate}%</span><span class="text-[10px] text-[#848e9c]">${vip.desc}</span>`;
         }
 
-        function openAuthModal() {
-            const modal = document.getElementById('auth-modal');
-            if (modal) modal.classList.remove('hidden');
-        }
-
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
         function closeAuthModal() {
-            if (!currentUser) {
+            if(!currentUser) {
                 const t = getTranslation(currentLang);
                 alert(t.alertLoginRequired);
                 return;
             }
-            const modal = document.getElementById('auth-modal');
-            if (modal) modal.classList.add('hidden');
+            document.getElementById('auth-modal').classList.add('hidden');
         }
 
         async function handleUserAuth() {
@@ -1117,11 +1236,10 @@
         function resetStarDisplayToWhite() {
             for(let i=1; i<=5; i++) {
                 const star = document.getElementById(`star-${i}`);
-                if (!star) continue;
                 star.classList.remove('text-[#fcd535]');
                 star.classList.add('text-[#848e9c]');
             }
-            setTextIfExists('rating-score-text', '0.0');
+            document.getElementById('rating-score-text').innerText = "0.0";
         }
 
         function dismissWelcomeBanner() {
@@ -1131,44 +1249,18 @@
         function handleUserLogout() {
             currentUser = null;
             localStorage.removeItem('savings_wallet_currentUser');
-
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-
-            ['deposit-modal', 'admin-modal', 'support-chat-modal', 'certificate-modal'].forEach(id => {
-                const modalEl = document.getElementById(id);
-                if (modalEl) modalEl.classList.add('hidden');
-            });
-
-            if (typeof switchTab === 'function') {
-                switchTab('home');
-            }
-
-            setTextIfExists('auth-nav-btn', 'Login / Register');
-            setTextIfExists('user-unique-address', '0x71C...39f8');
-            setTextIfExists('user-usdt-balance', '0.00 USDT');
-            setTextIfExists('user-display-balance', '0.000000 BNB');
-            setTextIfExists('user-today-bnb', '0.000000 BNB');
-            setTextIfExists('user-today-usdt', '≈ $0.00 USDT');
-            setTextIfExists('user-tier-badge', 'VIP 1 (2.00% / day)');
-            setTextIfExists('val-timer-countdown', '24:00:00');
-
-            const actBox = document.getElementById('activation-banner-box');
-            if (actBox) actBox.classList.add('hidden');
-
-            const welcomeBanner = document.getElementById('welcome-review-banner');
-            if (welcomeBanner) welcomeBanner.classList.add('hidden');
-
-            const progressBar = document.getElementById('timer-progress-bar');
-            if (progressBar) progressBar.style.width = '0%';
-
-            const userInput = document.getElementById('auth-username');
-            const passInput = document.getElementById('auth-password');
-            if (userInput) userInput.value = '';
-            if (passInput) passInput.value = '';
-
+            if(timerInterval) clearInterval(timerInterval);
+            document.getElementById('auth-nav-btn').innerText = "Login / Register";
+            document.getElementById('user-unique-address').innerText = "0x71C...39f8";
+            document.getElementById('user-usdt-balance').innerText = "0.00 USDT";
+            document.getElementById('user-display-balance').innerText = "0.000000 BNB";
+            document.getElementById('user-today-bnb').innerText = "0.000000 BNB";
+            document.getElementById('user-today-usdt').innerText = "≈ $0.00 USDT";
+            document.getElementById('user-tier-badge').innerText = "VIP 1 (2.00% / day)";
+            document.getElementById('activation-banner-box').classList.add('hidden');
+            document.getElementById('welcome-review-banner').classList.add('hidden');
+            document.getElementById('val-timer-countdown').innerText = "24:00:00";
+            document.getElementById('timer-progress-bar').style.width = "0%";
             openAuthModal();
         }
 
@@ -1193,19 +1285,15 @@
         function loadUserWalletInfo(userObj) {
             const displayBox = document.getElementById('display-linked-wallet');
             const t = getTranslation(currentLang);
-            if (displayBox) {
-                if(userObj && userObj.linkedWallet) {
-                    displayBox.innerHTML = `<span class="text-[#fcd535] font-bold">[${userObj.linkedNetwork || 'TRON (TRC20)'}]</span> ${userObj.linkedWallet}`;
-                    const linkInput = document.getElementById('link-wallet-address');
-                    const netSelect = document.getElementById('link-network-select');
-                    if (linkInput) linkInput.value = userObj.linkedWallet;
-                    if (netSelect && userObj.linkedNetwork) netSelect.value = userObj.linkedNetwork;
-                } else {
-                    displayBox.innerHTML = `<span class="text-[#f6465d] font-semibold">${t.unlinkedWalletText}</span>`;
-                }
+            if(userObj && userObj.linkedWallet) {
+                displayBox.innerHTML = `<span class="text-[#fcd535] font-bold">[${userObj.linkedNetwork || 'TRON (TRC20)'}]</span> ${userObj.linkedWallet}`;
+                document.getElementById('link-wallet-address').value = userObj.linkedWallet;
+                if(userObj.linkedNetwork) document.getElementById('link-network-select').value = userObj.linkedNetwork;
+            } else {
+                displayBox.innerHTML = `<span class="text-[#f6465d] font-semibold">${t.unlinkedWalletText}</span>`;
             }
             if(userObj && userObj.walletAddress) {
-                setTextIfExists('user-unique-address', userObj.walletAddress);
+                document.getElementById('user-unique-address').innerText = userObj.walletAddress;
             }
         }
 
@@ -1385,7 +1473,7 @@
 
         function loadUserWithdrawalHistory() {
             const container = document.getElementById('withdrawal-history-list');
-            if(!currentUser || !container) return;
+            if(!currentUser) return;
             const myHistory = pendingTx.filter(t => t.username === currentUser && t.type === 'WITHDRAW');
 
             const t = getTranslation(currentLang);
@@ -1780,24 +1868,11 @@
             setTextIfExists('lbl-cycle-start', t.startLabel);
             setTextIfExists('lbl-cycle-end', t.endLabel);
 
-            const linkAddrInput = document.getElementById('link-wallet-address');
-            if (linkAddrInput) linkAddrInput.placeholder = t.lblLinkAddr;
-
-            const withdrawInput = document.getElementById('withdraw-input');
-            if (withdrawInput) withdrawInput.placeholder = '0.00';
-
-            if (!currentUser) {
-                setTextIfExists('user-tier-badge', 'VIP 1 (2.00% / day)');
-            }
-
-            renderMarketWatchlist();
             renderExchangeConnectors();
 
             if(currentUser) {
                 const myUserObj = registeredUsers.find(u => u.username === currentUser);
                 if(myUserObj) loadUserWalletInfo(myUserObj);
-                loadUserWithdrawalHistory();
-                loadUserChatHistory();
             } else {
                 loadUserWalletInfo(null);
             }
