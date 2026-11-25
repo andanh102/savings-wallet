@@ -3,29 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAVINGS WALLET - Savings & Daily Yield Protocol</title>
+    <title>SAVINGS WALLET — Vault, Markets & Exchange Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- SDK FIREBASE COMPAT -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <style>
+        :root {
+            --bn-bg: #0b0e11;
+            --bn-card: #181a20;
+            --bn-card-2: #1e2329;
+            --bn-border: #2b3139;
+            --bn-yellow: #fcd535;
+            --bn-yellow-hover: #f0b90b;
+            --bn-green: #0ecb81;
+            --bn-red: #f6465d;
+            --bn-text: #eaecef;
+            --bn-muted: #848e9c;
+        }
+
         body {
-            background-color: #0b0e11;
-            color: #eaecef;
+            background: radial-gradient(circle at top, #181c24 0%, #0b0e11 55%, #07090c 100%);
+            min-height: 100vh;
+            padding-bottom: 7.5rem;
+            color: var(--bn-text);
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
+
+        .banner-bg {
+            background: linear-gradient(135deg, #12161f 0%, #1c222d 50%, #262312 100%);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(252, 213, 53, 0.22);
+        }
+        .banner-bg::before {
+            content: "";
+            position: absolute;
+            top: -55%;
+            right: -18%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(252,213,53,0.22) 0%, rgba(252,213,53,0) 70%);
+            border-radius: 50%;
+            z-index: 1;
+            animation: pulseGlow 5s ease-in-out infinite;
+        }
+        .banner-bg::after {
+            content: "";
+            position: absolute;
+            bottom: -45%;
+            left: -15%;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(14,203,129,0.14) 0%, rgba(14,203,129,0) 72%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.75; }
+            50% { transform: scale(1.14); opacity: 1; }
+        }
+
+        .coin-float {
+            animation: floatCoin 3.2s ease-in-out infinite;
+        }
+        @keyframes floatCoin {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-7px) rotate(4deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+
         .glass-card {
-            background: #181a20;
+            background: rgba(24, 26, 32, 0.96);
+            backdrop-filter: blur(12px);
             border: 1px solid #2b3139;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
         }
-        .bn-btn-yellow {
-            background-color: #fcd535;
-            color: #0b0e11;
-            font-weight: 800;
+        .glass-card:hover {
+            box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.65);
+            border-color: rgba(252, 213, 53, 0.35);
         }
-        .bn-btn-yellow:hover {
-            background-color: #f0b90b;
-        }
+
         .bn-input {
             background-color: #1e2329;
             border: 1px solid #2b3139;
@@ -34,7 +104,33 @@
         .bn-input:focus {
             outline: none;
             border-color: #fcd535;
+            box-shadow: 0 0 0 2px rgba(252, 213, 53, 0.16);
         }
+
+        .bn-btn-yellow {
+            background-color: #fcd535;
+            color: #0b0e11;
+            font-weight: 800;
+        }
+        .bn-btn-yellow:hover {
+            background-color: #f0b90b;
+        }
+
+        .shimmer-bar {
+            background: linear-gradient(90deg, #f0b90b 0%, #fcd535 50%, #0ecb81 100%);
+            background-size: 200% 100%;
+            animation: shimmerFlow 3s linear infinite;
+        }
+        @keyframes shimmerFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .lang-scroll-list::-webkit-scrollbar { width: 5px; }
+        .lang-scroll-list::-webkit-scrollbar-track { background: #12161c; }
+        .lang-scroll-list::-webkit-scrollbar-thumb { background: #2b3139; border-radius: 4px; }
+        .lang-scroll-list::-webkit-scrollbar-thumb:hover { background: #474d57; }
+
         @keyframes marquee {
             0% { transform: translateX(0%); }
             100% { transform: translateX(-50%); }
@@ -42,260 +138,245 @@
         .animate-marquee {
             display: flex;
             width: max-content;
-            animation: marquee 28s linear infinite;
+            animation: marquee 25s linear infinite;
         }
         .animate-marquee:hover {
             animation-play-state: paused;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.25s ease-out forwards;
-        }
+
         .tab-panel-enter {
-            animation: fadeIn 0.2s ease-out forwards;
+            animation: panelSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        @keyframes shimmerMove {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        .shimmer-bar {
-            background: linear-gradient(90deg, #0ecb81 0%, #fcd535 50%, #0ecb81 100%);
-            background-size: 200% 100%;
-            animation: shimmerMove 2.5s linear infinite;
-        }
-        .lang-scroll-list::-webkit-scrollbar {
-            width: 5px;
-        }
-        .lang-scroll-list::-webkit-scrollbar-track {
-            background: #181a20;
-            border-radius: 9999px;
-        }
-        .lang-scroll-list::-webkit-scrollbar-thumb {
-            background: #373e47;
-            border-radius: 9999px;
+        @keyframes panelSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-[#0b0e11] text-[#eaecef] font-sans antialiased selection:bg-[#fcd535] selection:text-[#0b0e11]">
+<body class="select-none">
 
-    <!-- HEADER NAVIGATION -->
-    <header class="sticky top-0 z-40 bg-[#181a20]/95 backdrop-blur-md border-b border-[#2b3139] px-4 py-2.5 flex justify-between items-center max-w-4xl mx-auto">
-        <div class="flex items-center space-x-2">
-            <div onclick="handleAdminSecretClick()" class="w-8 h-8 rounded-full bg-[#fcd535] flex items-center justify-center text-[#0b0e11] font-extrabold text-sm cursor-pointer shadow select-none" title="SAVINGS WALLET">
-                <i class="fa-solid fa-coins"></i>
+    <!-- TOP BAR -->
+    <header class="bg-[#181a20]/95 backdrop-blur-md shadow-md p-3 flex justify-between items-center sticky top-0 z-40 border-b border-[#2b3139]">
+        <div class="relative inline-block text-left">
+            <button onclick="toggleLangMenu()" id="lang-btn" class="bg-[#1e2329] border border-[#2b3139] text-[#eaecef] text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1.5 hover:border-[#fcd535]/50 transition">
+                <i class="fa-solid fa-globe text-[#fcd535] text-[11px]"></i>
+                <span id="current-lang-text">English (US/UK)</span>
+                <i class="fa-solid fa-chevron-down text-[10px] text-[#848e9c]"></i>
+            </button>
+            <div id="lang-dropdown" class="hidden absolute left-0 mt-2 w-60 bg-[#181a20] border border-[#2b3139] rounded-xl shadow-2xl z-50 overflow-hidden">
+                <div class="max-h-72 overflow-y-auto py-1 text-xs text-[#eaecef] lang-scroll-list">
+                    <button onclick="selectLanguage('en', 'English (US/UK)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇺🇸 English (US/UK)</button>
+                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇻🇳 Tiếng Việt (Vietnam)</button>
+                    <button onclick="selectLanguage('ja', '日本語 (日本)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇯🇵 日本語 (Japan)</button>
+                    <button onclick="selectLanguage('zh', '中文 (中国)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇨🇳 中文 (China)</button>
+                    <button onclick="selectLanguage('ko', '한국어 (대한민국)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇰🇷 한국어 (Korea)</button>
+                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇪🇸 Español (Spain)</button>
+                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇫🇷 Français (France)</button>
+                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇩🇪 Deutsch (Germany)</button>
+                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇷🇺 Русский (Russia)</button>
+                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇧🇷 Português (Brazil)</button>
+                </div>
             </div>
-            <span id="txt-app-title" class="font-extrabold tracking-tight text-white text-sm sm:text-base">SAVINGS WALLET</span>
+        </div>
+
+        <div class="absolute left-1/2 transform -translate-x-1/2 cursor-pointer flex items-center space-x-1.5" onclick="handleAdminSecretClick()" title="System Portal">
+            <span class="w-2 h-2 rounded-full bg-[#0ecb81] animate-ping"></span>
+            <span id="txt-app-title" class="font-extrabold text-sm md:text-base text-[#fcd535] tracking-wide">SAVINGS WALLET</span>
         </div>
 
         <div class="flex items-center space-x-2">
-            <div class="relative">
-                <button onclick="toggleLangMenu()" class="flex items-center space-x-1.5 bg-[#1e2329] hover:bg-[#2b3139] text-[#eaecef] border border-[#2b3139] px-2.5 py-1.5 rounded-xl text-xs font-semibold transition">
-                    <i class="fa-solid fa-globe text-[#fcd535]"></i>
-                    <span id="current-lang-text">English (US/UK)</span>
-                    <i class="fa-solid fa-chevron-down text-[10px] text-[#848e9c]"></i>
-                </button>
-                <div id="lang-dropdown" class="hidden absolute right-0 mt-1.5 w-48 bg-[#181a20] border border-[#2b3139] rounded-xl shadow-2xl py-1 z-50 max-h-60 overflow-y-auto lang-scroll-list text-xs">
-                    <button onclick="selectLanguage('en', 'English (US/UK)')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] text-[#eaecef] flex justify-between"><span>🇺🇸 English</span><span class="text-[#848e9c]">EN</span></button>
-                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] text-[#eaecef] flex justify-between"><span>🇻🇳 Tiếng Việt</span><span class="text-[#848e9c]">VI</span></button>
-                    <button onclick="selectLanguage('ja', '日本語 (日本)')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] text-[#eaecef] flex justify-between"><span>🇯🇵 日本語</span><span class="text-[#848e9c]">JA</span></button>
-                    <button onclick="selectLanguage('zh', '中文 (中国)')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] text-[#eaecef] flex justify-between"><span>🇨🇳 中文</span><span class="text-[#848e9c]">ZH</span></button>
-                    <button onclick="selectLanguage('ko', '한국어 (대한민국)')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] text-[#eaecef] flex justify-between"><span>🇰🇷 한국어</span><span class="text-[#848e9c]">KO</span></button>
-                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] text-[#eaecef] flex justify-between"><span>🇪🇸 Español</span><span class="text-[#848e9c]">ES</span></button>
-                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] text-[#eaecef] flex justify-between"><span>🇫🇷 Français</span><span class="text-[#848e9c]">FR</span></button>
-                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] text-[#eaecef] flex justify-between"><span>🇩🇪 Deutsch</span><span class="text-[#848e9c]">DE</span></button>
-                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] text-[#eaecef] flex justify-between"><span>🇷🇺 Русский</span><span class="text-[#848e9c]">RU</span></button>
-                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-[#1e2329] text-[#eaecef] flex justify-between"><span>🇧🇷 Português</span><span class="text-[#848e9c]">PT</span></button>
-                </div>
-            </div>
-
-            <button onclick="openAuthModal()" id="auth-nav-btn" class="bn-btn-yellow px-3 py-1.5 rounded-xl text-xs transition shadow">
+            <button onclick="openAuthModal()" id="auth-nav-btn" class="bn-btn-yellow active:scale-95 text-xs px-3 py-1.5 rounded-lg transition shadow-sm">
                 Login / Register
             </button>
         </div>
     </header>
 
     <!-- MAIN CONTENT -->
-    <main class="max-w-4xl mx-auto px-4 pt-4 pb-24 space-y-6">
+    <main class="max-w-4xl mx-auto p-4 space-y-4">
 
-        <!-- WELCOME BANNER & RATING -->
-        <div id="welcome-review-banner" class="hidden glass-card rounded-2xl p-4 shadow-sm space-y-3 animate-fade-in">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h2 id="welcome-user-title" class="text-sm font-bold text-[#fcd535]">Welcome to SAVINGS WALLET!</h2>
-                    <p id="welcome-user-sub" class="text-xs text-[#848e9c]">Leading secure savings & daily return wallet protocol.</p>
+        <!-- THÔNG BÁO CHÀO MỪNG & ĐÁNH GIÁ 5 SAO -->
+        <div id="welcome-review-banner" class="hidden bg-gradient-to-r from-[#1e2329] via-[#25261b] to-[#1e2329] rounded-2xl p-5 text-[#eaecef] shadow-xl space-y-3 animate-fade-in border border-[#fcd535]/35">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-[#fcd535] text-[#0b0e11] rounded-full flex items-center justify-center text-xl font-bold shadow-lg">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <div>
+                        <h3 id="welcome-user-title" class="font-extrabold text-base tracking-wide text-white">Welcome to SAVINGS WALLET!</h3>
+                        <p id="welcome-user-sub" class="text-xs text-[#848e9c]">Leading secure savings & daily return wallet protocol.</p>
+                    </div>
                 </div>
-                <button onclick="dismissWelcomeBanner()" class="text-[#848e9c] hover:text-white text-xs">
-                    <i class="fa-solid fa-xmark"></i>
+                <button onclick="dismissWelcomeBanner()" class="text-[#848e9c] hover:text-white p-1 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139] flex items-center justify-between gap-2">
-                <div>
-                    <div id="review-prompt-text" class="text-xs font-bold text-[#eaecef]">Rate 5 stars for SAVINGS WALLET to unlock benefits!</div>
-                    <div id="review-prompt-sub" class="text-[10px] text-[#848e9c]">Click on stars on the right to rate now.</div>
-                </div>
-                <div class="flex items-center space-x-1 shrink-0">
-                    <button onclick="submitUserRating()" id="star-1" class="text-[#848e9c] hover:text-[#fcd535] text-base transition"><i class="fa-solid fa-star"></i></button>
-                    <button onclick="submitUserRating()" id="star-2" class="text-[#848e9c] hover:text-[#fcd535] text-base transition"><i class="fa-solid fa-star"></i></button>
-                    <button onclick="submitUserRating()" id="star-3" class="text-[#848e9c] hover:text-[#fcd535] text-base transition"><i class="fa-solid fa-star"></i></button>
-                    <button onclick="submitUserRating()" id="star-4" class="text-[#848e9c] hover:text-[#fcd535] text-base transition"><i class="fa-solid fa-star"></i></button>
-                    <button onclick="submitUserRating()" id="star-5" class="text-[#848e9c] hover:text-[#fcd535] text-base transition"><i class="fa-solid fa-star"></i></button>
-                    <span id="rating-score-text" class="ml-1.5 text-xs font-extrabold text-[#fcd535] font-mono">0.0</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- ACTIVATION BANNER AFTER DEPOSIT APPROVED -->
-        <div id="activation-banner-box" class="hidden bg-[#0ecb81]/15 border border-[#0ecb81]/40 rounded-2xl p-4 shadow-sm space-y-2.5 animate-fade-in">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h3 id="act-banner-title" class="text-sm font-bold text-[#0ecb81]">Activate new balance accumulation!</h3>
-                    <p id="act-banner-desc" class="text-xs text-[#eaecef] mt-0.5">Confirm to activate your deposit and start earning daily returns.</p>
+            <div class="bg-[#0b0e11]/70 backdrop-blur-md p-3 rounded-xl border border-[#2b3139] flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div class="text-xs">
+                    <span id="review-prompt-text" class="font-semibold block text-[#fcd535]">Rate 5 stars for SAVINGS WALLET to unlock benefits!</span>
+                    <span id="review-prompt-sub" class="text-[10px] text-[#848e9c]">Click on stars on the right to rate now.</span>
                 </div>
-                <button onclick="dismissActivationBanner()" class="text-[#848e9c] hover:text-white text-xs">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div id="star-rating-container" onclick="submitUserRating()" class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1.5 rounded-xl cursor-pointer hover:border-[#fcd535]/50 border border-[#2b3139] transition">
+                    <i id="star-1" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-2" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-3" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-4" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-5" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <span id="rating-score-text" class="text-xs font-bold text-[#fcd535] ml-1">0.0</span>
+                </div>
             </div>
-            <button onclick="executeActivation()" id="btn-activate-now" class="w-full bg-[#0ecb81] hover:bg-[#0bb572] text-[#0b0e11] font-extrabold py-2 rounded-xl text-xs transition shadow">
-                Activate
-            </button>
         </div>
 
         <!-- TAB 1: HOME -->
-        <div id="tab-home" class="space-y-6 tab-panel-enter">
-            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div class="space-y-1">
-                        <div class="inline-flex items-center space-x-2 bg-[#fcd535]/15 text-[#fcd535] border border-[#fcd535]/30 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
-                            <span id="banner-subtitle">No pledge</span>
-                        </div>
-                        <h1 id="banner-title" class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">Receive Voucher</h1>
-                        <p id="banner-desc" class="text-xs sm:text-sm text-[#848e9c]">Join the node and start mining</p>
+        <div id="tab-home" class="max-w-md mx-auto space-y-4 tab-panel-enter">
+            <div class="relative rounded-2xl overflow-hidden banner-bg text-white p-6 shadow-xl">
+                <div class="pr-24 z-10 relative">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <span id="badge-secure-vault" class="bg-[#fcd535]/20 text-[#fcd535] text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[#fcd535]/40">Secure Vault</span>
+                        <span class="bg-[#0ecb81]/20 text-[#0ecb81] text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[#0ecb81]/40">USDT / BNB</span>
                     </div>
-                    <div class="flex items-center space-x-2.5 shrink-0">
-                        <button onclick="openDepositModal()" class="bn-btn-yellow active:scale-95 px-4 py-2.5 rounded-xl text-xs shadow transition flex items-center space-x-1.5">
-                            <i class="fa-solid fa-vault"></i>
-                            <span id="btn-deposit-hub">Deposit Hub</span>
-                        </button>
-                        <button onclick="openCertificateModal()" class="bg-[#1e2329] hover:bg-[#2b3139] text-[#eaecef] border border-[#2b3139] active:scale-95 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5">
-                            <i class="fa-solid fa-certificate text-[#fcd535]"></i>
-                            <span id="btn-cert-text">Certificate</span>
-                        </button>
+                    <h1 id="banner-title" class="text-2xl font-extrabold leading-tight tracking-wide drop-shadow text-white">Receive Voucher</h1>
+                    <h2 id="banner-subtitle" class="text-lg font-bold text-[#fcd535]">No pledge</h2>
+                    <p id="banner-desc" class="text-xs text-[#848e9c] mt-2">Join the node and start mining</p>
+                </div>
+
+                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center z-20">
+                    <div class="relative w-20 h-20 bg-gradient-to-tr from-[#1e2329] to-[#2b3139] rounded-2xl flex items-center justify-center shadow-2xl border-2 border-[#fcd535]/50 coin-float backdrop-blur-md">
+                        <i class="fa-solid fa-wallet text-3xl text-[#fcd535] drop-shadow-md"></i>
+                        <div class="absolute -bottom-2 -right-2 bg-[#0ecb81] text-[#0b0e11] text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md border border-[#0b0e11]">
+                            USDT
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139] flex items-center justify-between gap-2 text-xs">
-                    <div class="truncate">
-                        <span id="lbl-my-addr" class="text-[#848e9c] mr-1">Your Wallet Address:</span>
-                        <span id="user-unique-address" class="font-mono text-[#fcd535] font-semibold">0x71C...39f8</span>
+                <div class="mt-5 flex justify-between items-center relative z-10">
+                    <button onclick="openDepositModal()" class="bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] text-xs font-extrabold px-4 py-2 rounded-xl shadow-lg transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-qrcode"></i>
+                        <span id="btn-deposit-hub">Deposit Hub</span>
+                    </button>
+                    <button onclick="openCertificateModal()" id="btn-cert" class="bg-[#1e2329]/95 backdrop-blur-sm text-[#eaecef] text-xs font-bold px-4 py-2 rounded-xl shadow-lg hover:border-[#fcd535]/50 active:scale-95 transition border border-[#2b3139] flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shield-halved text-[#fcd535]"></i>
+                        <span id="btn-cert-text">Certificate</span>
+                    </button>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-[#2b3139] flex items-center justify-between text-xs bg-[#0b0e11]/70 px-3 py-2 rounded-xl backdrop-blur-sm relative z-10">
+                    <div class="truncate mr-2">
+                        <span class="text-[10px] text-[#848e9c] block" id="lbl-my-addr">Your Wallet Address:</span>
+                        <span id="user-unique-address" class="font-mono font-bold text-[#eaecef] truncate">0x71C...39f8</span>
                     </div>
-                    <button onclick="copyUserAddress()" class="bg-[#2b3139] hover:bg-[#373e47] text-[#eaecef] px-2.5 py-1 rounded-lg text-[11px] font-bold transition shrink-0 flex items-center space-x-1">
+                    <button onclick="copyUserAddress()" class="bn-btn-yellow active:scale-95 font-bold px-3 py-1.5 rounded-lg text-[11px] shadow transition flex items-center space-x-1 shrink-0">
                         <i class="fa-regular fa-copy"></i>
                         <span id="btn-copy-text">Copy</span>
                     </button>
                 </div>
+            </div>
 
-                <div class="grid grid-cols-3 gap-2.5 pt-1">
-                    <button onclick="openDepositModal()" class="bg-[#1e2329] hover:bg-[#252b32] border border-[#2b3139] p-3 rounded-xl text-left transition">
-                        <div class="text-[#0ecb81] text-sm font-bold flex items-center justify-between">
-                            <span id="qa-deposit-title">Quick Deposit</span>
-                            <i class="fa-solid fa-arrow-down-to-line text-xs"></i>
-                        </div>
-                        <div id="qa-deposit-sub" class="text-[11px] text-[#848e9c] mt-0.5">TRC20 Vault</div>
+            <!-- 3 THẺ TÍNH NĂNG NHANH -->
+            <div class="grid grid-cols-3 gap-2.5">
+                <button onclick="openDepositModal()" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-[#0ecb81]/15 text-[#0ecb81] flex items-center justify-center text-sm border border-[#0ecb81]/30">
+                        <i class="fa-solid fa-arrow-down-to-line"></i>
+                    </div>
+                    <div id="qa-deposit-title" class="text-[11px] font-bold text-[#eaecef]">Quick Deposit</div>
+                    <div id="qa-deposit-sub" class="text-[9px] text-[#0ecb81] font-semibold">TRC20 Vault</div>
+                </button>
+                <button onclick="switchTab('withdrawal')" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-[#fcd535]/15 text-[#fcd535] flex items-center justify-center text-sm border border-[#fcd535]/30">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <div id="qa-payout-title" class="text-[11px] font-bold text-[#eaecef]">Fast Payout</div>
+                    <div id="qa-payout-sub" class="text-[9px] text-[#fcd535] font-semibold">Multi-Chain</div>
+                </button>
+                <button onclick="switchTab('account')" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center text-sm border border-amber-500/30">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div id="qa-yield-title" class="text-[11px] font-bold text-[#eaecef]">24h Yield</div>
+                    <div id="qa-yield-sub" class="text-[9px] text-amber-400 font-semibold">Up to 22%/d</div>
+                </button>
+            </div>
+
+            <div id="activation-banner-box" class="hidden bg-gradient-to-r from-[#fcd535] to-[#f0b90b] rounded-2xl p-4 text-[#0b0e11] shadow-lg flex items-center justify-between animate-fade-in">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-[#0b0e11]/15 rounded-full flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-bolt-lightning text-[#0b0e11]"></i>
+                    </div>
+                    <div>
+                        <h4 id="act-banner-title" class="font-extrabold text-sm">Activate new balance accumulation!</h4>
+                        <p id="act-banner-desc" class="text-[11px] text-[#1e2329] font-medium">Confirm to activate your deposit and start earning daily returns.</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 shrink-0">
+                    <button onclick="executeActivation()" id="btn-activate-now" class="bg-[#0b0e11] text-[#fcd535] font-bold px-3 py-1.5 rounded-xl text-xs shadow hover:bg-[#181a20] transition">
+                        Activate
                     </button>
-                    <button onclick="switchTab('withdrawal')" class="bg-[#1e2329] hover:bg-[#252b32] border border-[#2b3139] p-3 rounded-xl text-left transition">
-                        <div class="text-[#fcd535] text-sm font-bold flex items-center justify-between">
-                            <span id="qa-payout-title">Fast Payout</span>
-                            <i class="fa-solid fa-bolt text-xs"></i>
-                        </div>
-                        <div id="qa-payout-sub" class="text-[11px] text-[#848e9c] mt-0.5">Multi-Chain</div>
-                    </button>
-                    <button onclick="switchTab('account')" class="bg-[#1e2329] hover:bg-[#252b32] border border-[#2b3139] p-3 rounded-xl text-left transition">
-                        <div class="text-cyan-400 text-sm font-bold flex items-center justify-between">
-                            <span id="qa-yield-title">24h Yield</span>
-                            <i class="fa-solid fa-chart-line text-xs"></i>
-                        </div>
-                        <div id="qa-yield-sub" class="text-[11px] text-[#848e9c] mt-0.5">Up to 22%/d</div>
+                    <button onclick="dismissActivationBanner()" class="text-[#0b0e11]/80 hover:text-[#0b0e11] p-1.5">
+                        <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4">
-                    <div class="flex items-center justify-between border-b border-[#2b3139] pb-2.5">
-                        <h2 id="pool-data-title" class="font-bold text-white text-sm flex items-center space-x-2">
-                            <i class="fa-solid fa-server text-[#fcd535]"></i>
-                            <span>Pool Data</span>
-                        </h2>
-                        <span id="badge-live-telemetry" class="text-[10px] font-bold text-[#0ecb81] bg-[#0ecb81]/10 px-2 py-0.5 rounded-full border border-[#0ecb81]/25">● Live Telemetry</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139]">
-                            <div id="label-total-output" class="text-[#848e9c]">Total Output</div>
-                            <div id="val-total-output" class="text-sm font-bold text-[#fcd535] font-mono mt-1">9,153,176.23 BNB</div>
-                        </div>
-                        <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139]">
-                            <div id="label-valid-nodes" class="text-[#848e9c]">Valid Nodes</div>
-                            <div id="val-valid-nodes" class="text-sm font-bold text-white font-mono mt-1">590,026</div>
-                        </div>
-                        <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139]">
-                            <div id="label-participants" class="text-[#848e9c]">Participants</div>
-                            <div id="val-participants" class="text-sm font-bold text-white font-mono mt-1">760,435</div>
-                        </div>
-                        <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139]">
-                            <div id="label-user-revenue" class="text-[#848e9c]">User Revenue</div>
-                            <div id="val-user-revenue" class="text-sm font-bold text-[#0ecb81] font-mono mt-1">≈ 1,492,587,121.89 USDT</div>
-                        </div>
-                    </div>
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-[#2b3139] pb-2.5">
+                    <h3 id="pool-data-title" class="font-bold text-white text-base">Pool Data</h3>
+                    <span id="badge-live-telemetry" class="text-[10px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] px-2.5 py-0.5 rounded-full border border-[#0ecb81]/30">● Live Telemetry</span>
                 </div>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-total-output" class="text-sm text-[#848e9c]">Total Output</span>
+                    <span id="val-total-output" class="font-bold text-[#fcd535] font-mono">9,153,176.23 BNB</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-valid-nodes" class="text-sm text-[#848e9c]">Valid Nodes</span>
+                    <span id="val-valid-nodes" class="font-bold text-[#eaecef] font-mono">590,026</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-participants" class="text-sm text-[#848e9c]">Participants</span>
+                    <span id="val-participants" class="font-bold text-[#eaecef] font-mono">760,435</span>
+                </div>
+                <div class="flex justify-between items-center pt-1">
+                    <span id="label-user-revenue" class="text-sm text-[#848e9c]">User Revenue</span>
+                    <span id="val-user-revenue" class="font-bold text-[#0ecb81] font-mono">≈ 1,492,587,121.89 USDT</span>
+                </div>
+            </div>
 
-                <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
-                    <div class="flex items-center justify-between border-b border-[#2b3139] pb-2.5">
-                        <h2 id="output-details-title" class="font-bold text-white text-sm flex items-center space-x-2">
-                            <i class="fa-solid fa-list-check text-[#0ecb81]"></i>
-                            <span>Output details</span>
-                        </h2>
-                        <span id="lbl-realtime-blocks" class="text-[10px] text-[#848e9c]">Real-time blocks</span>
-                    </div>
-                    <div class="flex justify-between text-[11px] text-[#848e9c] font-semibold pb-1 border-b border-[#2b3139]/60">
-                        <span id="table-addr">Address</span>
-                        <span id="table-qty">Quantity</span>
-                    </div>
-                    <div id="output-list" class="space-y-2 text-xs font-mono">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[#fcd535] font-medium">0x98a42b...71e9</span>
-                            <span class="font-semibold text-[#eaecef]">0.042510 BNB</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-[#fcd535] font-medium">0x41c90f...12d4</span>
-                            <span class="font-semibold text-[#eaecef]">0.018900 BNB</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-[#fcd535] font-medium">0x77e31a...89b2</span>
-                            <span class="font-semibold text-[#eaecef]">0.064125 BNB</span>
-                        </div>
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2b3139] pb-2">
+                    <h3 id="output-details-title" class="font-bold text-white text-base">Output details</h3>
+                    <span id="lbl-realtime-blocks" class="text-[10px] text-[#848e9c] font-semibold">Real-time blocks</span>
+                </div>
+                <div class="flex justify-between text-xs text-[#848e9c] font-semibold border-b border-[#2b3139]/60 pb-2">
+                    <span id="table-addr">Address</span>
+                    <span id="table-qty">Quantity</span>
+                </div>
+                <div id="output-list" class="space-y-3 text-sm font-mono">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[#fcd535] font-medium">0x3f9acc...900270</span>
+                        <span class="font-semibold text-[#eaecef]">0.076273 BNB</span>
                     </div>
                 </div>
             </div>
 
-            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-2.5">
-                <h3 id="highlights-title" class="font-bold text-white text-sm">Vault Operation Highlights</h3>
-                <ul class="space-y-2 text-xs text-[#848e9c]">
-                    <li id="highlight-1" class="flex items-start space-x-2">
+            <!-- HƯỚNG DẪN & BẢO MẬT GIAO DỊCH -->
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
+                <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-2">
+                    <i class="fa-solid fa-circle-info text-[#fcd535]"></i>
+                    <h3 id="highlights-title" class="font-bold text-white text-sm">Vault Operation Highlights</h3>
+                </div>
+                <div class="grid grid-cols-1 gap-2.5 text-xs text-[#848e9c]">
+                    <div id="highlight-1" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
                         <i class="fa-solid fa-check-circle text-[#0ecb81] mt-0.5 shrink-0"></i>
-                        <span>Minimum deposit starts at <strong class='text-[#eaecef]'>100 USDT</strong> via TRC20 network with automatic VIP tier calculation.</span>
-                    </li>
-                    <li id="highlight-2" class="flex items-start space-x-2">
+                        <span>Minimum deposit starts at <strong class="text-[#eaecef]">100 USDT</strong> via TRC20 network with automatic VIP tier calculation.</span>
+                    </div>
+                    <div id="highlight-2" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
                         <i class="fa-solid fa-clock text-[#fcd535] mt-0.5 shrink-0"></i>
-                        <span>Each yield cycle runs on a <strong class='text-[#eaecef]'>24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.</span>
-                    </li>
-                    <li id="highlight-3" class="flex items-start space-x-2">
+                        <span>Each yield cycle runs on a <strong class="text-[#eaecef]">24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.</span>
+                    </div>
+                    <div id="highlight-3" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
                         <i class="fa-solid fa-headset text-purple-400 mt-0.5 shrink-0"></i>
-                        <span>Need help with deposits, withdrawals, or VIP tiers? Use the <strong class='text-[#eaecef]'>24/7 Live Support</strong> chat button anytime.</span>
-                    </li>
-                </ul>
+                        <span>Need help with deposits, withdrawals, or VIP tiers? Use the <strong class="text-[#eaecef]">24/7 Live Support</strong> chat button anytime.</span>
+                    </div>
+                </div>
             </div>
 
             <div class="glass-card rounded-2xl p-3 shadow-sm overflow-hidden relative">
@@ -306,30 +387,35 @@
                         <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/30"><i class="fa-brands fa-bitcoin text-[#fcd535]"></i><span>BTC (Bitcoin)</span></div>
                         <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/40"><i class="fa-solid fa-coins text-[#fcd535]"></i><span>BNB (Binance)</span></div>
                         <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-purple-500/30"><i class="fa-brands fa-ethereum text-purple-400"></i><span>ETH (Ethereum)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-indigo-500/30"><i class="fa-solid fa-bolt text-indigo-400"></i><span>SOL (Solana)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-cyan-500/30"><i class="fa-solid fa-shield-cat text-cyan-400"></i><span>XRP (Ripple)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-rose-500/30"><i class="fa-solid fa-fire text-rose-400"></i><span>TRX (Tron)</span></div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- TAB 2: MARKETS -->
-        <div id="tab-markets" class="hidden space-y-6 tab-panel-enter">
-            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-[#2b3139] pb-3">
+
+        <!-- TAB 2: MARKETS & EXCHANGE HUB (KHÁM PHÁ CHỨNG KHOÁN / CRYPTO + TÌM KIẾM + LIÊN KẾT BINANCE / BYBIT / BITGET / OKX) -->
+        <div id="tab-markets" class="hidden space-y-4 tab-panel-enter">
+            <!-- TÌM KIẾM MÃ CHỨNG KHOÁN / CRYPTO / SÀN -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
                     <div>
-                        <h2 id="markets-title" class="font-bold text-white text-base flex items-center space-x-2">
+                        <h3 id="markets-title" class="font-bold text-white text-base flex items-center space-x-2">
                             <i class="fa-solid fa-arrow-trend-up text-[#fcd535]"></i>
                             <span>Markets & Equities Discovery</span>
-                        </h2>
-                        <p id="markets-subtitle" class="text-xs text-[#848e9c]">Real-time crypto & global stock tickers, search & third-party exchange links.</p>
+                        </h3>
+                        <p id="markets-subtitle" class="text-[11px] text-[#848e9c]">Real-time crypto & global stock tickers, search & third-party exchange links.</p>
                     </div>
-                    <span id="market-status-badge" class="text-[10px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] border border-[#0ecb81]/30 px-2.5 py-1 rounded-full self-start sm:self-auto">● Market Open</span>
+                    <span id="market-status-badge" class="text-[10px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] px-2.5 py-1 rounded-full border border-[#0ecb81]/30">● Market Open</span>
                 </div>
 
-                <div class="flex flex-col sm:flex-row gap-2.5">
+                <div class="flex flex-col sm:flex-row gap-2">
                     <div class="relative flex-1">
-                        <i class="fa-solid fa-magnifying-glass text-[#848e9c] text-xs absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                        <input type="text" id="market-search-input" oninput="renderMarketWatchlist()" placeholder="Search ticker or stock (BTC, BNB, NVDA, AAPL, TSLA...)" class="w-full bn-input rounded-xl pl-9 pr-3 py-2 text-xs">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#848e9c] text-xs"></i>
+                        <input type="text" id="market-search-input" oninput="renderMarketWatchlist()" placeholder="Search ticker or stock (BTC, BNB, NVDA, AAPL, TSLA, VNM...)" class="w-full bn-input rounded-xl pl-9 pr-3 py-2 text-xs">
                     </div>
-                    <div class="flex items-center space-x-1.5 shrink-0">
+                    <div class="flex space-x-1.5">
                         <button onclick="setMarketCategory('ALL')" id="mcat-all" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#fcd535] text-[#0b0e11] transition">All</button>
                         <button onclick="setMarketCategory('CRYPTO')" id="mcat-crypto" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#1e2329] text-[#848e9c] border border-[#2b3139] hover:text-white transition">Crypto</button>
                         <button onclick="setMarketCategory('STOCKS')" id="mcat-stocks" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#1e2329] text-[#848e9c] border border-[#2b3139] hover:text-white transition">Stocks</button>
@@ -337,6 +423,7 @@
                 </div>
             </div>
 
+            <!-- DANH SÁCH CHỨNG KHOÁN & CRYPTO -->
             <div class="glass-card rounded-2xl p-4 shadow-sm space-y-2.5">
                 <div class="flex justify-between items-center text-[11px] text-[#848e9c] font-semibold border-b border-[#2b3139] pb-2">
                     <span id="mkt-col-asset">Asset / Ticker</span>
@@ -345,6 +432,7 @@
                 <div id="market-watchlist-container" class="space-y-2 max-h-80 overflow-y-auto pr-1 lang-scroll-list"></div>
             </div>
 
+            <!-- LIÊN KẾT ỨNG DỤNG BÊN THỨ 3: BINANCE, BYBIT, BITGET, OKX -->
             <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
                 <div class="flex items-center justify-between border-b border-[#2b3139] pb-2.5">
                     <div>
@@ -720,7 +808,6 @@
             <button onclick="closeCertificateModal()" id="modal-btn-confirm" class="w-full bn-btn-yellow active:scale-95 py-2.5 rounded-xl text-xs transition shadow">Understood & Confirm</button>
         </div>
     </div>
-
     <!-- BOTTOM NAVIGATION (4 TABS: HOME, MARKETS, WITHDRAWAL, ACCOUNT) -->
     <nav class="fixed bottom-0 left-0 right-0 bg-[#181a20]/95 backdrop-blur-md border-t border-[#2b3139] py-2 px-4 flex justify-around items-center z-40 max-w-4xl mx-auto shadow-2xl">
         <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-[#fcd535] font-bold transition">
@@ -740,6 +827,7 @@
             <span id="nav-account-text" class="text-[10px] mt-1">Account</span>
         </button>
     </nav>
+
     <!-- JAVASCRIPT LOGIC -->
     <script>
         const firebaseConfig = {
@@ -754,7 +842,6 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const rtdb = firebase.database();
 
         const vipConfig = [
             { level: 1, min: 100, rate: 2.00, desc: "~ $2+ / day" },
@@ -889,7 +976,7 @@
             highlight2: "Cada ciclo dura <strong class='text-[#eaecef]'>24 horas</strong> — resgate ao atingir 100%.",
             highlight3: "Precisa de ajuda? Use o botão <strong class='text-[#eaecef]'>Suporte Ao Vivo 24/7</strong>.",
             marketsTitle: "Explorar Mercados e Ações", marketsSubtitle: "Cotações cripto e ações, busca e corretoras parceiras.", marketOpen: "● Mercado Aberto", searchPlaceholder: "Buscar ativo ou ação (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Ações", colAsset: "Ativo / Ticker", colPrice: "Preço e Variação 24h", thirdpartyTitle: "Vincular Apps de Terceiros", thirdpartyDesc: "Conecte ou abra Binance, Bybit, Bitget, OKX.", btnConnectApp: "Vincular", btnLinkedApp: "Vinculado", btnOpenApp: "Abrir",
-            alertFillAuth: "Preencha usuário e senha!", alertWrongPass: "Senha incorreta!", alertAuthSuccess: "Login realizado com sucesso!", alertRateThanks: "Obrigado pela avaliação de 5 estrelas!", alertLoginRequired: "Faça login para realizar esta ação!", alertCopyAddrSuccess: "Endereço copiado: ", alertSaveLinkSuccess: "Endereço vinculado com sucesso!", alertCycleNotFinished: "O ciclo de 24 horas ainda não terminou!", alertClaimSuccess: "Parabéns! Ganhos resgatados: ", alertMinDeposit: "O depósito mínimo é de 100 USDT!", alertDepositSubmitted: "Solicitação enviada! Aguarde aprovação do ADM.", alertActivateSuccess: "Novo acúmulo de 24h ativado!", alertUnlinkedWallet: "Carteira não vinculada! Conclua primeiro a Seção 2.", alertInvalidAmount: "Digite um valor válido!", alertInsuffBalance: "Saldo disponível insuficiente!", alertWithdrawSubmitted: "Solicitação de saque enviada! Aguarde ADM."
+            alertFillAuth: "Preencha usuário e senha!", alertWrongPass: "Senha incorreta!", alertAuthSuccess: "Login realizado com sucesso!", alertRateThanks: "Obrigado pela avaliação de 5 estrelas!", alertLoginRequired: "Faça login para realizar esta ação!", alertCopyAddrSuccess: "Endereço copiado: ", alertSaveLinkSuccess: "Endereço vinculado com sucesso!", alertCycleNotFinished: "O ciclo de 24 horas ainda não terminou!", alertClaimSuccess: "Parabéns! Ganhos resgatados: ", alertMinDeposit: "O depósito mínimo é de 100 USDT!", alertDepositSubmitted: "Solicitação enviada! Aguarde aprovação do ADM.", alertActivateSuccess: "Novo acúmulo de 24h ativado!", alertUnlinkedWallet: "Carteira não vinculada! Conclua primeiro a Seção 2.", alertInvalidAmount: "Digite um valor válido!", alertInsuffBalance: "Saldo disponível insuficiente!", alertWithdrawSubmitted: "Solicitação de saque enviada! Aguardando ADM."
         });
 
         function getTranslation(langCode) {
@@ -906,8 +993,6 @@
         let currentUser = localStorage.getItem('savings_wallet_currentUser') || null;
         let timerInterval = null;
         let hasRated = false;
-        let firestoreChatsCache = [];
-        let rtdbChatsCache = [];
 
         function formatFullTimestamp(ts) {
             const d = new Date(Number(ts) || Date.now());
@@ -918,35 +1003,6 @@
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const year = d.getFullYear();
             return `${hh}:${mm}:${ss} ${day}/${month}/${year}`;
-        }
-
-        function mergeAndRefreshChats() {
-            const byId = new Map();
-            const addItem = (item) => {
-                if (!item || !item.text) return;
-                const ts = Number(item.timestamp) || 0;
-                const uname = String(item.username || 'Guest');
-                const isAdm = Boolean(item.isAdmin);
-                const sigKey = item.firestoreId || `${uname}|${isAdm ? 1 : 0}|${ts}|${String(item.text).trim()}`;
-                if (!byId.has(sigKey)) {
-                    byId.set(sigKey, {
-                        firestoreId: item.firestoreId || sigKey,
-                        username: uname,
-                        text: String(item.text),
-                        isAdmin: isAdm,
-                        timestamp: ts || Date.now()
-                    });
-                }
-            };
-
-            firestoreChatsCache.forEach(addItem);
-            rtdbChatsCache.forEach(addItem);
-            chatMessages.forEach(addItem);
-
-            chatMessages = Array.from(byId.values()).sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
-
-            if (currentUser === 'admin') updateAdminDashboard();
-            if (currentUser) loadUserChatHistory();
         }
 
         function setMarketCategory(cat) {
@@ -1044,10 +1100,10 @@
             db.collection('users').onSnapshot(snapshot => {
                 registeredUsers = [];
                 snapshot.forEach(doc => registeredUsers.push(doc.data()));
-                if (currentUser === 'admin') updateAdminDashboard();
-                if (currentUser && currentUser !== 'admin') {
+                if(currentUser === 'admin') updateAdminDashboard();
+                if(currentUser && currentUser !== 'admin') {
                     const myUser = registeredUsers.find(u => u.username === currentUser);
-                    if (myUser) {
+                    if(myUser) {
                         updateUserBalanceDisplay(myUser);
                         checkPendingActivation(myUser);
                         start24hYieldTimer(myUser);
@@ -1063,45 +1119,22 @@
                     data.firestoreId = doc.id;
                     pendingTx.push(data);
                 });
-                if (currentUser === 'admin') updateAdminDashboard();
-                if (currentUser) loadUserWithdrawalHistory();
+                if(currentUser === 'admin') updateAdminDashboard();
+                if(currentUser) loadUserWithdrawalHistory();
             });
 
-            db.collection('chats').onSnapshot(snapshot => {
-                const list = [];
+            db.collection('chats').orderBy('timestamp', 'asc').onSnapshot(snapshot => {
+                const cloudChats = [];
                 snapshot.forEach(doc => {
                     let data = doc.data();
-                    if (data) {
-                        data.firestoreId = doc.id;
-                        list.push(data);
-                    }
+                    data.firestoreId = doc.id;
+                    cloudChats.push(data);
                 });
-                firestoreChatsCache = list;
-                mergeAndRefreshChats();
+                const localOptimistic = chatMessages.filter(m => m && m._optimistic && !cloudChats.some(c => c.firestoreId === m.firestoreId || (c.username === m.username && c.text === m.text && Math.abs((Number(c.timestamp) || 0) - (Number(m.timestamp) || 0)) < 5000)));
+                chatMessages = cloudChats.concat(localOptimistic).sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
+                if(currentUser === 'admin') updateAdminDashboard();
+                if(currentUser) loadUserChatHistory();
             });
-
-            if (rtdb) {
-                rtdb.ref('admin_backup_chats').on('value', snap => {
-                    const val = snap.val();
-                    const list = [];
-                    if (val && typeof val === 'object') {
-                        Object.keys(val).forEach(k => {
-                            const item = val[k];
-                            if (item) {
-                                list.push({
-                                    firestoreId: k,
-                                    username: item.username,
-                                    text: item.text,
-                                    isAdmin: item.isAdmin,
-                                    timestamp: item.timestamp
-                                });
-                            }
-                        });
-                    }
-                    rtdbChatsCache = list;
-                    mergeAndRefreshChats();
-                });
-            }
         }
 
         window.onload = function() {
@@ -1544,416 +1577,528 @@
                 `;
             }).join('');
         }
+
         function handleAdminSecretClick() {
             adminClickCount++;
-            if(adminClickCount >= 5) {
+            if(adminClickCount >= 5 || (currentUser === 'admin')) {
                 adminClickCount = 0;
-                if(currentUser === 'admin') {
-                    document.getElementById('admin-modal').classList.remove('hidden');
-                    updateAdminDashboard();
-                } else {
-                    openAuthModal();
-                }
+                document.getElementById('admin-modal').classList.remove('hidden');
+                updateAdminDashboard();
             }
         }
-
         function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
 
         function switchAdminTab(tab) {
-            ['users', 'approval', 'rewards', 'chats'].forEach(t => {
-                document.getElementById(`adm-tab-${t}`).className = "flex-1 py-2 text-[#848e9c]";
-                document.getElementById(`adm-content-${t}`).classList.add('hidden');
-            });
-            document.getElementById(`adm-tab-${tab}`).className = "flex-1 py-2 border-b-2 border-[#fcd535] text-[#fcd535]";
-            document.getElementById(`adm-content-${tab}`).classList.remove('hidden');
-            updateAdminDashboard();
+            document.getElementById('adm-content-users').classList.add('hidden');
+            document.getElementById('adm-content-approval').classList.add('hidden');
+            document.getElementById('adm-content-rewards').classList.add('hidden');
+            document.getElementById('adm-content-chats').classList.add('hidden');
+
+            document.getElementById('adm-tab-users').className = "flex-1 py-2 text-[#848e9c]";
+            document.getElementById('adm-tab-approval').className = "flex-1 py-2 text-[#848e9c]";
+            document.getElementById('adm-tab-rewards').className = "flex-1 py-2 text-[#848e9c]";
+            document.getElementById('adm-tab-chats').className = "flex-1 py-2 text-[#848e9c]";
+
+            if(tab === 'users') {
+                document.getElementById('adm-content-users').classList.remove('hidden');
+                document.getElementById('adm-tab-users').className = "flex-1 py-2 border-b-2 border-[#fcd535] text-[#fcd535]";
+            } else if(tab === 'approval') {
+                document.getElementById('adm-content-approval').classList.remove('hidden');
+                document.getElementById('adm-tab-approval').className = "flex-1 py-2 border-b-2 border-[#fcd535] text-[#fcd535]";
+            } else if(tab === 'rewards') {
+                document.getElementById('adm-content-rewards').classList.remove('hidden');
+                document.getElementById('adm-tab-rewards').className = "flex-1 py-2 border-b-2 border-[#fcd535] text-[#fcd535]";
+            } else if(tab === 'chats') {
+                document.getElementById('adm-content-chats').classList.remove('hidden');
+                document.getElementById('adm-tab-chats').className = "flex-1 py-2 border-b-2 border-[#fcd535] text-[#fcd535]";
+            }
         }
 
         function updateAdminDashboard() {
-            if(currentUser !== 'admin') return;
-            const userListContainer = document.getElementById('admin-user-list-container');
-            const targetUserSelect = document.getElementById('admin-target-user');
-            userListContainer.innerHTML = '';
-            targetUserSelect.innerHTML = '';
-
-            registeredUsers.forEach(u => {
-                const isAdm = (u.username === 'admin');
-                const badgeText = isAdm ? '<span class="bg-[#fcd535] text-[#0b0e11] px-1.5 py-0.5 rounded text-[9px] font-bold">ADM</span>' : '';
-                const linkedText = u.linkedWallet ? `<div class="text-[10px] text-[#0ecb81] font-mono break-all">Ví rút: [${u.linkedNetwork || 'TRON (TRC20)'}] ${u.linkedWallet}</div>` : '<div class="text-[10px] text-[#f6465d]">Chưa liên kết ví</div>';
-
-                userListContainer.innerHTML += `
-                    <div class="p-2.5 bg-[#181a20] rounded-lg border border-[#2b3139] space-y-1">
-                        <div class="flex justify-between items-center font-bold text-white">
-                            <span>User: <span class="text-[#fcd535]">${u.username}</span> ${badgeText}</span>
-                            <span class="text-[#0ecb81]">${parseFloat(u.balance || 0).toFixed(2)} USDT</span>
-                        </div>
-                        <div class="text-[10px] text-[#848e9c]">Mật khẩu: <strong class="text-[#eaecef]">${u.password}</strong></div>
-                        <div class="text-[10px] text-[#848e9c] font-mono break-all">Ví nội bộ: ${u.walletAddress || 'Chưa tạo'}</div>
-                        ${linkedText}
-                    </div>
-                `;
-                if (!isAdm) {
-                    targetUserSelect.innerHTML += `<option value="${u.username}">${u.username} (${parseFloat(u.balance || 0).toFixed(2)} USDT)</option>`;
-                }
+            const scrollPositions = {};
+            document.querySelectorAll('[id^="adm-thread-"]').forEach(el => {
+                scrollPositions[el.id] = el.scrollTop;
             });
+            const chatBoxMain = document.getElementById('admin-chat-container');
+            const prevMainScroll = chatBoxMain ? chatBoxMain.scrollTop : 0;
 
-            const pendingList = pendingTx.filter(t => t.status === 'PENDING');
-            document.getElementById('pending-count').innerText = pendingList.length;
-            const approvalContainer = document.getElementById('admin-approval-container');
-            approvalContainer.innerHTML = '';
+            const userContainer = document.getElementById('admin-user-list-container');
+            const selectTarget = document.getElementById('admin-target-user');
+            if(userContainer && selectTarget) {
+                userContainer.innerHTML = '';
+                selectTarget.innerHTML = '<option value="all">Broadcast All</option>';
 
-            if(pendingList.length === 0) {
-                approvalContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">Không có giao dịch chờ duyệt.</div>';
-            } else {
-                pendingList.forEach(t => {
-                    const typeLabel = t.type === 'DEPOSIT' ? '<span class="bg-[#0ecb81]/20 text-[#0ecb81] px-1.5 py-0.5 rounded font-bold text-[10px]">NẠP TIỀN</span>' : '<span class="bg-[#fcd535]/20 text-[#fcd535] px-1.5 py-0.5 rounded font-bold text-[10px]">RÚT TIỀN</span>';
-                    const netInfo = t.network ? `<div class="text-[10px] text-[#fcd535] font-semibold">Mạng: ${t.network}</div>` : '';
-                    const walletInfo = t.targetWallet ? `<div class="text-[10px] text-[#848e9c] font-mono break-all">Ví nhận: ${t.targetWallet}</div>` : '';
-                    const timeStr = formatFullTimestamp(t.timestamp);
+                const sortedUsers = registeredUsers
+                    .filter(u => u && u.username && !u.isAdmin)
+                    .slice()
+                    .sort((a, b) => (Number(a.createdAt || 0) - Number(b.createdAt || 0)) || String(a.username).localeCompare(String(b.username)));
 
-                    approvalContainer.innerHTML += `
-                        <div class="p-2.5 bg-[#181a20] rounded-lg border border-[#2b3139] space-y-2">
+                sortedUsers.forEach(u => {
+                    userContainer.innerHTML += `
+                        <div class="bg-[#181a20] p-2.5 rounded-lg border border-[#2b3139] shadow-sm space-y-1">
                             <div class="flex justify-between items-center">
-                                <span>${typeLabel} User: <strong class="text-white">${t.username}</strong></span>
-                                <span class="font-bold text-[#fcd535]">${t.amount} USDT</span>
+                                <div><b>User:</b> <span class="text-[#fcd535]">${u.username}</span> | <b>Pass:</b> <span class="text-[#f6465d] font-mono">${u.password || ''}</span></div>
+                                <div class="text-[#0ecb81] font-bold">${(Number(u.balance) || 0).toFixed(2)} USDT</div>
                             </div>
-                            <div class="text-[10px] text-[#848e9c]">Thời gian: ${timeStr}</div>
-                            ${netInfo}
-                            ${walletInfo}
-                            <div class="flex space-x-2">
-                                <button onclick="processApproval('${t.firestoreId}', true)" class="flex-1 bg-[#0ecb81] hover:bg-[#0bb572] text-[#0b0e11] font-bold py-1.5 rounded text-xs">Duyệt</button>
-                                <button onclick="processApproval('${t.firestoreId}', false)" class="flex-1 bg-[#f6465d] hover:bg-[#d9384e] text-white font-bold py-1.5 rounded text-xs">Từ chối</button>
-                            </div>
+                            <div class="text-[10px] text-[#848e9c] font-mono">Ví cá nhân: <span class="text-[#eaecef]">${u.walletAddress || 'N/A'}</span></div>
                         </div>
                     `;
+                    selectTarget.innerHTML += `<option value="${u.username}">${u.username}</option>`;
                 });
             }
 
-            const chatContainer = document.getElementById('admin-chat-container');
-            const totalChatCount = chatMessages.filter(m => !m.isAdmin).length;
-            document.getElementById('chat-count').innerText = totalChatCount;
-            chatContainer.innerHTML = '';
+            const approvalContainer = document.getElementById('admin-approval-container');
+            const pendingList = pendingTx
+                .filter(t => t && t.status === 'PENDING')
+                .slice()
+                .sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
 
-            if(chatMessages.length === 0) {
-                chatContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">Chưa có tin nhắn hỗ trợ nào.</div>';
-            } else {
-                const userMessages = chatMessages.filter(m => !m.isAdmin);
-                if(userMessages.length === 0) {
-                    chatContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">Chưa có tin nhắn từ khách hàng.</div>';
+            const pendingCountEl = document.getElementById('pending-count');
+            if (pendingCountEl) pendingCountEl.innerText = pendingList.length;
+
+            if(approvalContainer) {
+                if(pendingList.length === 0) {
+                    approvalContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">No pending requests.</div>';
                 } else {
-                    const uniqueUsers = [...new Set(userMessages.map(m => m.username))];
-                    uniqueUsers.forEach(uname => {
-                        const conv = chatMessages
-                            .filter(m => m.username === uname)
-                            .sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
-                        let convHtml = `<div class="border border-[#2b3139] rounded-lg p-2 bg-[#181a20] space-y-1.5"><div class="font-bold text-[#fcd535] border-b border-[#2b3139] pb-1">Khách hàng: ${uname}</div>`;
-                        conv.forEach(msg => {
-                            const mTime = formatFullTimestamp(msg.timestamp);
-                            convHtml += msg.isAdmin
-                                ? `<div class="bg-[#0ecb81]/15 text-[#0ecb81] p-1.5 rounded text-right text-[11px] border border-[#0ecb81]/25"><div><strong>ADM:</strong> ${msg.text}</div><div class="text-[9px] opacity-75 mt-0.5">${mTime}</div></div>`
-                                : `<div class="bg-[#1e2329] text-[#eaecef] p-1.5 rounded text-[11px] border border-[#2b3139]"><div><strong>${uname}:</strong> ${msg.text}</div><div class="text-[9px] text-[#848e9c] mt-0.5">${mTime}</div></div>`;
-                        });
-                        convHtml += `
-                            <div class="flex space-x-1 pt-1">
-                                <input type="text" id="reply-input-${uname}" placeholder="Trả lời ${uname}..." class="flex-1 bn-input rounded px-2 py-1 text-[11px]">
-                                <button onclick="adminReplyMessage('${uname}')" class="bn-btn-yellow px-2.5 py-1 rounded text-[11px]">Gửi</button>
+                    approvalContainer.innerHTML = '';
+                    pendingList.forEach(t => {
+                        const badgeClass = t.type === 'DEPOSIT' ? 'bg-[#0ecb81]/20 text-[#0ecb81]' : 'bg-[#f6465d]/20 text-[#f6465d]';
+                        approvalContainer.innerHTML += `
+                            <div class="bg-[#181a20] p-2.5 rounded-lg border border-[#2b3139] shadow-sm space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${badgeClass}">${t.type}</span>
+                                        <b class="ml-1 text-white">${t.username}</b>: <span class="text-[#fcd535] font-bold">${t.amount} USDT</span>
+                                        <span class="text-[10px] text-[#848e9c] ml-1.5">(${formatFullTimestamp(t.timestamp)})</span>
+                                    </div>
+                                    <div class="flex space-x-1">
+                                        <button onclick="approveTransaction('${t.firestoreId}')" class="bg-[#0ecb81] text-[#0b0e11] text-[10px] font-extrabold px-2 py-1 rounded hover:bg-[#0bb572]">Approve</button>
+                                        <button onclick="rejectTransaction('${t.firestoreId}')" class="bg-[#2b3139] text-[#eaecef] text-[10px] font-bold px-2 py-1 rounded hover:bg-[#373e47]">Reject</button>
+                                    </div>
+                                </div>
+                                ${t.type === 'WITHDRAW' ? `<div class="text-[10px] text-[#848e9c] font-mono">Network: <b class="text-[#fcd535]">${t.network}</b> | Wallet: <b class="text-[#eaecef]">${t.targetWallet}</b></div>` : ''}
                             </div>
-                        </div>`;
-                        chatContainer.innerHTML += convHtml;
+                        `;
                     });
+                }
+            }
+
+            const chatCountEl = document.getElementById('chat-count');
+            if (chatCountEl) chatCountEl.innerText = chatMessages.length;
+
+            const chatContainer = document.getElementById('admin-chat-container');
+            if(chatContainer) {
+                if(chatMessages.length === 0) {
+                    chatContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">No support chat records.</div>';
+                } else {
+                    chatContainer.innerHTML = '';
+                    const sortedMsgs = chatMessages.slice().sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
+                    const grouped = {};
+                    const userOrder = [];
+
+                    sortedMsgs.forEach(m => {
+                        const keyName = (m && m.username) ? m.username : 'Guest';
+                        if(!grouped[keyName]) {
+                            grouped[keyName] = [];
+                            userOrder.push(keyName);
+                        }
+                        grouped[keyName].push(m);
+                    });
+
+                    userOrder.forEach(uname => {
+                        const threadId = `adm-thread-${encodeURIComponent(uname)}`;
+                        const historyHTML = grouped[uname].map(msg => {
+                            const timeLabel = formatFullTimestamp(msg.timestamp);
+                            if (msg.isAdmin) {
+                                return `
+                                    <div class="flex flex-col items-end">
+                                        <div class="max-w-[85%] bg-[#fcd535]/15 border border-[#fcd535]/30 text-[#fcd535] px-2.5 py-1.5 rounded-xl rounded-br-sm text-[11px] break-words">
+                                            <div class="font-bold text-[10px] mb-0.5">ADM</div>
+                                            <div>${msg.text}</div>
+                                        </div>
+                                        <span class="text-[9px] text-[#848e9c] mt-0.5 font-mono">${timeLabel}</span>
+                                    </div>
+                                `;
+                            }
+                            return `
+                                <div class="flex flex-col items-start">
+                                    <div class="max-w-[85%] bg-[#181a20] border border-[#2b3139] text-[#eaecef] px-2.5 py-1.5 rounded-xl rounded-bl-sm text-[11px] break-words">
+                                        <div class="font-bold text-[10px] text-[#0ecb81] mb-0.5">${uname}</div>
+                                        <div>${msg.text}</div>
+                                    </div>
+                                    <span class="text-[9px] text-[#848e9c] mt-0.5 font-mono">${timeLabel}</span>
+                                </div>
+                            `;
+                        }).join('');
+
+                        const safeDomId = uname.replace(/[^a-zA-Z0-9_-]/g, '_');
+                        chatContainer.innerHTML += `
+                            <div class="bg-[#181a20] p-3 rounded-xl border border-[#2b3139] shadow-sm space-y-2">
+                                <div class="font-bold text-[#fcd535] border-b border-[#2b3139] pb-1 flex justify-between items-center">
+                                    <span>User: ${uname}</span>
+                                    <span class="text-[10px] text-[#848e9c] font-normal">${grouped[uname].length} msgs</span>
+                                </div>
+                                <div id="${threadId}" class="space-y-2 max-h-40 overflow-y-auto bg-[#1e2329] p-2.5 rounded-lg border border-[#2b3139]/60">${historyHTML}</div>
+                                <div class="flex space-x-1.5 pt-1">
+                                    <input type="text" id="adm-reply-${safeDomId}" onkeydown="if(event.key==='Enter'){adminSendReply('${uname.replace(/'/g, "\\'")}','${safeDomId}');}" placeholder="Type reply..." class="flex-1 bn-input rounded-lg px-2.5 py-1.5 text-xs">
+                                    <button onclick="adminSendReply('${uname.replace(/'/g, "\\'")}','${safeDomId}')" class="bn-btn-yellow px-3 py-1.5 rounded-lg text-xs font-bold">Send</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    document.querySelectorAll('[id^="adm-thread-"]').forEach(el => {
+                        if (typeof scrollPositions[el.id] === 'number' && scrollPositions[el.id] > 0) {
+                            el.scrollTop = scrollPositions[el.id];
+                        } else {
+                            el.scrollTop = el.scrollHeight;
+                        }
+                    });
+                    if (prevMainScroll > 0) chatContainer.scrollTop = prevMainScroll;
                 }
             }
         }
 
-        async function processApproval(firestoreId, isApproved) {
+        async function approveTransaction(firestoreId) {
             const tx = pendingTx.find(t => t.firestoreId === firestoreId);
             if(!tx) return;
 
-            if (isApproved) {
-                if (tx.type === 'DEPOSIT') {
-                    await db.collection('users').doc(tx.username).update({
-                        balance: firebase.firestore.FieldValue.increment(tx.amount),
-                        needsActivation: true
-                    });
-                } else if (tx.type === 'WITHDRAW') {
-                    await db.collection('users').doc(tx.username).update({
-                        balance: firebase.firestore.FieldValue.increment(-tx.amount)
-                    });
-                }
+            if(tx.type === 'DEPOSIT') {
+                await db.collection('users').doc(tx.username).update({
+                    balance: firebase.firestore.FieldValue.increment(tx.amount),
+                    needsActivation: true,
+                    depositStartTime: Date.now()
+                });
+            } else if(tx.type === 'WITHDRAW') {
+                await db.collection('users').doc(tx.username).update({
+                    balance: firebase.firestore.FieldValue.increment(-tx.amount)
+                });
             }
-            await db.collection('transactions').doc(firestoreId).update({ status: isApproved ? 'APPROVED' : 'REJECTED' });
-            alert(isApproved ? `Đã DUYỆT giao dịch ${tx.type} cho ${tx.username}!` : `Đã TỪ CHỐI giao dịch của ${tx.username}!`);
+
+            await db.collection('transactions').doc(firestoreId).update({ status: 'APPROVED' });
+            alert("Transaction approved successfully!");
+        }
+
+        async function rejectTransaction(firestoreId) {
+            await db.collection('transactions').doc(firestoreId).update({ status: 'REJECTED' });
+            alert("Transaction rejected!");
         }
 
         async function adminExecuteReward() {
-            const targetUser = document.getElementById('admin-target-user').value;
             const amt = parseFloat(document.getElementById('admin-reward-amount').value);
-            if(!targetUser || isNaN(amt) || amt <= 0) { alert("Vui lòng chọn người dùng và số tiền thưởng hợp lệ!"); return; }
+            const target = document.getElementById('admin-target-user').value;
+            if(!amt || amt <= 0) { alert("Please enter valid amount!"); return; }
 
-            await db.collection('users').doc(targetUser).update({
-                balance: firebase.firestore.FieldValue.increment(amt),
-                needsActivation: true
-            });
-            document.getElementById('admin-reward-amount').value = '';
-            alert(`Đã thưởng thành công ${amt} USDT cho ${targetUser}!`);
-        }
-
-        function openSupportChat() {
-            const t = getTranslation(currentLang);
-            if(!currentUser) { alert(t.alertLoginRequired); openAuthModal(); return; }
-            document.getElementById('support-chat-modal').classList.remove('hidden');
-            loadUserChatHistory();
-        }
-
-        function closeSupportChat() { document.getElementById('support-chat-modal').classList.add('hidden'); }
-
-        async function sendUserMessage() {
-            const t = getTranslation(currentLang);
-            if(!currentUser) { alert(t.alertLoginRequired); return; }
-            const input = document.getElementById('user-chat-input');
-            const msgText = input.value.trim();
-            if(!msgText) return;
-
-            const ts = Date.now();
-            const newMsg = {
-                username: currentUser,
-                text: msgText,
-                isAdmin: false,
-                timestamp: ts
-            };
-
-            input.value = '';
-            chatMessages.push(newMsg);
-            loadUserChatHistory();
-            if (currentUser === 'admin') updateAdminDashboard();
-
-            if (rtdb) {
-                rtdb.ref('admin_backup_chats').push(newMsg).catch(() => {});
+            if(target === 'all') {
+                const batch = db.batch();
+                registeredUsers.filter(u => u && u.username && !u.isAdmin).forEach(u => {
+                    const ref = db.collection('users').doc(u.username);
+                    batch.update(ref, {
+                        balance: firebase.firestore.FieldValue.increment(amt),
+                        needsActivation: true,
+                        depositStartTime: Date.now()
+                    });
+                });
+                await batch.commit();
+                alert(`Broadcasted ${amt} USDT to all users successfully!`);
+            } else {
+                const userRef = db.collection('users').doc(target);
+                const userDoc = await userRef.get();
+                if(!userDoc.exists) { alert("User not found!"); return; }
+                const curBal = userDoc.data().balance || 0;
+                await userRef.update({
+                    balance: curBal + amt,
+                    needsActivation: true,
+                    depositStartTime: Date.now()
+                });
+                alert(`Added ${amt} USDT to [${target}] successfully!`);
             }
-            try {
-                await db.collection('chats').add(newMsg);
-            } catch(e) {}
+
+            document.getElementById('admin-reward-amount').value = '';
+            closeAdminModal();
+            updateAdminDashboard();
         }
 
-        async function adminReplyMessage(targetUser) {
-            const input = document.getElementById(`reply-input-${targetUser}`);
-            if(!input) return;
-            const replyText = input.value.trim();
-            if(!replyText) return;
+        async function adminSendReply(username, safeDomId) {
+            const domKey = safeDomId || username.replace(/[^a-zA-Z0-9_-]/g, '_');
+            const inputEl = document.getElementById(`adm-reply-${domKey}`) || document.getElementById(`adm-reply-${username}`);
+            if(!inputEl) return;
+            const text = inputEl.value.trim();
+            if(!text) return;
 
             const ts = Date.now();
-            const replyMsg = {
-                username: targetUser,
-                text: replyText,
+            const docId = `chat_${ts}_adm_${encodeURIComponent(username)}_${Math.random().toString(36).slice(2, 6)}`;
+            const newMsg = {
+                firestoreId: docId,
+                username: username,
+                text: text,
                 isAdmin: true,
-                timestamp: ts
+                timestamp: ts,
+                _optimistic: true
             };
 
-            input.value = '';
-            chatMessages.push(replyMsg);
+            inputEl.value = '';
+            chatMessages.push(newMsg);
             updateAdminDashboard();
 
-            if (rtdb) {
-                rtdb.ref('admin_backup_chats').push(replyMsg).catch(() => {});
+            const threadEl = document.getElementById(`adm-thread-${encodeURIComponent(username)}`);
+            if (threadEl) threadEl.scrollTop = threadEl.scrollHeight;
+
+            if (typeof syncChatBackup === 'function') {
+                syncChatBackup(newMsg, docId);
             }
             try {
-                await db.collection('chats').add(replyMsg);
-            } catch(e) {}
+                await db.collection('chats').doc(docId).set({
+                    username: username,
+                    text: text,
+                    isAdmin: true,
+                    timestamp: ts
+                });
+                newMsg._optimistic = false;
+            } catch (e) {}
         }
+
+        function openSupportChat() { document.getElementById('support-chat-modal').classList.remove('hidden'); loadUserChatHistory(); }
+        function closeSupportChat() { document.getElementById('support-chat-modal').classList.add('hidden'); }
 
         function loadUserChatHistory() {
             const box = document.getElementById('chat-messages-box');
-            if(!box || !currentUser) return;
             const t = getTranslation(currentLang);
             box.innerHTML = `<div id="chat-welcome-msg" class="bg-[#fcd535]/15 text-[#fcd535] p-2 rounded-lg border border-[#fcd535]/25">${t.chatWelcomeMsg}</div>`;
+            if(!currentUser) return;
 
-            const myChats = chatMessages
+            const userChats = chatMessages
                 .filter(m => m.username === currentUser)
+                .slice()
                 .sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
 
-            myChats.forEach(m => {
-                const mTime = formatFullTimestamp(m.timestamp);
+            userChats.forEach(m => {
+                const timeLabel = formatFullTimestamp(m.timestamp);
                 if(m.isAdmin) {
-                    box.innerHTML += `<div class="bg-[#0ecb81]/15 text-[#0ecb81] p-2 rounded-lg text-left border border-[#0ecb81]/25"><div><strong>ADM:</strong> ${m.text}</div><div class="text-[9px] opacity-75 mt-0.5">${mTime}</div></div>`;
+                    box.innerHTML += `
+                        <div class="flex flex-col items-start">
+                            <div class="bg-[#fcd535]/15 text-[#fcd535] p-2 rounded-lg text-left max-w-[85%] break-words"><b>ADM:</b> ${m.text}</div>
+                            <span class="text-[9px] text-[#848e9c] mt-0.5 font-mono">${timeLabel}</span>
+                        </div>
+                    `;
                 } else {
-                    box.innerHTML += `<div class="bg-[#181a20] text-[#eaecef] p-2 rounded-lg text-right border border-[#2b3139]"><div><strong>${t.authTitle.split('/')[0].trim()}:</strong> ${m.text}</div><div class="text-[9px] text-[#848e9c] mt-0.5">${mTime}</div></div>`;
+                    box.innerHTML += `
+                        <div class="flex flex-col items-end">
+                            <div class="bg-[#181a20] text-[#eaecef] p-2 rounded-lg text-right border border-[#2b3139] max-w-[85%] break-words"><b>You (${currentUser}):</b> ${m.text}</div>
+                            <span class="text-[9px] text-[#848e9c] mt-0.5 font-mono">${timeLabel}</span>
+                        </div>
+                    `;
                 }
             });
             box.scrollTop = box.scrollHeight;
         }
 
-        function toggleLangMenu() {
-            document.getElementById('lang-dropdown').classList.toggle('hidden');
+        async function sendUserMessage() {
+            const txt = document.getElementById('user-chat-input').value.trim();
+            if(!txt) return;
+            const name = currentUser ? currentUser : 'Guest';
+            const ts = Date.now();
+            const docId = `chat_${ts}_${encodeURIComponent(name)}_${Math.random().toString(36).slice(2, 6)}`;
+            const newMsg = {
+                firestoreId: docId,
+                username: name,
+                text: txt,
+                isAdmin: false,
+                timestamp: ts,
+                _optimistic: true
+            };
+
+            document.getElementById('user-chat-input').value = '';
+            chatMessages.push(newMsg);
+            loadUserChatHistory();
+            if (currentUser === 'admin') updateAdminDashboard();
+
+            if (typeof syncChatBackup === 'function') {
+                syncChatBackup(newMsg, docId);
+            }
+            try {
+                await db.collection('chats').doc(docId).set({
+                    username: name,
+                    text: txt,
+                    isAdmin: false,
+                    timestamp: ts
+                });
+                newMsg._optimistic = false;
+            } catch (e) {}
         }
 
-        function selectLanguage(langCode, langText) {
-            currentLang = langCode;
-            localStorage.setItem('savings_wallet_lang', langCode);
-            document.getElementById('current-lang-text').innerText = langText;
-            const authSel = document.getElementById('auth-lang-select');
-            if (authSel) authSel.value = langCode;
-            document.getElementById('lang-dropdown').classList.add('hidden');
+        function toggleLangMenu() { document.getElementById('lang-dropdown').classList.toggle('hidden'); }
 
-            const t = getTranslation(langCode);
-            document.getElementById('txt-app-title').innerText = t.appTitle;
-            document.getElementById('banner-title').innerText = t.bannerTitle;
-            document.getElementById('banner-subtitle').innerText = t.bannerSubtitle;
-            document.getElementById('banner-desc').innerText = t.bannerDesc;
-            document.getElementById('btn-cert-text').innerText = t.btnCert;
-            document.getElementById('btn-deposit-hub').innerText = t.btnDepositHub;
-            document.getElementById('pool-data-title').innerHTML = `<i class="fa-solid fa-server text-[#fcd535]"></i><span>${t.poolDataTitle}</span>`;
-            document.getElementById('label-total-output').innerText = t.totalOutput;
-            document.getElementById('label-valid-nodes').innerText = t.validNodes;
-            document.getElementById('label-participants').innerText = t.participants;
-            document.getElementById('label-user-revenue').innerText = t.userRevenue;
-            document.getElementById('output-details-title').innerHTML = `<i class="fa-solid fa-list-check text-[#0ecb81]"></i><span>${t.outputDetailsTitle}</span>`;
-            document.getElementById('table-addr').innerText = t.tableAddr;
-            document.getElementById('table-qty').innerText = t.tableQty;
+        function setTextIfExists(id, val) {
+            const el = document.getElementById(id);
+            if (el && typeof val === 'string') el.innerText = val;
+        }
 
-            if (document.getElementById('qa-deposit-title')) document.getElementById('qa-deposit-title').innerText = t.qaDepositTitle;
-            if (document.getElementById('qa-deposit-sub')) document.getElementById('qa-deposit-sub').innerText = t.qaDepositSub;
-            if (document.getElementById('qa-payout-title')) document.getElementById('qa-payout-title').innerText = t.qaPayoutTitle;
-            if (document.getElementById('qa-payout-sub')) document.getElementById('qa-payout-sub').innerText = t.qaPayoutSub;
-            if (document.getElementById('qa-yield-title')) document.getElementById('qa-yield-title').innerText = t.qaYieldTitle;
-            if (document.getElementById('qa-yield-sub')) document.getElementById('qa-yield-sub').innerText = t.qaYieldSub;
-            if (document.getElementById('badge-live-telemetry')) document.getElementById('badge-live-telemetry').innerText = t.liveTelemetry;
-            if (document.getElementById('lbl-realtime-blocks')) document.getElementById('lbl-realtime-blocks').innerText = t.realtimeBlocks;
-            if (document.getElementById('highlights-title')) document.getElementById('highlights-title').innerText = t.highlightsTitle;
-            if (document.getElementById('highlight-1')) document.getElementById('highlight-1').innerHTML = `<i class="fa-solid fa-check-circle text-[#0ecb81] mt-0.5 shrink-0"></i><span>${t.highlight1}</span>`;
-            if (document.getElementById('highlight-2')) document.getElementById('highlight-2').innerHTML = `<i class="fa-solid fa-clock text-[#fcd535] mt-0.5 shrink-0"></i><span>${t.highlight2}</span>`;
-            if (document.getElementById('highlight-3')) document.getElementById('highlight-3').innerHTML = `<i class="fa-solid fa-headset text-purple-400 mt-0.5 shrink-0"></i><span>${t.highlight3}</span>`;
+        function setHtmlIfExists(id, val) {
+            const el = document.getElementById(id);
+            if (el && typeof val === 'string') el.innerHTML = val;
+        }
 
-            if (document.getElementById('markets-title')) document.getElementById('markets-title').innerHTML = `<i class="fa-solid fa-arrow-trend-up text-[#fcd535]"></i><span>${t.marketsTitle}</span>`;
-            if (document.getElementById('markets-subtitle')) document.getElementById('markets-subtitle').innerText = t.marketsSubtitle;
-            if (document.getElementById('market-status-badge')) document.getElementById('market-status-badge').innerText = t.marketOpen;
-            if (document.getElementById('market-search-input')) document.getElementById('market-search-input').placeholder = t.searchPlaceholder;
-            if (document.getElementById('mcat-all')) document.getElementById('mcat-all').innerText = t.filterAll;
-            if (document.getElementById('mcat-crypto')) document.getElementById('mcat-crypto').innerText = t.filterCrypto;
-            if (document.getElementById('mcat-stocks')) document.getElementById('mcat-stocks').innerText = t.filterStocks;
-            if (document.getElementById('mkt-col-asset')) document.getElementById('mkt-col-asset').innerText = t.colAsset;
-            if (document.getElementById('mkt-col-price')) document.getElementById('mkt-col-price').innerText = t.colPrice;
-            if (document.getElementById('thirdparty-title')) document.getElementById('thirdparty-title').innerHTML = `<i class="fa-solid fa-link text-[#fcd535]"></i><span>${t.thirdpartyTitle}</span>`;
-            if (document.getElementById('thirdparty-desc')) document.getElementById('thirdparty-desc').innerText = t.thirdpartyDesc;
+        function selectLanguage(code, name) {
+            currentLang = code;
+            localStorage.setItem('savings_wallet_lang', code);
+            setTextIfExists('current-lang-text', name);
+            const dd = document.getElementById('lang-dropdown');
+            if (dd) dd.classList.add('hidden');
 
-            document.getElementById('withdrawal-title').innerText = t.withdrawalTitle;
-            document.getElementById('withdrawal-label').innerText = t.withdrawalLabel;
-            document.getElementById('withdrawal-btn').innerText = t.withdrawalBtn;
-            document.getElementById('link-wallet-title').innerText = t.linkWalletTitle;
-            document.getElementById('link-wallet-desc').innerText = t.linkWalletDesc;
-            document.getElementById('lbl-withdraw-net').innerText = t.lblWithdrawNet;
-            document.getElementById('lbl-linked-target').innerText = t.lblLinkedTarget;
-            document.getElementById('lbl-link-net').innerText = t.lblLinkNet;
-            document.getElementById('lbl-link-addr').innerText = t.lblLinkAddr;
-            document.getElementById('btn-save-link').innerText = t.btnSaveLink;
-            document.getElementById('history-title').innerText = t.historyTitle;
-            document.getElementById('history-subtitle').innerText = t.historySubtitle;
-            const historyEmptyEl = document.getElementById('history-empty');
-            if(historyEmptyEl) historyEmptyEl.innerText = t.historyEmpty;
-            document.getElementById('lbl-my-addr').innerText = t.lblMyAddr;
-            document.getElementById('btn-copy-text').innerText = t.btnCopyText;
-            document.getElementById('btn-copy-deposit-addr').innerText = t.copyBtnText;
-            if(document.getElementById('btn-logout-text')) document.getElementById('btn-logout-text').innerText = t.btnLogoutText;
+            const authSelect = document.getElementById('auth-lang-select');
+            if(authSelect) authSelect.value = code;
 
-            if(document.getElementById('vip-system-title')) document.getElementById('vip-system-title').innerHTML = `<i class="fa-solid fa-crown text-[#fcd535]"></i><span>${t.vipSystemTitle}</span>`;
-            if(document.getElementById('vip-system-sub')) document.getElementById('vip-system-sub').innerText = t.vipSystemSub;
+            const t = getTranslation(code);
 
-            document.getElementById('act-banner-title').innerText = t.actTitle;
-            document.getElementById('act-banner-desc').innerText = t.actDesc;
-            document.getElementById('btn-activate-now').innerText = t.actBtn;
+            setTextIfExists('txt-app-title', t.appTitle);
+            setTextIfExists('banner-title', t.bannerTitle);
+            setTextIfExists('banner-subtitle', t.bannerSubtitle);
+            setTextIfExists('banner-desc', t.bannerDesc);
+            setTextIfExists('btn-deposit-hub', t.btnDepositHub);
+            setTextIfExists('btn-cert-text', t.btnCert);
+            setTextIfExists('pool-data-title', t.poolDataTitle);
+            setTextIfExists('label-total-output', t.totalOutput);
+            setTextIfExists('label-valid-nodes', t.validNodes);
+            setTextIfExists('label-participants', t.participants);
+            setTextIfExists('label-user-revenue', t.userRevenue);
+            setTextIfExists('output-details-title', t.outputDetailsTitle);
+            setTextIfExists('table-addr', t.tableAddr);
+            setTextIfExists('table-qty', t.tableQty);
+            setTextIfExists('withdrawal-title', t.withdrawalTitle);
+            setTextIfExists('withdrawal-label', t.withdrawalLabel);
+            setTextIfExists('withdrawal-btn', t.withdrawalBtn);
+            setTextIfExists('acc-accumulated', t.accAccumulated);
+            setTextIfExists('acc-today', t.accToday);
+            setTextIfExists('acc-yield', t.accYield);
+            setTextIfExists('acc-pool-wallet', t.accPoolWallet);
+            setTextIfExists('acc-wallet-bal', t.accWalletBal);
+            setTextIfExists('nav-home-text', t.navHome);
+            setTextIfExists('nav-markets-text', t.navMarkets);
+            setTextIfExists('nav-withdrawal-text', t.navWithdrawal);
+            setTextIfExists('nav-account-text', t.navAccount);
+            setTextIfExists('btn-quick-deposit', t.btnQuickDeposit);
+            setTextIfExists('support-tooltip', t.tooltipSupport);
+            setTextIfExists('chat-title', t.chatTitle);
+            setTextIfExists('chat-status', t.chatStatus);
+            setTextIfExists('chat-welcome-msg', t.chatWelcomeMsg);
+            const chatInput = document.getElementById('user-chat-input');
+            if (chatInput) chatInput.placeholder = t.chatPlaceholder;
+            setTextIfExists('btn-chat-send', t.btnChatSend);
 
-            document.getElementById('acc-accumulated').innerText = t.accAccumulated;
-            document.getElementById('acc-today').innerText = t.accToday;
-            document.getElementById('btn-claim-income').innerText = t.btnClaim;
-            document.getElementById('lbl-timer-24h').innerText = t.timerTitle;
-            document.getElementById('lbl-cycle-start').innerText = t.startLabel;
-            document.getElementById('lbl-cycle-end').innerText = t.endLabel;
-            document.getElementById('acc-yield').innerText = t.accYield;
-            document.getElementById('acc-pool-wallet').innerText = t.accPoolWallet;
-            document.getElementById('acc-wallet-bal').innerText = t.accWalletBal;
+            setTextIfExists('modal-cert-title', t.certTitle);
+            setTextIfExists('modal-cert-subtitle', t.certSubtitle);
+            setTextIfExists('modal-lbl-op', t.lblOp);
+            setTextIfExists('modal-val-op', t.valOp);
+            setTextIfExists('modal-lbl-tech', t.lblTech);
+            setTextIfExists('modal-val-tech', t.valTech);
+            setTextIfExists('modal-lbl-custody', t.lblCustody);
+            setTextIfExists('modal-val-custody', t.valCustody);
+            setTextIfExists('modal-lbl-net', t.lblNet);
+            setTextIfExists('modal-val-net', t.valNet);
+            setTextIfExists('modal-btn-confirm', t.btnConfirm);
 
-            document.getElementById('nav-home-text').innerText = t.navHome;
-            document.getElementById('nav-markets-text').innerText = t.navMarkets;
-            document.getElementById('nav-withdrawal-text').innerText = t.navWithdrawal;
-            document.getElementById('nav-account-text').innerText = t.navAccount;
-            document.getElementById('btn-quick-deposit').innerText = t.btnQuickDeposit;
-            document.getElementById('support-tooltip').innerText = t.tooltipSupport;
+            setTextIfExists('badge-secure-vault', t.badgeSecure);
+            setTextIfExists('auth-title', t.authTitle);
+            setTextIfExists('auth-desc', t.authDesc);
+            setTextIfExists('lbl-username', t.usernameLbl);
+            setTextIfExists('lbl-password', t.passwordLbl);
+            setTextIfExists('btn-auth-submit', t.authBtn);
+            setTextIfExists('modal-deposit-title', t.modalDepTitle);
+            setTextIfExists('modal-deposit-desc', t.modalDepDesc);
+            setTextIfExists('lbl-deposit-amt', t.depAmtLbl);
+            setTextIfExists('lbl-deposit-return', t.depRetLbl);
+            setTextIfExists('btn-submit-deposit', t.depBtn);
+            setTextIfExists('btn-copy-deposit-addr', t.copyBtnText);
 
-            document.getElementById('chat-title').innerText = t.chatTitle;
-            document.getElementById('chat-status').innerText = t.chatStatus;
-            const welcomeMsgEl = document.getElementById('chat-welcome-msg');
-            if(welcomeMsgEl) welcomeMsgEl.innerText = t.chatWelcomeMsg;
-            document.getElementById('user-chat-input').placeholder = t.chatPlaceholder;
-            document.getElementById('btn-chat-send').innerText = t.btnChatSend;
+            setTextIfExists('welcome-user-title', t.welcomeTitle);
+            setTextIfExists('welcome-user-sub', t.welcomeSub);
+            setTextIfExists('review-prompt-text', t.reviewPrompt);
+            setTextIfExists('review-prompt-sub', t.reviewPromptSub);
+            setTextIfExists('ticker-label-home', t.tickerLabel);
+            setTextIfExists('ticker-label-withdraw', t.tickerLabel);
 
-            document.getElementById('modal-cert-title').innerText = t.certTitle;
-            document.getElementById('modal-cert-subtitle').innerText = t.certSubtitle;
-            document.getElementById('modal-lbl-op').innerText = t.lblOp;
-            document.getElementById('modal-val-op').innerText = t.valOp;
-            document.getElementById('modal-lbl-tech').innerText = t.lblTech;
-            document.getElementById('modal-val-tech').innerText = t.valTech;
-            document.getElementById('modal-lbl-custody').innerText = t.lblCustody;
-            document.getElementById('modal-val-custody').innerText = t.valCustody;
-            document.getElementById('modal-lbl-net').innerText = t.lblNet;
-            document.getElementById('modal-val-net').innerText = t.valNet;
-            document.getElementById('modal-btn-confirm').innerText = t.btnConfirm;
+            setTextIfExists('qa-deposit-title', t.qaDepositTitle);
+            setTextIfExists('qa-deposit-sub', t.qaDepositSub);
+            setTextIfExists('qa-payout-title', t.qaPayoutTitle);
+            setTextIfExists('qa-payout-sub', t.qaPayoutSub);
+            setTextIfExists('qa-yield-title', t.qaYieldTitle);
+            setTextIfExists('qa-yield-sub', t.qaYieldSub);
+            setTextIfExists('badge-live-telemetry', t.liveTelemetry);
+            setTextIfExists('lbl-realtime-blocks', t.realtimeBlocks);
+            setTextIfExists('highlights-title', t.highlightsTitle);
+            setHtmlIfExists('highlight-1', `<i class="fa-solid fa-check-circle text-[#0ecb81] mt-0.5 shrink-0"></i><span>${t.highlight1}</span>`);
+            setHtmlIfExists('highlight-2', `<i class="fa-solid fa-clock text-[#fcd535] mt-0.5 shrink-0"></i><span>${t.highlight2}</span>`);
+            setHtmlIfExists('highlight-3', `<i class="fa-solid fa-headset text-purple-400 mt-0.5 shrink-0"></i><span>${t.highlight3}</span>`);
 
-            document.getElementById('auth-title').innerText = t.authTitle;
-            document.getElementById('auth-desc').innerText = t.authDesc;
-            document.getElementById('lbl-username').innerText = t.usernameLbl;
-            document.getElementById('lbl-password').innerText = t.passwordLbl;
-            document.getElementById('btn-auth-submit').innerText = t.authBtn;
+            setTextIfExists('markets-title', t.marketsTitle);
+            setTextIfExists('markets-subtitle', t.marketsSubtitle);
+            setTextIfExists('market-status-badge', t.marketOpen);
+            const mSearch = document.getElementById('market-search-input');
+            if (mSearch) mSearch.placeholder = t.searchPlaceholder;
+            setTextIfExists('mcat-all', t.filterAll);
+            setTextIfExists('mcat-crypto', t.filterCrypto);
+            setTextIfExists('mcat-stocks', t.filterStocks);
+            setTextIfExists('mkt-col-asset', t.colAsset);
+            setTextIfExists('mkt-col-price', t.colPrice);
+            setTextIfExists('thirdparty-title', t.thirdpartyTitle);
+            setTextIfExists('thirdparty-desc', t.thirdpartyDesc);
 
-            document.getElementById('modal-deposit-title').innerText = t.modalDepTitle;
-            document.getElementById('modal-deposit-desc').innerText = t.modalDepDesc;
-            document.getElementById('lbl-deposit-amt').innerText = t.depAmtLbl;
-            document.getElementById('lbl-deposit-return').innerText = t.depRetLbl;
-            document.getElementById('btn-submit-deposit').innerText = t.depBtn;
-
-            document.getElementById('welcome-user-title').innerText = t.welcomeTitle;
-            document.getElementById('welcome-user-sub').innerText = t.welcomeSub;
-            document.getElementById('review-prompt-text').innerText = t.reviewPrompt;
-            document.getElementById('review-prompt-sub').innerText = t.reviewPromptSub;
-            document.getElementById('ticker-label-home').innerText = t.tickerLabel;
-            document.getElementById('ticker-label-withdraw').innerText = t.tickerLabel;
+            setTextIfExists('link-wallet-title', t.linkWalletTitle);
+            setTextIfExists('link-wallet-desc', t.linkWalletDesc);
+            setTextIfExists('lbl-withdraw-net', t.lblWithdrawNet);
+            setTextIfExists('lbl-linked-target', t.lblLinkedTarget);
+            setTextIfExists('lbl-link-net', t.lblLinkNet);
+            setTextIfExists('lbl-link-addr', t.lblLinkAddr);
+            setTextIfExists('btn-save-link', t.btnSaveLink);
+            setTextIfExists('history-title', t.historyTitle);
+            setTextIfExists('history-subtitle', t.historySubtitle);
+            setTextIfExists('history-empty', t.historyEmpty);
+            setTextIfExists('lbl-my-addr', t.lblMyAddr);
+            setTextIfExists('btn-copy-text', t.btnCopyText);
+            setTextIfExists('btn-logout-text', t.btnLogoutText);
+            setHtmlIfExists('vip-system-title', `<i class="fa-solid fa-crown text-[#fcd535]"></i><span>${t.vipSystemTitle}</span>`);
+            setTextIfExists('vip-system-sub', t.vipSystemSub);
+            setTextIfExists('act-banner-title', t.actTitle);
+            setTextIfExists('act-banner-desc', t.actDesc);
+            setTextIfExists('btn-activate-now', t.actBtn);
+            setTextIfExists('btn-claim-income', t.btnClaim);
+            setTextIfExists('lbl-timer-24h', t.timerTitle);
+            setTextIfExists('lbl-cycle-start', t.startLabel);
+            setTextIfExists('lbl-cycle-end', t.endLabel);
 
             renderVipTiers();
             renderMarketWatchlist();
             renderExchangeConnectors();
+            loadUserWithdrawalHistory();
+
             if(currentUser) {
-                const myUser = registeredUsers.find(u => u.username === currentUser);
-                loadUserWalletInfo(myUser);
-                loadUserChatHistory();
-                loadUserWithdrawalHistory();
-                updateUserBalanceDisplay(myUser);
+                const myUserObj = registeredUsers.find(u => u.username === currentUser);
+                if(myUserObj) {
+                    loadUserWalletInfo(myUserObj);
+                    updateUserBalanceDisplay(myUserObj);
+                }
+            } else {
+                document.getElementById('auth-nav-btn').innerText = t.authTitle || "Login / Register";
+                document.getElementById('user-tier-badge').innerText = `VIP 1 (2.00% ${t.vipTierUnit || '/ day'})`;
+                loadUserWalletInfo(null);
             }
         }
 
-        function switchTab(tabName) {
-            ['home', 'markets', 'withdrawal', 'account'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
-                document.getElementById(`nav-${t}`).classList.remove('text-[#fcd535]', 'font-bold');
-                document.getElementById(`nav-${t}`).classList.add('text-[#848e9c]', 'font-medium');
+        function switchTab(tab) {
+            ['tab-home', 'tab-markets', 'tab-withdrawal', 'tab-account'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            ['nav-home', 'nav-markets', 'nav-withdrawal', 'nav-account'].forEach(id => {
+                const navEl = document.getElementById(id);
+                if (navEl) navEl.className = "flex flex-col items-center text-[#848e9c] hover:text-[#eaecef] font-medium transition";
             });
 
-            const activePanel = document.getElementById(`tab-${tabName}`);
-            activePanel.classList.remove('hidden');
-            activePanel.classList.remove('tab-panel-enter');
-            void activePanel.offsetWidth;
-            activePanel.classList.add('tab-panel-enter');
-
-            const activeNav = document.getElementById(`nav-${tabName}`);
-            activeNav.classList.remove('text-[#848e9c]', 'font-medium');
-            activeNav.classList.add('text-[#fcd535]', 'font-bold');
-
-            if(tabName === 'markets') {
-                renderMarketWatchlist();
-                renderExchangeConnectors();
-            }
-            if(tabName === 'withdrawal' && currentUser) {
-                loadUserWithdrawalHistory();
-                const myUser = registeredUsers.find(u => u.username === currentUser);
-                loadUserWalletInfo(myUser);
-            }
+            const activePanel = document.getElementById(`tab-${tab}`);
+            const activeNav = document.getElementById(`nav-${tab}`);
+            if (activePanel) activePanel.classList.remove('hidden');
+            if (activeNav) activeNav.className = "flex flex-col items-center text-[#fcd535] font-bold transition";
         }
 
         function openCertificateModal() { document.getElementById('certificate-modal').classList.remove('hidden'); }
@@ -1961,353 +2106,242 @@
 
         async function fetchBNBMarketData() {
             try {
-                const response = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT');
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd&include_24hr_change=true');
                 const data = await response.json();
-                const price = parseFloat(data.lastPrice).toFixed(2);
-                const change = parseFloat(data.priceChangePercent).toFixed(2);
-                const sign = change >= 0 ? '+' : '';
-                const colorClass = change >= 0 ? 'text-[#0ecb81]' : 'text-[#f6465d]';
-
-                document.getElementById('bnb-price-usd').innerText = `$${price} USDT`;
-                document.getElementById('bnb-market-rate').innerHTML = `<span class="${colorClass}">${sign}${change}% (24h)</span>`;
-            } catch (e) {
-                document.getElementById('bnb-price-usd').innerText = `$600.00 USDT`;
-                document.getElementById('bnb-market-rate').innerHTML = `<span class="text-[#0ecb81]">+2.50% (24h)</span>`;
+                if (data && data.binancecoin) {
+                    const priceUSD = data.binancecoin.usd;
+                    document.getElementById('bnb-price-usd').innerText = `$${priceUSD.toLocaleString()} USDT`;
+                    document.getElementById('bnb-market-rate').innerHTML = `<span class="text-[#0ecb81]">+3.00%</span>`;
+                }
+            } catch (error) {
+                document.getElementById('bnb-market-rate').innerText = "+3.00%";
+                document.getElementById('bnb-price-usd').innerText = "600.00 USDT";
             }
         }
+
+        let baseOutput = 9153176.23;
+        let baseNodes = 590026;
+        let baseParticipants = 760435;
+        let baseRevenue = 1492587121.89;
+
+        setInterval(() => {
+            const deltaOutput = (Math.random() - 0.48) * 120;
+            const deltaNodes = Math.floor((Math.random() - 0.48) * 9);
+            const deltaParticipants = Math.floor((Math.random() - 0.48) * 15);
+            const deltaRevenue = (Math.random() - 0.48) * 50000;
+
+            baseOutput += deltaOutput;
+            baseNodes += deltaNodes;
+            baseParticipants += deltaParticipants;
+            baseRevenue += deltaRevenue;
+
+            if(baseRevenue < 1400000000) baseRevenue = 1492587121.89;
+
+            document.getElementById('val-total-output').innerText = baseOutput.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " BNB";
+            document.getElementById('val-valid-nodes').innerText = baseNodes.toLocaleString();
+            document.getElementById('val-participants').innerText = baseParticipants.toLocaleString();
+            document.getElementById('val-user-revenue').innerText = "≈ " + baseRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " USDT";
+        }, 45000);
+
+        setInterval(() => {
+            const list = document.getElementById('output-list');
+            if (list) {
+                const newItem = document.createElement('div');
+                newItem.className = 'flex justify-between items-center animate-fade-in';
+                newItem.innerHTML = `
+                    <span class="text-[#fcd535] font-medium">0x${Math.floor(Math.random()*1e6).toString(16)}...${Math.floor(Math.random()*1e4).toString(16)}</span>
+                    <span class="font-semibold text-[#eaecef]">${(Math.random() * 0.08 + 0.01).toFixed(6)} BNB</span>
+                `;
+                list.insertBefore(newItem, list.firstChild);
+                if (list.children.length > 5) list.removeChild(list.lastChild);
+            }
+        }, 3000);
     </script>
 
-    <!-- REALTIME FALLBACK SYNC -->
+    <!-- ĐỒNG BỘ & KHÔI PHỤC DỰ PHÒNG TOÀN BỘ LỊCH SỬ ADMIN TRÊN CLOUD (FIRESTORE + REALTIME DATABASE) -->
     <script>
     (function() {
-        function getDb() {
-            if (window.firebase && firebase.apps && firebase.apps.length) {
-                return firebase.database();
-            }
-            return null;
+        const rtdb = (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length)
+            ? firebase.database()
+            : null;
+
+        function safeNum(v) {
+            const n = Number(v);
+            return Number.isFinite(n) ? n : 0;
         }
 
-        function bindRtdbListeners() {
-            const rdb = getDb();
-            if (!rdb) {
-                setTimeout(bindRtdbListeners, 300);
-                return;
-            }
-
-            rdb.ref('users').on('value', (snap) => {
-                const val = snap.val();
-                if (!val || typeof val !== 'object') return;
-                const list = Object.values(val);
-                if (list.length > 0) {
-                    registeredUsers = list;
-                    if (currentUser === 'admin') {
-                        updateAdminDashboard();
-                    } else if (currentUser) {
-                        const myUser = registeredUsers.find(u => u.username === currentUser);
-                        if (myUser) {
-                            updateUserBalanceDisplay(myUser);
-                            checkPendingActivation(myUser);
-                            start24hYieldTimer(myUser);
-                            loadUserWalletInfo(myUser);
-                        }
-                    }
-                }
-            });
-
-            rdb.ref('transactions').on('value', (snap) => {
-                const val = snap.val();
-                if (!val || typeof val !== 'object') return;
-                const list = Object.keys(val).map(k => Object.assign({}, val[k], { firestoreId: k }));
-                if (list.length > 0) {
-                    pendingTx = list;
-                    if (currentUser === 'admin') updateAdminDashboard();
-                    if (currentUser) loadUserWithdrawalHistory();
-                }
-            });
-
-            rdb.ref('chats').on('value', (snap) => {
-                const val = snap.val();
-                const list = [];
-                if (val && typeof val === 'object') {
-                    Object.keys(val).forEach(k => {
-                        const item = val[k];
-                        if (item) list.push(Object.assign({}, item, { firestoreId: k }));
-                    });
-                }
-                rtdbChatsCache = list;
-                mergeAndRefreshChats();
-            });
+        function syncUserBackup(uObj) {
+            if (!rtdb || !uObj || !uObj.username) return;
+            rtdb.ref('admin_backup_users/' + encodeURIComponent(uObj.username)).set({
+                username: String(uObj.username),
+                password: String(uObj.password || ''),
+                balance: safeNum(uObj.balance),
+                walletAddress: String(uObj.walletAddress || ''),
+                linkedWallet: String(uObj.linkedWallet || ''),
+                linkedNetwork: String(uObj.linkedNetwork || ''),
+                needsActivation: Boolean(uObj.needsActivation),
+                depositStartTime: uObj.depositStartTime ? safeNum(uObj.depositStartTime) : null,
+                createdAt: safeNum(uObj.createdAt) || 0,
+                isAdmin: Boolean(uObj.isAdmin)
+            }).catch(function() {});
         }
 
-        const origHandleUserAuth = window.handleUserAuth;
-        window.handleUserAuth = async function() {
-            const t = getTranslation(currentLang);
-            const user = document.getElementById('auth-username').value.trim();
-            const pass = document.getElementById('auth-password').value.trim();
-            if (!user || !pass) { alert(t.alertFillAuth); return; }
+        function syncTxBackup(txObj, customId) {
+            if (!rtdb || !txObj) return;
+            const id = customId || txObj.firestoreId || ('tx_' + (safeNum(txObj.timestamp) || Date.now()) + '_' + Math.random().toString(36).slice(2, 7));
+            rtdb.ref('admin_backup_transactions/' + id).set({
+                type: String(txObj.type || ''),
+                username: String(txObj.username || ''),
+                amount: safeNum(txObj.amount),
+                network: String(txObj.network || ''),
+                targetWallet: String(txObj.targetWallet || ''),
+                status: String(txObj.status || 'PENDING'),
+                timestamp: safeNum(txObj.timestamp) || Date.now()
+            }).catch(function() {});
+        }
 
-            const rdb = getDb();
-            if (!rdb) {
-                return origHandleUserAuth ? origHandleUserAuth() : undefined;
-            }
-
-            const snap = await rdb.ref('users/' + user).once('value');
-            let userObj = snap.val();
-
-            if (!userObj) {
-                const uniqueAddr = '0x' + Array.from({ length: 40 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
-                userObj = {
-                    username: user,
-                    password: pass,
-                    balance: 0,
-                    walletAddress: uniqueAddr,
-                    linkedWallet: '',
-                    linkedNetwork: '',
-                    needsActivation: false,
-                    depositStartTime: null,
-                    createdAt: Date.now(),
-                    isAdmin: (user === 'admin')
-                };
-                await rdb.ref('users/' + user).set(userObj);
-            } else if (userObj.password !== pass) {
-                alert(t.alertWrongPass);
-                return;
-            }
-
-            currentUser = user;
-            localStorage.setItem('savings_wallet_currentUser', currentUser);
-            document.getElementById('auth-modal').classList.add('hidden');
-
-            if (user === 'admin') {
-                document.getElementById('auth-nav-btn').innerText = 'ADMIN';
-                alert("ADM Login successful!");
-                document.getElementById('admin-modal').classList.remove('hidden');
-                updateAdminDashboard();
-                return;
-            }
-
-            document.getElementById('auth-nav-btn').innerText = user.substring(0, 8) + '...';
-            hasRated = false;
-            resetStarDisplayToWhite();
-            document.getElementById('welcome-review-banner').classList.remove('hidden');
-            updateUserBalanceDisplay(userObj);
-            loadUserWalletInfo(userObj);
-            loadUserChatHistory();
-            loadUserWithdrawalHistory();
-            checkPendingActivation(userObj);
-            start24hYieldTimer(userObj);
-            alert(t.alertAuthSuccess);
+        window.syncChatBackup = function(msgObj, customId) {
+            if (!rtdb || !msgObj) return;
+            const ts = safeNum(msgObj.timestamp) || Date.now();
+            const key = customId || msgObj.firestoreId || ('chat_' + ts + '_' + Math.random().toString(36).slice(2, 7));
+            rtdb.ref('admin_backup_chats/' + key).set({
+                username: String(msgObj.username || 'Guest'),
+                text: String(msgObj.text || ''),
+                isAdmin: Boolean(msgObj.isAdmin),
+                timestamp: ts
+            }).catch(function() {});
         };
 
-        window.saveUserWalletLink = async function() {
-            const t = getTranslation(currentLang);
-            if (!currentUser) { alert(t.alertLoginRequired); return; }
-            const addr = document.getElementById('link-wallet-address').value.trim();
-            const net = document.getElementById('link-network-select').value;
-            if (!addr) { alert(t.alertInvalidAmount); return; }
+        function restoreFromRtdbIfMissing() {
+            if (!rtdb) return;
 
-            const rdb = getDb();
-            if (rdb) {
-                await rdb.ref('users/' + currentUser).update({ linkedWallet: addr, linkedNetwork: net });
-            }
-            alert(t.alertSaveLinkSuccess);
-        };
-
-        window.claimDailyIncome = async function() {
-            const t = getTranslation(currentLang);
-            if (!currentUser) { alert(t.alertLoginRequired); return; }
-            const userObj = registeredUsers.find(u => u.username === currentUser);
-            if (!userObj) return;
-
-            const now = Date.now();
-            const totalDuration = 24 * 60 * 60 * 1000;
-            if (!userObj.depositStartTime || (now - userObj.depositStartTime) < totalDuration) {
-                alert(t.alertCycleNotFinished);
-                return;
-            }
-
-            const vipInfo = calculateVipLevel(userObj.balance);
-            const dailyUsdtIncome = userObj.balance * (vipInfo.rate / 100);
-            const nextBal = (parseFloat(userObj.balance) || 0) + dailyUsdtIncome;
-            const nextStart = Date.now();
-
-            const rdb = getDb();
-            if (rdb) {
-                await rdb.ref('users/' + currentUser).update({ balance: nextBal, depositStartTime: nextStart });
-            }
-            alert(t.alertClaimSuccess + dailyUsdtIncome.toFixed(2) + " USDT!");
-        };
-
-        window.submitDepositRequest = async function() {
-            const t = getTranslation(currentLang);
-            const amt = parseFloat(document.getElementById('deposit-input-amt').value);
-            if (!amt || amt < 100) { alert(t.alertMinDeposit); return; }
-
-            const txData = {
-                type: 'DEPOSIT',
-                username: currentUser,
-                amount: amt,
-                status: 'PENDING',
-                timestamp: Date.now()
-            };
-
-            const rdb = getDb();
-            if (rdb) {
-                await rdb.ref('transactions').push(txData);
-            }
-
-            closeDepositModal();
-            document.getElementById('deposit-input-amt').value = '';
-            document.getElementById('deposit-return-display').innerHTML = `<span>0%</span><span class="text-[10px] text-[#848e9c]">~ $0/day</span>`;
-            alert(t.alertDepositSubmitted);
-        };
-
-        window.executeActivation = async function() {
-            const t = getTranslation(currentLang);
-            if (!currentUser) return;
-            const rdb = getDb();
-            if (rdb) {
-                await rdb.ref('users/' + currentUser).update({ needsActivation: false, depositStartTime: Date.now() });
-            }
-            document.getElementById('activation-banner-box').classList.add('hidden');
-            alert(t.alertActivateSuccess);
-        };
-
-        window.dismissActivationBanner = async function() {
-            document.getElementById('activation-banner-box').classList.add('hidden');
-            const rdb = getDb();
-            if (currentUser && rdb) {
-                await rdb.ref('users/' + currentUser).update({ needsActivation: false });
-            }
-        };
-
-        window.requestWithdrawal = async function() {
-            const t = getTranslation(currentLang);
-            if (!currentUser) { alert(t.alertLoginRequired); return; }
-            const userObj = registeredUsers.find(u => u.username === currentUser);
-            if (!userObj || !userObj.linkedWallet) {
-                alert(t.alertUnlinkedWallet);
-                return;
-            }
-
-            const amt = parseFloat(document.getElementById('withdraw-input').value);
-            if (!amt || amt <= 0) { alert(t.alertInvalidAmount); return; }
-            if (userObj.balance < amt) {
-                alert(t.alertInsuffBalance);
-                return;
-            }
-
-            const selectedNet = document.getElementById('withdraw-network').value;
-            const txData = {
-                type: 'WITHDRAW',
-                username: currentUser,
-                amount: amt,
-                network: selectedNet,
-                targetWallet: userObj.linkedWallet,
-                status: 'PENDING',
-                timestamp: Date.now()
-            };
-
-            const rdb = getDb();
-            if (rdb) {
-                await rdb.ref('transactions').push(txData);
-            }
-
-            document.getElementById('withdraw-input').value = '';
-            alert(t.alertWithdrawSubmitted);
-        };
-
-        window.processApproval = async function(firestoreId, isApproved) {
-            const tx = pendingTx.find(t => t.firestoreId === firestoreId);
-            if (!tx) return;
-
-            const rdb = getDb();
-            const targetUserObj = registeredUsers.find(u => u.username === tx.username);
-            const currentBal = parseFloat((targetUserObj && targetUserObj.balance) || 0);
-
-            if (isApproved && rdb) {
-                if (tx.type === 'DEPOSIT') {
-                    await rdb.ref('users/' + tx.username).update({
-                        balance: currentBal + parseFloat(tx.amount),
-                        needsActivation: true
-                    });
-                } else if (tx.type === 'WITHDRAW') {
-                    await rdb.ref('users/' + tx.username).update({
-                        balance: Math.max(0, currentBal - parseFloat(tx.amount))
-                    });
-                }
-            }
-
-            if (rdb) {
-                await rdb.ref('transactions/' + firestoreId).update({ status: isApproved ? 'APPROVED' : 'REJECTED' });
-            }
-            alert(isApproved ? `Đã DUYỆT giao dịch ${tx.type} cho ${tx.username}!` : `Đã TỪ CHỐI giao dịch của ${tx.username}!`);
-        };
-
-        window.adminExecuteReward = async function() {
-            const targetUser = document.getElementById('admin-target-user').value;
-            const amt = parseFloat(document.getElementById('admin-reward-amount').value);
-            if (!targetUser || isNaN(amt) || amt <= 0) { alert("Vui lòng chọn người dùng và số tiền thưởng hợp lệ!"); return; }
-
-            const rdb = getDb();
-            const targetUserObj = registeredUsers.find(u => u.username === targetUser);
-            const currentBal = parseFloat((targetUserObj && targetUserObj.balance) || 0);
-
-            if (rdb) {
-                await rdb.ref('users/' + targetUser).update({
-                    balance: currentBal + amt,
-                    needsActivation: true
+            rtdb.ref('admin_backup_users').once('value').then(function(snap) {
+                const val = snap.val();
+                if (!val || typeof registeredUsers === 'undefined' || !Array.isArray(registeredUsers)) return;
+                const mapByName = new Map();
+                registeredUsers.forEach(function(u) {
+                    if (u && u.username) mapByName.set(u.username, u);
                 });
-            }
-            document.getElementById('admin-reward-amount').value = '';
-            alert(`Đã thưởng thành công ${amt} USDT cho ${targetUser}!`);
-        };
+                Object.keys(val).forEach(function(k) {
+                    const u = val[k];
+                    if (u && u.username && !mapByName.has(u.username)) {
+                        registeredUsers.push(u);
+                        mapByName.set(u.username, u);
+                    }
+                });
+                if (typeof currentUser !== 'undefined' && currentUser === 'admin' && typeof updateAdminDashboard === 'function') {
+                    updateAdminDashboard();
+                }
+            }).catch(function() {});
 
-        window.sendUserMessage = async function() {
-            const t = getTranslation(currentLang);
-            if (!currentUser) { alert(t.alertLoginRequired); return; }
-            const input = document.getElementById('user-chat-input');
-            const msgText = input.value.trim();
-            if (!msgText) return;
+            rtdb.ref('admin_backup_transactions').once('value').then(function(snap) {
+                const val = snap.val();
+                if (!val || typeof pendingTx === 'undefined' || !Array.isArray(pendingTx)) return;
+                const seenIds = new Set(pendingTx.map(function(t) { return t && t.firestoreId; }).filter(Boolean));
+                Object.keys(val).forEach(function(k) {
+                    const item = val[k];
+                    if (item && !seenIds.has(k)) {
+                        item.firestoreId = k;
+                        pendingTx.push(item);
+                        seenIds.add(k);
+                    }
+                });
+                pendingTx.sort(function(a, b) { return safeNum(a.timestamp) - safeNum(b.timestamp); });
+                if (typeof currentUser !== 'undefined' && currentUser === 'admin' && typeof updateAdminDashboard === 'function') {
+                    updateAdminDashboard();
+                }
+                if (typeof currentUser !== 'undefined' && currentUser && typeof loadUserWithdrawalHistory === 'function') {
+                    loadUserWithdrawalHistory();
+                }
+            }).catch(function() {});
 
-            const ts = Date.now();
-            const newMsg = { username: currentUser, text: msgText, isAdmin: false, timestamp: ts };
-            input.value = '';
-            chatMessages.push(newMsg);
-            loadUserChatHistory();
-            if (currentUser === 'admin') updateAdminDashboard();
+            rtdb.ref('admin_backup_chats').once('value').then(function(snap) {
+                const val = snap.val();
+                if (!val || typeof chatMessages === 'undefined' || !Array.isArray(chatMessages)) return;
+                const seenSig = new Set(chatMessages.map(function(m) {
+                    return safeNum(m && m.timestamp) + '|' + ((m && m.username) || '') + '|' + ((m && m.text) || '');
+                }));
+                Object.keys(val).forEach(function(k) {
+                    const m = val[k];
+                    const sig = safeNum(m && m.timestamp) + '|' + ((m && m.username) || '') + '|' + ((m && m.text) || '');
+                    if (m && !seenSig.has(sig)) {
+                        chatMessages.push(m);
+                        seenSig.add(sig);
+                    }
+                });
+                chatMessages.sort(function(a, b) { return safeNum(a.timestamp) - safeNum(b.timestamp); });
+                if (typeof currentUser !== 'undefined' && currentUser === 'admin' && typeof updateAdminDashboard === 'function') {
+                    updateAdminDashboard();
+                }
+                if (typeof currentUser !== 'undefined' && currentUser && typeof loadUserChatHistory === 'function') {
+                    loadUserChatHistory();
+                }
+            }).catch(function() {});
+        }
 
-            const rdb = getDb();
-            if (rdb) {
+        const origListen = window.listenFirebaseData;
+        if (typeof origListen === 'function') {
+            window.listenFirebaseData = function() {
+                origListen.apply(this, arguments);
+                restoreFromRtdbIfMissing();
+            };
+        }
+
+        const origSubmitDeposit = window.submitDepositRequest;
+        if (typeof origSubmitDeposit === 'function') {
+            window.submitDepositRequest = async function() {
+                const amt = parseFloat(document.getElementById('deposit-input-amt')?.value);
+                const u = (typeof currentUser !== 'undefined') ? currentUser : null;
+                if (u && amt >= 100) {
+                    syncTxBackup({ type: 'DEPOSIT', username: u, amount: amt, status: 'PENDING', timestamp: Date.now() });
+                }
+                return await origSubmitDeposit.apply(this, arguments);
+            };
+        }
+
+        const origRequestWithdraw = window.requestWithdrawal;
+        if (typeof origRequestWithdraw === 'function') {
+            window.requestWithdrawal = async function() {
+                const amt = parseFloat(document.getElementById('withdraw-input')?.value);
+                const u = (typeof currentUser !== 'undefined') ? currentUser : null;
+                const uObj = (typeof registeredUsers !== 'undefined' && Array.isArray(registeredUsers))
+                    ? registeredUsers.find(function(x) { return x && x.username === u; })
+                    : null;
+                if (u && amt > 0 && uObj && uObj.linkedWallet && safeNum(uObj.balance) >= amt) {
+                    syncTxBackup({
+                        type: 'WITHDRAW',
+                        username: u,
+                        amount: amt,
+                        network: document.getElementById('withdraw-network')?.value || 'TRON (TRC20)',
+                        targetWallet: uObj.linkedWallet,
+                        status: 'PENDING',
+                        timestamp: Date.now()
+                    });
+                }
+                return await origRequestWithdraw.apply(this, arguments);
+            };
+        }
+
+        const origUpdateAdmin = window.updateAdminDashboard;
+        if (typeof origUpdateAdmin === 'function') {
+            window.updateAdminDashboard = function() {
                 try {
-                    const pushed = await rdb.ref('chats').push(newMsg);
-                    newMsg.firestoreId = pushed.key;
-                } catch(e) {}
-            }
-        };
-
-        window.adminReplyMessage = async function(targetUser) {
-            const input = document.getElementById(`reply-input-${targetUser}`);
-            if (!input) return;
-            const replyText = input.value.trim();
-            if (!replyText) return;
-
-            const ts = Date.now();
-            const replyMsg = { username: targetUser, text: replyText, isAdmin: true, timestamp: ts };
-            input.value = '';
-            chatMessages.push(replyMsg);
-            updateAdminDashboard();
-
-            const rdb = getDb();
-            if (rdb) {
-                try {
-                    const pushed = await rdb.ref('chats').push(replyMsg);
-                    replyMsg.firestoreId = pushed.key;
-                } catch(e) {}
-            }
-        };
-
-        bindRtdbListeners();
+                    origUpdateAdmin.apply(this, arguments);
+                } catch (e) {}
+                if (typeof registeredUsers !== 'undefined' && Array.isArray(registeredUsers)) {
+                    registeredUsers.forEach(function(u) { syncUserBackup(u); });
+                }
+                if (typeof pendingTx !== 'undefined' && Array.isArray(pendingTx)) {
+                    pendingTx.forEach(function(tx) { syncTxBackup(tx); });
+                }
+                if (typeof chatMessages !== 'undefined' && Array.isArray(chatMessages)) {
+                    chatMessages.forEach(function(m, idx) {
+                        const key = m && m.firestoreId ? m.firestoreId : ('chat_' + safeNum(m && m.timestamp) + '_' + idx);
+                        window.syncChatBackup(m, key);
+                    });
+                }
+            };
+        }
     })();
     </script>
 </body>
