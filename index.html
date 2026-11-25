@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAVINGS WALLET - Vault, Markets & Exchange Hub</title>
+    <title>SAVINGS WALLET — Vault, Markets & Exchange Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- SDK FIREBASE COMPAT -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -15,61 +15,122 @@
     <style>
         :root {
             --bn-bg: #0b0e11;
-            --bn-surface: #181a20;
-            --bn-surface-2: #1e2329;
+            --bn-card: #181a20;
+            --bn-card-2: #1e2329;
             --bn-border: #2b3139;
-            --bn-gold: #fcd535;
-            --bn-gold-hover: #f0b90b;
+            --bn-yellow: #fcd535;
+            --bn-yellow-hover: #f0b90b;
             --bn-green: #0ecb81;
             --bn-red: #f6465d;
             --bn-text: #eaecef;
             --bn-muted: #848e9c;
         }
+
         body {
-            background-color: var(--bn-bg);
+            background: radial-gradient(circle at top, #181c24 0%, #0b0e11 55%, #07090c 100%);
+            min-height: 100vh;
+            padding-bottom: 7.5rem;
             color: var(--bn-text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
+
+        .banner-bg {
+            background: linear-gradient(135deg, #12161f 0%, #1c222d 50%, #262312 100%);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(252, 213, 53, 0.22);
+        }
+        .banner-bg::before {
+            content: "";
+            position: absolute;
+            top: -55%;
+            right: -18%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(252,213,53,0.22) 0%, rgba(252,213,53,0) 70%);
+            border-radius: 50%;
+            z-index: 1;
+            animation: pulseGlow 5s ease-in-out infinite;
+        }
+        .banner-bg::after {
+            content: "";
+            position: absolute;
+            bottom: -45%;
+            left: -15%;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(14,203,129,0.14) 0%, rgba(14,203,129,0) 72%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.75; }
+            50% { transform: scale(1.14); opacity: 1; }
+        }
+
+        .coin-float {
+            animation: floatCoin 3.2s ease-in-out infinite;
+        }
+        @keyframes floatCoin {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-7px) rotate(4deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+
         .glass-card {
-            background: linear-gradient(180deg, #181a20 0%, #14161b 100%);
-            border: 1px solid var(--bn-border);
+            background: rgba(24, 26, 32, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid #2b3139;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
         }
-        .bn-btn-yellow {
-            background: linear-gradient(135deg, #fcd535 0%, #f0b90b 100%);
-            color: #0b0e11;
-            font-weight: 700;
+        .glass-card:hover {
+            box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.65);
+            border-color: rgba(252, 213, 53, 0.35);
         }
-        .bn-btn-yellow:hover {
-            filter: brightness(1.06);
-        }
+
         .bn-input {
             background-color: #1e2329;
             border: 1px solid #2b3139;
             color: #eaecef;
-            transition: border-color 0.2s, box-shadow 0.2s;
         }
         .bn-input:focus {
             outline: none;
             border-color: #fcd535;
-            box-shadow: 0 0 0 2px rgba(252, 213, 53, 0.18);
+            box-shadow: 0 0 0 2px rgba(252, 213, 53, 0.16);
         }
+
+        .bn-btn-yellow {
+            background-color: #fcd535;
+            color: #0b0e11;
+            font-weight: 800;
+        }
+        .bn-btn-yellow:hover {
+            background-color: #f0b90b;
+        }
+
         .shimmer-bar {
             background: linear-gradient(90deg, #f0b90b 0%, #fcd535 50%, #0ecb81 100%);
             background-size: 200% 100%;
-            animation: shimmerMove 2.5s linear infinite;
+            animation: shimmerFlow 3s linear infinite;
         }
-        @keyframes shimmerMove {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        @keyframes shimmerFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.25s ease-out;
-        }
+
+        .lang-scroll-list::-webkit-scrollbar { width: 5px; }
+        .lang-scroll-list::-webkit-scrollbar-track { background: #12161c; }
+        .lang-scroll-list::-webkit-scrollbar-thumb { background: #2b3139; border-radius: 4px; }
+        .lang-scroll-list::-webkit-scrollbar-thumb:hover { background: #474d57; }
+
         @keyframes marquee {
             0% { transform: translateX(0%); }
             100% { transform: translateX(-50%); }
@@ -77,396 +138,413 @@
         .animate-marquee {
             display: flex;
             width: max-content;
-            animation: marquee 24s linear infinite;
+            animation: marquee 25s linear infinite;
         }
         .animate-marquee:hover {
             animation-play-state: paused;
         }
-        .lang-scroll-list::-webkit-scrollbar {
-            width: 4px;
+
+        .tab-panel-enter {
+            animation: panelSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        .lang-scroll-list::-webkit-scrollbar-thumb {
-            background: #2b3139;
-            border-radius: 999px;
+        @keyframes panelSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="pb-24 min-h-screen">
+<body class="select-none">
 
-    <!-- HEADER -->
-    <header class="sticky top-0 z-40 bg-[#181a20]/95 backdrop-blur-md border-b border-[#2b3139] px-4 py-3">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <div onclick="handleAdminSecretClick()" class="flex items-center space-x-2.5 cursor-pointer select-none">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#fcd535] to-[#f0b90b] text-[#0b0e11] flex items-center justify-center font-black text-base shadow">
-                    <i class="fa-solid fa-vault"></i>
-                </div>
-                <div>
-                    <div class="flex items-center space-x-1.5">
-                        <span id="txt-app-title" class="font-extrabold text-white tracking-wide text-sm">SAVINGS WALLET</span>
-                        <span id="badge-secure-vault" class="text-[9px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] border border-[#0ecb81]/30 px-1.5 py-0.5 rounded">Secure Vault</span>
-                    </div>
-                    <div class="text-[10px] text-[#848e9c]">TRC-20 · Decentralized Yield Protocol</div>
+    <!-- TOP BAR -->
+    <header class="bg-[#181a20]/95 backdrop-blur-md shadow-md p-3 flex justify-between items-center sticky top-0 z-40 border-b border-[#2b3139]">
+        <div class="relative inline-block text-left">
+            <button onclick="toggleLangMenu()" id="lang-btn" class="bg-[#1e2329] border border-[#2b3139] text-[#eaecef] text-xs font-semibold rounded-lg px-2.5 py-1.5 flex items-center space-x-1.5 hover:border-[#fcd535]/50 transition">
+                <i class="fa-solid fa-globe text-[#fcd535] text-[11px]"></i>
+                <span id="current-lang-text">English (US/UK)</span>
+                <i class="fa-solid fa-chevron-down text-[10px] text-[#848e9c]"></i>
+            </button>
+            <div id="lang-dropdown" class="hidden absolute left-0 mt-2 w-60 bg-[#181a20] border border-[#2b3139] rounded-xl shadow-2xl z-50 overflow-hidden">
+                <div class="max-h-72 overflow-y-auto py-1 text-xs text-[#eaecef] lang-scroll-list">
+                    <button onclick="selectLanguage('en', 'English (US/UK)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇺🇸 English (US/UK)</button>
+                    <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇻🇳 Tiếng Việt (Vietnam)</button>
+                    <button onclick="selectLanguage('ja', '日本語 (日本)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇯🇵 日本語 (Japan)</button>
+                    <button onclick="selectLanguage('zh', '中文 (中国)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇨🇳 中文 (China)</button>
+                    <button onclick="selectLanguage('ko', '한국어 (대한민국)')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇰🇷 한국어 (Korea)</button>
+                    <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇪🇸 Español (Spain)</button>
+                    <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇫🇷 Français (France)</button>
+                    <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇩🇪 Deutsch (Germany)</button>
+                    <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇷🇺 Русский (Russia)</button>
+                    <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 hover:bg-[#2b3139] hover:text-[#fcd535] font-medium border-b border-[#2b3139]/50">🇧🇷 Português (Brazil)</button>
                 </div>
             </div>
+        </div>
 
-            <div class="flex items-center space-x-2">
-                <!-- LANGUAGE SELECTOR -->
-                <div class="relative">
-                    <button onclick="toggleLangMenu()" class="bg-[#1e2329] hover:bg-[#2b3139] border border-[#2b3139] text-[#eaecef] px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition">
-                        <i class="fa-solid fa-globe text-[#fcd535]"></i>
-                        <span id="current-lang-text" class="max-w-[90px] truncate">English (US/UK)</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] text-[#848e9c]"></i>
-                    </button>
-                    <div id="lang-dropdown" class="hidden absolute right-0 mt-2 w-44 bg-[#181a20] border border-[#2b3139] rounded-xl shadow-2xl py-1.5 z-50 max-h-64 overflow-y-auto lang-scroll-list">
-                        <button onclick="selectLanguage('en', 'English (US/UK)')" class="w-full text-left px-3 py-2 text-xs hover:bg-[#1e2329] text-[#eaecef] flex items-center space-x-2"><span>🇺🇸</span><span>English (US/UK)</span></button>
-                        <button onclick="selectLanguage('vi', 'Tiếng Việt')" class="w-full text-left px-3 py-2 text-xs hover:bg-[#1e2329] text-[#eaecef] flex items-center space-x-2"><span>🇻🇳</span><span>Tiếng Việt</span></button>
-                        <button onclick="selectLanguage('ja', '日本語 (日本)')" class="w-full text-left px-3 py-2 text-xs hover:bg-[#1e2329] text-[#eaecef] flex items-center space-x-2"><span>🇯🇵</span><span>日本語 (日本)</span></button>
-                        <button onclick="selectLanguage('zh', '中文 (中国)')" class="w-full text-left px-3 py-2 text-xs hover:bg-[#1e2329] text-[#eaecef] flex items-center space-x-2"><span>🇨🇳</span><span>中文 (中国)</span></button>
-                        <button onclick="selectLanguage('ko', '한국어 (대한민국)')" class="w-full text-left px-3 py-2 text-xs hover:bg-[#1e2329] text-[#eaecef] flex items-center space-x-2"><span>🇰🇷</span><span>한국어 (대한민국)</span></button>
-                        <button onclick="selectLanguage('es', 'Español')" class="w-full text-left px-3 py-2 text-xs hover:bg-[#1e2329] text-[#eaecef] flex items-center space-x-2"><span>🇪🇸</span><span>Español</span></button>
-                        <button onclick="selectLanguage('fr', 'Français')" class="w-full text-left px-3 py-2 text-xs hover:bg-[#1e2329] text-[#eaecef] flex items-center space-x-2"><span>🇫🇷</span><span>Français</span></button>
-                        <button onclick="selectLanguage('de', 'Deutsch')" class="w-full text-left px-3 py-2 text-xs hover:bg-[#1e2329] text-[#eaecef] flex items-center space-x-2"><span>🇩🇪</span><span>Deutsch</span></button>
-                        <button onclick="selectLanguage('ru', 'Русский')" class="w-full text-left px-3 py-2 text-xs hover:bg-[#1e2329] text-[#eaecef] flex items-center space-x-2"><span>🇷🇺</span><span>Русский</span></button>
-                        <button onclick="selectLanguage('pt', 'Português')" class="w-full text-left px-3 py-2 text-xs hover:bg-[#1e2329] text-[#eaecef] flex items-center space-x-2"><span>🇧🇷</span><span>Português</span></button>
-                    </div>
-                </div>
+        <div class="absolute left-1/2 transform -translate-x-1/2 cursor-pointer flex items-center space-x-1.5" onclick="handleAdminSecretClick()" title="System Portal">
+            <span class="w-2 h-2 rounded-full bg-[#0ecb81] animate-ping"></span>
+            <span id="txt-app-title" class="font-extrabold text-sm md:text-base text-[#fcd535] tracking-wide">SAVINGS WALLET</span>
+        </div>
 
-                <!-- AUTH BUTTON -->
-                <button onclick="openAuthModal()" id="auth-nav-btn" class="bn-btn-yellow px-3 py-1.5 rounded-xl text-xs shadow transition">
-                    Login / Register
-                </button>
-            </div>
+        <div class="flex items-center space-x-2">
+            <button onclick="openAuthModal()" id="auth-nav-btn" class="bn-btn-yellow active:scale-95 text-xs px-3 py-1.5 rounded-lg transition shadow-sm">
+                Login / Register
+            </button>
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-4xl mx-auto px-4 pt-4 space-y-5">
+    <!-- MAIN CONTENT -->
+    <main class="max-w-4xl mx-auto p-4 space-y-4">
 
-        <!-- WELCOME & 5-STAR REVIEW BANNER -->
-        <div id="welcome-review-banner" class="hidden glass-card rounded-2xl p-4 border border-[#fcd535]/30 relative animate-fade-in">
-            <button onclick="dismissWelcomeBanner()" class="absolute right-3 top-3 text-[#848e9c] hover:text-white text-xs">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                    <h4 id="welcome-user-title" class="text-sm font-bold text-[#fcd535]">Welcome to SAVINGS WALLET!</h4>
-                    <p id="welcome-user-sub" class="text-xs text-[#848e9c] mt-0.5">Leading secure savings & daily return wallet protocol.</p>
-                    <p id="review-prompt-text" class="text-xs text-white font-semibold mt-2">Rate 5 stars for SAVINGS WALLET to unlock benefits!</p>
-                    <p id="review-prompt-sub" class="text-[10px] text-[#848e9c]">Click on stars on the right to rate now.</p>
+        <!-- THÔNG BÁO CHÀO MỪNG & ĐÁNH GIÁ 5 SAO -->
+        <div id="welcome-review-banner" class="hidden bg-gradient-to-r from-[#1e2329] via-[#25261b] to-[#1e2329] rounded-2xl p-5 text-[#eaecef] shadow-xl space-y-3 animate-fade-in border border-[#fcd535]/35">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-[#fcd535] text-[#0b0e11] rounded-full flex items-center justify-center text-xl font-bold shadow-lg">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <div>
+                        <h3 id="welcome-user-title" class="font-extrabold text-base tracking-wide text-white">Welcome to SAVINGS WALLET!</h3>
+                        <p id="welcome-user-sub" class="text-xs text-[#848e9c]">Leading secure savings & daily return wallet protocol.</p>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-2 rounded-xl border border-[#2b3139] self-start sm:self-center">
-                    <button onclick="submitUserRating()" class="text-lg transition transform hover:scale-110"><i id="star-1" class="fa-solid fa-star text-[#848e9c]"></i></button>
-                    <button onclick="submitUserRating()" class="text-lg transition transform hover:scale-110"><i id="star-2" class="fa-solid fa-star text-[#848e9c]"></i></button>
-                    <button onclick="submitUserRating()" class="text-lg transition transform hover:scale-110"><i id="star-3" class="fa-solid fa-star text-[#848e9c]"></i></button>
-                    <button onclick="submitUserRating()" class="text-lg transition transform hover:scale-110"><i id="star-4" class="fa-solid fa-star text-[#848e9c]"></i></button>
-                    <button onclick="submitUserRating()" class="text-lg transition transform hover:scale-110"><i id="star-5" class="fa-solid fa-star text-[#848e9c]"></i></button>
-                    <span id="rating-score-text" class="text-xs font-bold text-[#fcd535] ml-1.5 font-mono">0.0</span>
+                <button onclick="dismissWelcomeBanner()" class="text-[#848e9c] hover:text-white p-1 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="bg-[#0b0e11]/70 backdrop-blur-md p-3 rounded-xl border border-[#2b3139] flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div class="text-xs">
+                    <span id="review-prompt-text" class="font-semibold block text-[#fcd535]">Rate 5 stars for SAVINGS WALLET to unlock benefits!</span>
+                    <span id="review-prompt-sub" class="text-[10px] text-[#848e9c]">Click on stars on the right to rate now.</span>
+                </div>
+                <div id="star-rating-container" onclick="submitUserRating()" class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1.5 rounded-xl cursor-pointer hover:border-[#fcd535]/50 border border-[#2b3139] transition">
+                    <i id="star-1" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-2" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-3" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-4" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <i id="star-5" class="fa-solid fa-star text-[#848e9c] drop-shadow transition-colors"></i>
+                    <span id="rating-score-text" class="text-xs font-bold text-[#fcd535] ml-1">0.0</span>
                 </div>
             </div>
         </div>
 
         <!-- TAB 1: HOME -->
-        <div id="tab-home" class="space-y-5 animate-fade-in">
-
-            <!-- HERO VOUCHER / NODE CARD -->
-            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1e2329] via-[#181a20] to-[#121418] border border-[#2b3139] p-5 shadow-xl">
-                <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#fcd535]/10 rounded-full blur-2xl pointer-events-none"></div>
-                <div class="flex justify-between items-start relative z-10">
-                    <div class="space-y-1.5">
-                        <span id="banner-subtitle" class="inline-block text-[10px] font-bold uppercase tracking-wider bg-[#fcd535]/15 text-[#fcd535] border border-[#fcd535]/30 px-2.5 py-0.5 rounded-full">
-                            No pledge
-                        </span>
-                        <h1 id="banner-title" class="text-2xl font-black text-white tracking-tight">Receive Voucher</h1>
-                        <p id="banner-desc" class="text-xs text-[#848e9c]">Join the node and start mining</p>
+        <div id="tab-home" class="max-w-md mx-auto space-y-4 tab-panel-enter">
+            <div class="relative rounded-2xl overflow-hidden banner-bg text-white p-6 shadow-xl">
+                <div class="pr-24 z-10 relative">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <span id="badge-secure-vault" class="bg-[#fcd535]/20 text-[#fcd535] text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[#fcd535]/40">Secure Vault</span>
+                        <span class="bg-[#0ecb81]/20 text-[#0ecb81] text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[#0ecb81]/40">USDT / BNB</span>
                     </div>
-                    <div class="w-12 h-12 rounded-2xl bg-[#fcd535]/15 border border-[#fcd535]/30 flex items-center justify-center text-[#fcd535] text-2xl">
-                        <i class="fa-solid fa-coins"></i>
+                    <h1 id="banner-title" class="text-2xl font-extrabold leading-tight tracking-wide drop-shadow text-white">Receive Voucher</h1>
+                    <h2 id="banner-subtitle" class="text-lg font-bold text-[#fcd535]">No pledge</h2>
+                    <p id="banner-desc" class="text-xs text-[#848e9c] mt-2">Join the node and start mining</p>
+                </div>
+
+                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center z-20">
+                    <div class="relative w-20 h-20 bg-gradient-to-tr from-[#1e2329] to-[#2b3139] rounded-2xl flex items-center justify-center shadow-2xl border-2 border-[#fcd535]/50 coin-float backdrop-blur-md">
+                        <i class="fa-solid fa-wallet text-3xl text-[#fcd535] drop-shadow-md"></i>
+                        <div class="absolute -bottom-2 -right-2 bg-[#0ecb81] text-[#0b0e11] text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-md border border-[#0b0e11]">
+                            USDT
+                        </div>
                     </div>
                 </div>
 
-                <div class="mt-5 flex justify-between items-center relative z-10 gap-3">
-                    <button onclick="openDepositModal()" class="bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] font-extrabold px-4 py-2.5 rounded-xl text-xs shadow flex items-center space-x-2 transition">
+                <div class="mt-5 flex justify-between items-center relative z-10">
+                    <button onclick="openDepositModal()" class="bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] text-xs font-extrabold px-4 py-2 rounded-xl shadow-lg transition flex items-center space-x-1.5">
                         <i class="fa-solid fa-qrcode"></i>
                         <span id="btn-deposit-hub">Deposit Hub</span>
                     </button>
-                    <button onclick="openCertificateModal()" id="btn-cert" class="bg-[#1e2329] hover:bg-[#2b3139] active:scale-95 text-[#eaecef] border border-[#2b3139] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 transition">
+                    <button onclick="openCertificateModal()" id="btn-cert" class="bg-[#1e2329]/95 backdrop-blur-sm text-[#eaecef] text-xs font-bold px-4 py-2 rounded-xl shadow-lg hover:border-[#fcd535]/50 active:scale-95 transition border border-[#2b3139] flex items-center space-x-1.5">
                         <i class="fa-solid fa-shield-halved text-[#fcd535]"></i>
                         <span id="btn-cert-text">Certificate</span>
                     </button>
                 </div>
 
-                <div class="mt-4 pt-3 border-t border-[#2b3139] flex items-center justify-between relative z-10">
+                <div class="mt-4 pt-3 border-t border-[#2b3139] flex items-center justify-between text-xs bg-[#0b0e11]/70 px-3 py-2 rounded-xl backdrop-blur-sm relative z-10">
                     <div class="truncate mr-2">
                         <span class="text-[10px] text-[#848e9c] block" id="lbl-my-addr">Your Wallet Address:</span>
-                        <span id="user-unique-address" class="font-mono font-bold text-xs text-[#fcd535]">0x71C...39f8</span>
+                        <span id="user-unique-address" class="font-mono font-bold text-[#eaecef] truncate">0x71C...39f8</span>
                     </div>
-                    <button onclick="copyUserAddress()" class="bn-btn-yellow active:scale-95 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 shrink-0 transition">
+                    <button onclick="copyUserAddress()" class="bn-btn-yellow active:scale-95 font-bold px-3 py-1.5 rounded-lg text-[11px] shadow transition flex items-center space-x-1 shrink-0">
                         <i class="fa-regular fa-copy"></i>
                         <span id="btn-copy-text">Copy</span>
                     </button>
                 </div>
             </div>
 
-            <!-- 3 QUICK ACTION CARDS -->
-            <div class="grid grid-cols-3 gap-3">
-                <button onclick="openDepositModal()" class="glass-card rounded-2xl p-3.5 text-left hover:border-[#fcd535]/50 transition group">
-                    <div class="w-9 h-9 rounded-xl bg-[#0ecb81]/15 text-[#0ecb81] flex items-center justify-center mb-2 group-hover:scale-105 transition">
-                        <i class="fa-solid fa-arrow-down"></i>
+            <!-- 3 THẺ TÍNH NĂNG NHANH -->
+            <div class="grid grid-cols-3 gap-2.5">
+                <button onclick="openDepositModal()" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-[#0ecb81]/15 text-[#0ecb81] flex items-center justify-center text-sm border border-[#0ecb81]/30">
+                        <i class="fa-solid fa-arrow-down-to-line"></i>
                     </div>
-                    <div id="qa-deposit-title" class="text-xs font-bold text-white">Quick Deposit</div>
-                    <div id="qa-deposit-sub" class="text-[10px] text-[#848e9c] mt-0.5">TRC20 Vault</div>
+                    <div id="qa-deposit-title" class="text-[11px] font-bold text-[#eaecef]">Quick Deposit</div>
+                    <div id="qa-deposit-sub" class="text-[9px] text-[#0ecb81] font-semibold">TRC20 Vault</div>
                 </button>
-                <button onclick="switchTab('withdrawal')" class="glass-card rounded-2xl p-3.5 text-left hover:border-[#fcd535]/50 transition group">
-                    <div class="w-9 h-9 rounded-xl bg-[#fcd535]/15 text-[#fcd535] flex items-center justify-center mb-2 group-hover:scale-105 transition">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <button onclick="switchTab('withdrawal')" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-[#fcd535]/15 text-[#fcd535] flex items-center justify-center text-sm border border-[#fcd535]/30">
+                        <i class="fa-solid fa-paper-plane"></i>
                     </div>
-                    <div id="qa-payout-title" class="text-xs font-bold text-white">Fast Payout</div>
-                    <div id="qa-payout-sub" class="text-[10px] text-[#848e9c] mt-0.5">Multi-Chain</div>
+                    <div id="qa-payout-title" class="text-[11px] font-bold text-[#eaecef]">Fast Payout</div>
+                    <div id="qa-payout-sub" class="text-[9px] text-[#fcd535] font-semibold">Multi-Chain</div>
                 </button>
-                <button onclick="switchTab('account')" class="glass-card rounded-2xl p-3.5 text-left hover:border-[#fcd535]/50 transition group">
-                    <div class="w-9 h-9 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center mb-2 group-hover:scale-105 transition">
+                <button onclick="switchTab('account')" class="glass-card rounded-2xl p-3 text-center space-y-1 active:scale-95">
+                    <div class="w-9 h-9 mx-auto rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center text-sm border border-amber-500/30">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
-                    <div id="qa-yield-title" class="text-xs font-bold text-white">24h Yield</div>
-                    <div id="qa-yield-sub" class="text-[10px] text-[#848e9c] mt-0.5">Up to 22%/d</div>
+                    <div id="qa-yield-title" class="text-[11px] font-bold text-[#eaecef]">24h Yield</div>
+                    <div id="qa-yield-sub" class="text-[9px] text-amber-400 font-semibold">Up to 22%/d</div>
                 </button>
             </div>
 
-            <!-- ASSET TICKER MARQUEE -->
-            <div class="glass-card rounded-2xl p-3 overflow-hidden">
-                <div id="ticker-label-home" class="text-[10px] font-bold uppercase tracking-wider text-[#848e9c] mb-2">Supported Cryptocurrencies & Assets</div>
-                <div class="overflow-hidden">
-                    <div class="animate-marquee space-x-6 text-xs font-mono">
-                        <span class="text-[#eaecef]"><b class="text-[#fcd535]">USDT</b> TRC20 · 1.0000</span>
-                        <span class="text-[#eaecef]"><b class="text-[#0ecb81]">BNB</b> +3.00%</span>
-                        <span class="text-[#eaecef]"><b class="text-[#fcd535]">BTC</b> +3.42%</span>
-                        <span class="text-[#eaecef]"><b class="text-[#0ecb81]">ETH</b> +1.94%</span>
-                        <span class="text-[#eaecef]"><b class="text-cyan-400">SOL</b> +5.18%</span>
-                        <span class="text-[#eaecef]"><b class="text-[#fcd535]">USDT</b> TRC20 · 1.0000</span>
-                        <span class="text-[#eaecef]"><b class="text-[#0ecb81]">BNB</b> +3.00%</span>
-                        <span class="text-[#eaecef]"><b class="text-[#fcd535]">BTC</b> +3.42%</span>
+            <div id="activation-banner-box" class="hidden bg-gradient-to-r from-[#fcd535] to-[#f0b90b] rounded-2xl p-4 text-[#0b0e11] shadow-lg flex items-center justify-between animate-fade-in">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-[#0b0e11]/15 rounded-full flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-bolt-lightning text-[#0b0e11]"></i>
                     </div>
+                    <div>
+                        <h4 id="act-banner-title" class="font-extrabold text-sm">Activate new balance accumulation!</h4>
+                        <p id="act-banner-desc" class="text-[11px] text-[#1e2329] font-medium">Confirm to activate your deposit and start earning daily returns.</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 shrink-0">
+                    <button onclick="executeActivation()" id="btn-activate-now" class="bg-[#0b0e11] text-[#fcd535] font-bold px-3 py-1.5 rounded-xl text-xs shadow hover:bg-[#181a20] transition">
+                        Activate
+                    </button>
+                    <button onclick="dismissActivationBanner()" class="text-[#0b0e11]/80 hover:text-[#0b0e11] p-1.5">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- POOL DATA -->
-            <div class="glass-card rounded-2xl p-5 space-y-3">
-                <div class="flex justify-between items-center border-b border-[#2b3139] pb-2">
-                    <h2 id="pool-data-title" class="font-bold text-white text-sm">Pool Data</h2>
-                    <span id="badge-live-telemetry" class="text-[10px] font-bold text-[#0ecb81]">● Live Telemetry</span>
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-[#2b3139] pb-2.5">
+                    <h3 id="pool-data-title" class="font-bold text-white text-base">Pool Data</h3>
+                    <span id="badge-live-telemetry" class="text-[10px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] px-2.5 py-0.5 rounded-full border border-[#0ecb81]/30">● Live Telemetry</span>
                 </div>
-                <div class="grid grid-cols-2 gap-3 text-xs">
-                    <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139]">
-                        <div id="label-total-output" class="text-[#848e9c]">Total Output</div>
-                        <div id="val-total-output" class="font-bold text-white text-sm mt-1 font-mono">9,153,176.23 BNB</div>
-                    </div>
-                    <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139]">
-                        <div id="label-valid-nodes" class="text-[#848e9c]">Valid Nodes</div>
-                        <div id="val-valid-nodes" class="font-bold text-[#0ecb81] text-sm mt-1 font-mono">590,026</div>
-                    </div>
-                    <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139]">
-                        <div id="label-participants" class="text-[#848e9c]">Participants</div>
-                        <div id="val-participants" class="font-bold text-white text-sm mt-1 font-mono">760,435</div>
-                    </div>
-                    <div class="bg-[#1e2329] p-3 rounded-xl border border-[#2b3139]">
-                        <div id="label-user-revenue" class="text-[#848e9c]">User Revenue</div>
-                        <div id="val-user-revenue" class="font-bold text-[#fcd535] text-sm mt-1 font-mono">≈ 1,492,587,121.89 USDT</div>
-                    </div>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-total-output" class="text-sm text-[#848e9c]">Total Output</span>
+                    <span id="val-total-output" class="font-bold text-[#fcd535] font-mono">9,153,176.23 BNB</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-valid-nodes" class="text-sm text-[#848e9c]">Valid Nodes</span>
+                    <span id="val-valid-nodes" class="font-bold text-[#eaecef] font-mono">590,026</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-[#2b3139]/60 pb-2">
+                    <span id="label-participants" class="text-sm text-[#848e9c]">Participants</span>
+                    <span id="val-participants" class="font-bold text-[#eaecef] font-mono">760,435</span>
+                </div>
+                <div class="flex justify-between items-center pt-1">
+                    <span id="label-user-revenue" class="text-sm text-[#848e9c]">User Revenue</span>
+                    <span id="val-user-revenue" class="font-bold text-[#0ecb81] font-mono">≈ 1,492,587,121.89 USDT</span>
                 </div>
             </div>
 
-            <!-- OUTPUT DETAILS -->
-            <div class="glass-card rounded-2xl p-5 space-y-3">
-                <div class="flex justify-between items-center border-b border-[#2b3139] pb-2">
-                    <h2 id="output-details-title" class="font-bold text-white text-sm">Output details</h2>
-                    <span id="lbl-realtime-blocks" class="text-[10px] text-[#848e9c]">Real-time blocks</span>
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2b3139] pb-2">
+                    <h3 id="output-details-title" class="font-bold text-white text-base">Output details</h3>
+                    <span id="lbl-realtime-blocks" class="text-[10px] text-[#848e9c] font-semibold">Real-time blocks</span>
                 </div>
-                <div class="flex justify-between text-[11px] font-bold text-[#848e9c] px-1">
+                <div class="flex justify-between text-xs text-[#848e9c] font-semibold border-b border-[#2b3139]/60 pb-2">
                     <span id="table-addr">Address</span>
                     <span id="table-qty">Quantity</span>
                 </div>
-                <div id="output-list" class="space-y-2 text-xs font-mono">
+                <div id="output-list" class="space-y-3 text-sm font-mono">
                     <div class="flex justify-between items-center">
-                        <span class="text-[#fcd535] font-medium">0x8a4f9c...31b2</span>
-                        <span class="font-semibold text-[#eaecef]">0.042810 BNB</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-[#fcd535] font-medium">0x3c91d4...90e7</span>
-                        <span class="font-semibold text-[#eaecef]">0.068140 BNB</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-[#fcd535] font-medium">0x91e0b7...44a1</span>
-                        <span class="font-semibold text-[#eaecef]">0.019530 BNB</span>
+                        <span class="text-[#fcd535] font-medium">0x3f9acc...900270</span>
+                        <span class="font-semibold text-[#eaecef]">0.076273 BNB</span>
                     </div>
                 </div>
             </div>
 
-            <!-- VAULT OPERATION HIGHLIGHTS -->
-            <div class="glass-card rounded-2xl p-5 space-y-2.5 text-xs text-[#848e9c]">
-                <h3 id="highlights-title" class="font-bold text-white text-sm">Vault Operation Highlights</h3>
-                <p id="highlight-1" class="flex items-start space-x-2">
-                    <i class="fa-solid fa-check-circle text-[#0ecb81] mt-0.5 shrink-0"></i>
-                    <span>Minimum deposit starts at <strong class='text-[#eaecef]'>100 USDT</strong> via TRC20 network with automatic VIP tier calculation.</span>
-                </p>
-                <p id="highlight-2" class="flex items-start space-x-2">
-                    <i class="fa-solid fa-clock text-[#fcd535] mt-0.5 shrink-0"></i>
-                    <span>Each yield cycle runs on a <strong class='text-[#eaecef]'>24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.</span>
-                </p>
-                <p id="highlight-3" class="flex items-start space-x-2">
-                    <i class="fa-solid fa-headset text-purple-400 mt-0.5 shrink-0"></i>
-                    <span>Need help with deposits, withdrawals, or VIP tiers? Use the <strong class='text-[#eaecef]'>24/7 Live Support</strong> chat button anytime.</span>
-                </p>
+            <!-- HƯỚNG DẪN & BẢO MẬT GIAO DỊCH -->
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
+                <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-2">
+                    <i class="fa-solid fa-circle-info text-[#fcd535]"></i>
+                    <h3 id="highlights-title" class="font-bold text-white text-sm">Vault Operation Highlights</h3>
+                </div>
+                <div class="grid grid-cols-1 gap-2.5 text-xs text-[#848e9c]">
+                    <div id="highlight-1" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
+                        <i class="fa-solid fa-check-circle text-[#0ecb81] mt-0.5 shrink-0"></i>
+                        <span>Minimum deposit starts at <strong class="text-[#eaecef]">100 USDT</strong> via TRC20 network with automatic VIP tier calculation.</span>
+                    </div>
+                    <div id="highlight-2" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
+                        <i class="fa-solid fa-clock text-[#fcd535] mt-0.5 shrink-0"></i>
+                        <span>Each yield cycle runs on a <strong class="text-[#eaecef]">24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.</span>
+                    </div>
+                    <div id="highlight-3" class="flex items-start space-x-2.5 bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
+                        <i class="fa-solid fa-headset text-purple-400 mt-0.5 shrink-0"></i>
+                        <span>Need help with deposits, withdrawals, or VIP tiers? Use the <strong class="text-[#eaecef]">24/7 Live Support</strong> chat button anytime.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-3 shadow-sm overflow-hidden relative">
+                <div id="ticker-label-home" class="text-[10px] font-bold text-[#848e9c] uppercase tracking-widest text-center mb-2">Supported Cryptocurrencies & Assets</div>
+                <div class="overflow-hidden whitespace-nowrap relative w-full">
+                    <div class="animate-marquee flex items-center space-x-8 text-xs font-bold text-[#eaecef]">
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#0ecb81]/30"><i class="fa-solid fa-circle-dollar-to-slot text-[#0ecb81]"></i><span>USDT (Tether)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/30"><i class="fa-brands fa-bitcoin text-[#fcd535]"></i><span>BTC (Bitcoin)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/40"><i class="fa-solid fa-coins text-[#fcd535]"></i><span>BNB (Binance)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-purple-500/30"><i class="fa-brands fa-ethereum text-purple-400"></i><span>ETH (Ethereum)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-indigo-500/30"><i class="fa-solid fa-bolt text-indigo-400"></i><span>SOL (Solana)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-cyan-500/30"><i class="fa-solid fa-shield-cat text-cyan-400"></i><span>XRP (Ripple)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-rose-500/30"><i class="fa-solid fa-fire text-rose-400"></i><span>TRX (Tron)</span></div>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- TAB 2: MARKETS -->
-        <div id="tab-markets" class="hidden space-y-5 animate-fade-in">
-            <div class="glass-card rounded-2xl p-5 space-y-4">
-                <div class="flex justify-between items-center border-b border-[#2b3139] pb-3">
+
+        <!-- TAB 2: MARKETS & EXCHANGE HUB (KHÁM PHÁ CHỨNG KHOÁN / CRYPTO + TÌM KIẾM + LIÊN KẾT BINANCE / BYBIT / BITGET / OKX) -->
+        <div id="tab-markets" class="hidden space-y-4 tab-panel-enter">
+            <!-- TÌM KIẾM MÃ CHỨNG KHOÁN / CRYPTO / SÀN -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
                     <div>
-                        <h2 id="markets-title" class="font-bold text-white text-base">Markets & Equities Discovery</h2>
-                        <p id="markets-subtitle" class="text-xs text-[#848e9c] mt-0.5">Real-time crypto & global stock tickers, search & third-party exchange links.</p>
+                        <h3 id="markets-title" class="font-bold text-white text-base flex items-center space-x-2">
+                            <i class="fa-solid fa-arrow-trend-up text-[#fcd535]"></i>
+                            <span>Markets & Equities Discovery</span>
+                        </h3>
+                        <p id="markets-subtitle" class="text-[11px] text-[#848e9c]">Real-time crypto & global stock tickers, search & third-party exchange links.</p>
                     </div>
-                    <span id="market-status-badge" class="text-[10px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] border border-[#0ecb81]/30 px-2.5 py-1 rounded-full">● Market Open</span>
+                    <span id="market-status-badge" class="text-[10px] font-bold bg-[#0ecb81]/15 text-[#0ecb81] px-2.5 py-1 rounded-full border border-[#0ecb81]/30">● Market Open</span>
                 </div>
 
-                <div class="flex flex-col sm:flex-row gap-2.5">
+                <div class="flex flex-col sm:flex-row gap-2">
                     <div class="relative flex-1">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[#848e9c] text-xs"></i>
-                        <input type="text" id="market-search-input" oninput="renderMarketWatchlist()" placeholder="Search ticker or stock (BTC, BNB, NVDA, AAPL, TSLA...)" class="w-full bn-input rounded-xl pl-9 pr-3 py-2 text-xs">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#848e9c] text-xs"></i>
+                        <input type="text" id="market-search-input" oninput="renderMarketWatchlist()" placeholder="Search ticker or stock (BTC, BNB, NVDA, AAPL, TSLA, VNM...)" class="w-full bn-input rounded-xl pl-9 pr-3 py-2 text-xs">
                     </div>
-                    <div class="flex items-center space-x-1.5 shrink-0">
+                    <div class="flex space-x-1.5">
                         <button onclick="setMarketCategory('ALL')" id="mcat-all" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#fcd535] text-[#0b0e11] transition">All</button>
                         <button onclick="setMarketCategory('CRYPTO')" id="mcat-crypto" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#1e2329] text-[#848e9c] border border-[#2b3139] hover:text-white transition">Crypto</button>
                         <button onclick="setMarketCategory('STOCKS')" id="mcat-stocks" class="px-3 py-2 rounded-xl text-xs font-bold bg-[#1e2329] text-[#848e9c] border border-[#2b3139] hover:text-white transition">Stocks</button>
                     </div>
                 </div>
+            </div>
 
-                <div class="flex justify-between text-[11px] font-bold text-[#848e9c] px-1">
+            <!-- DANH SÁCH CHỨNG KHOÁN & CRYPTO -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm space-y-2.5">
+                <div class="flex justify-between items-center text-[11px] text-[#848e9c] font-semibold border-b border-[#2b3139] pb-2">
                     <span id="mkt-col-asset">Asset / Ticker</span>
                     <span id="mkt-col-price">Price & 24h Change</span>
                 </div>
-
-                <div id="market-watchlist-container" class="space-y-2.5 max-h-96 overflow-y-auto pr-1 lang-scroll-list"></div>
+                <div id="market-watchlist-container" class="space-y-2 max-h-80 overflow-y-auto pr-1 lang-scroll-list"></div>
             </div>
 
-            <div class="glass-card rounded-2xl p-5 space-y-3">
-                <div class="flex justify-between items-center border-b border-[#2b3139] pb-2.5">
+            <!-- LIÊN KẾT ỨNG DỤNG BÊN THỨ 3: BINANCE, BYBIT, BITGET, OKX -->
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2b3139] pb-2.5">
                     <div>
-                        <h3 id="thirdparty-title" class="font-bold text-white text-sm">Third-Party Exchange Links</h3>
-                        <p id="thirdparty-desc" class="text-xs text-[#848e9c] mt-0.5">Connect or open external partner apps: Binance, Bybit, Bitget, OKX.</p>
+                        <h3 id="thirdparty-title" class="font-bold text-white text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-link text-[#fcd535]"></i>
+                            <span>Third-Party Exchange Links</span>
+                        </h3>
+                        <p id="thirdparty-desc" class="text-[11px] text-[#848e9c]">Connect or open external partner apps: Binance, Bybit, Bitget, OKX.</p>
                     </div>
-                    <span id="linked-exchanges-badge" class="text-[10px] font-bold bg-[#fcd535]/15 text-[#fcd535] border border-[#fcd535]/30 px-2 py-1 rounded-lg">0 Linked</span>
+                    <span id="linked-exchanges-badge" class="text-[10px] font-bold bg-[#fcd535]/15 text-[#fcd535] px-2.5 py-0.5 rounded-full border border-[#fcd535]/30">0 Linked</span>
                 </div>
-                <div id="exchange-connectors-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="exchange-connectors-grid"></div>
             </div>
         </div>
 
         <!-- TAB 3: WITHDRAWAL -->
-        <div id="tab-withdrawal" class="hidden space-y-5 animate-fade-in">
-            <div class="glass-card rounded-2xl p-3 overflow-hidden">
-                <div id="ticker-label-withdraw" class="text-[10px] font-bold uppercase tracking-wider text-[#848e9c] mb-2">Supported Cryptocurrencies & Assets</div>
-                <div class="overflow-hidden">
-                    <div class="animate-marquee space-x-6 text-xs font-mono">
-                        <span class="text-[#eaecef]"><b class="text-[#fcd535]">USDT</b> TRC20 · 1.0000</span>
-                        <span class="text-[#eaecef]"><b class="text-[#0ecb81]">BNB</b> +3.00%</span>
-                        <span class="text-[#eaecef]"><b class="text-[#fcd535]">BTC</b> +3.42%</span>
-                        <span class="text-[#eaecef]"><b class="text-[#0ecb81]">ETH</b> +1.94%</span>
-                        <span class="text-[#eaecef]"><b class="text-[#fcd535]">USDT</b> TRC20 · 1.0000</span>
-                        <span class="text-[#eaecef]"><b class="text-[#0ecb81]">BNB</b> +3.00%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card rounded-2xl p-5 space-y-4">
-                <h2 id="withdrawal-title" class="font-bold text-white text-base border-b border-[#2b3139] pb-2">Withdrawal</h2>
-
-                <div class="bg-[#1e2329] p-3.5 rounded-xl border border-[#2b3139] space-y-2 text-xs">
-                    <div class="flex justify-between items-center">
-                        <span id="lbl-withdraw-net" class="font-bold text-[#848e9c]">WITHDRAWAL NETWORK</span>
-                        <select id="withdraw-network" class="bn-input rounded-lg px-2.5 py-1 text-xs font-bold text-[#fcd535]">
-                            <option value="TRON (TRC20)">TRON (TRC20)</option>
-                            <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
-                            <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
-                            <option value="Binance Pay / Internal">Binance Pay / Internal</option>
-                        </select>
-                    </div>
-                    <div class="pt-1 border-t border-[#2b3139]">
-                        <span id="lbl-linked-target" class="font-bold text-[#848e9c] block mb-1">TARGET WALLET ADDRESS</span>
-                        <div id="display-linked-wallet" class="font-mono text-xs text-[#eaecef] break-all">
-                            <span class="text-[#f6465d] font-semibold">Unlinked Wallet Address (Please fill Section 2)</span>
+        <div id="tab-withdrawal" class="hidden space-y-6 tab-panel-enter">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-3 mb-3">
+                            <div class="w-8 h-8 bg-[#fcd535]/15 text-[#fcd535] rounded-lg flex items-center justify-center font-bold border border-[#fcd535]/30">1</div>
+                            <h3 id="withdrawal-title" class="font-bold text-white text-base">Withdrawal</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <label id="lbl-withdraw-net" class="block text-xs font-semibold text-[#848e9c] mb-1">WITHDRAWAL NETWORK</label>
+                                <select id="withdraw-network" class="w-full bn-input rounded-xl p-2.5 text-xs">
+                                    <option value="TRON (TRC20)">TRON (TRC20)</option>
+                                    <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
+                                    <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
+                                    <option value="Polygon (MATIC)">Polygon (MATIC)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label id="lbl-linked-target" class="block text-xs font-semibold text-[#848e9c] mb-1">TARGET WALLET ADDRESS</label>
+                                <div id="display-linked-wallet" class="bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139] text-xs font-mono break-all text-[#eaecef]">
+                                    Not linked yet
+                                </div>
+                            </div>
+                            <div>
+                                <label id="withdrawal-label" class="block text-xs font-semibold text-[#848e9c] mb-1">WITHDRAW AMOUNT (USDT)</label>
+                                <input type="number" id="withdraw-input" placeholder="0.00" class="w-full bn-input rounded-xl p-3 text-sm">
+                            </div>
                         </div>
                     </div>
+                    <button id="withdrawal-btn" onclick="requestWithdrawal()" class="w-full bn-btn-yellow active:scale-95 py-3 rounded-xl shadow transition text-sm mt-4">
+                        Confirm Withdrawal
+                    </button>
                 </div>
 
-                <div>
-                    <label id="withdrawal-label" class="block text-xs font-bold text-[#848e9c] mb-1.5">WITHDRAW AMOUNT (USDT)</label>
-                    <input type="number" id="withdraw-input" placeholder="0.00" class="w-full bn-input rounded-xl p-3 text-sm font-mono">
+                <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 border-b border-[#2b3139] pb-3 mb-3">
+                            <div class="w-8 h-8 bg-[#0ecb81]/15 text-[#0ecb81] rounded-lg flex items-center justify-center font-bold border border-[#0ecb81]/30">2</div>
+                            <h3 id="link-wallet-title" class="font-bold text-white text-base">Link Wallet Address</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <p id="link-wallet-desc" class="text-xs text-[#848e9c]">Please select network and link your Binance or personal exchange wallet address before withdrawing.</p>
+                            <div>
+                                <label id="lbl-link-net" class="block text-xs font-semibold text-[#848e9c] mb-1">SELECT YOUR NETWORK</label>
+                                <select id="link-network-select" class="w-full bn-input rounded-xl p-2.5 text-xs">
+                                    <option value="TRON (TRC20)">TRON (TRC20)</option>
+                                    <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
+                                    <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
+                                    <option value="Polygon (MATIC)">Polygon (MATIC)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label id="lbl-link-addr" class="block text-xs font-semibold text-[#848e9c] mb-1">PERSONAL WALLET ADDRESS</label>
+                                <input type="text" id="link-wallet-address" placeholder="Enter TRC20 / Binance wallet address..." class="w-full bn-input rounded-xl p-2.5 text-xs font-mono">
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="saveUserWalletLink()" id="btn-save-link" class="w-full bg-[#0ecb81] hover:bg-[#0bb572] active:scale-95 text-[#0b0e11] font-extrabold py-3 rounded-xl shadow transition text-sm mt-4">
+                        Save Wallet Address
+                    </button>
                 </div>
-
-                <button onclick="requestWithdrawal()" id="withdrawal-btn" class="w-full bn-btn-yellow active:scale-95 py-3 rounded-xl text-sm shadow transition">
-                    Confirm Withdrawal
-                </button>
             </div>
 
-            <!-- SECTION 2: LINK WALLET -->
-            <div class="glass-card rounded-2xl p-5 space-y-3">
-                <h3 id="link-wallet-title" class="font-bold text-white text-sm">Link Wallet Address</h3>
-                <p id="link-wallet-desc" class="text-xs text-[#848e9c]">Select network & bind your TRC20/Binance wallet address before withdrawing.</p>
-
-                <div>
-                    <label id="lbl-link-net" class="block text-[11px] font-bold text-[#848e9c] mb-1">SELECT YOUR NETWORK</label>
-                    <select id="link-network-select" class="w-full bn-input rounded-xl p-2.5 text-xs font-semibold">
-                        <option value="TRON (TRC20)">TRON (TRC20)</option>
-                        <option value="BNB Smart Chain (BEP20)">BNB Smart Chain (BEP20)</option>
-                        <option value="Ethereum (ERC20)">Ethereum (ERC20)</option>
-                        <option value="Binance UID / Wallet">Binance UID / Wallet</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label id="lbl-link-addr" class="block text-[11px] font-bold text-[#848e9c] mb-1">PERSONAL WALLET ADDRESS</label>
-                    <input type="text" id="link-wallet-address" placeholder="T... or 0x..." class="w-full bn-input rounded-xl p-2.5 text-xs font-mono">
-                </div>
-
-                <button onclick="saveUserWalletLink()" id="btn-save-link" class="w-full bg-[#1e2329] hover:bg-[#2b3139] text-[#fcd535] border border-[#fcd535]/40 font-bold py-2.5 rounded-xl text-xs transition">
-                    Save Wallet Address
-                </button>
-            </div>
-
-            <!-- WITHDRAWAL HISTORY -->
-            <div class="glass-card rounded-2xl p-5 space-y-3">
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-3">
                 <div class="flex justify-between items-center border-b border-[#2b3139] pb-2">
-                    <h3 id="history-title" class="font-bold text-white text-xs">Withdrawal History (24h Auto-Expiry)</h3>
+                    <h3 id="history-title" class="font-bold text-white text-sm">Withdrawal History (24h Auto-Expiry)</h3>
                     <span id="history-subtitle" class="text-[10px] text-[#848e9c]">Auto-clears after 24h</span>
                 </div>
-                <div id="withdrawal-history-list" class="space-y-2 text-xs">
+                <div id="withdrawal-history-list" class="space-y-2 max-h-48 overflow-y-auto text-xs">
                     <div id="history-empty" class="text-[#848e9c] text-center py-4">No withdrawal history in the last 24 hours.</div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-3 shadow-sm overflow-hidden relative">
+                <div id="ticker-label-withdraw" class="text-[10px] font-bold text-[#848e9c] uppercase tracking-widest text-center mb-2">Supported Cryptocurrencies & Assets</div>
+                <div class="overflow-hidden whitespace-nowrap relative w-full">
+                    <div class="animate-marquee flex items-center space-x-8 text-xs font-bold text-[#eaecef]">
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#0ecb81]/30"><i class="fa-solid fa-circle-dollar-to-slot text-[#0ecb81]"></i><span>USDT (Tether)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/30"><i class="fa-brands fa-bitcoin text-[#fcd535]"></i><span>BTC (Bitcoin)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-[#fcd535]/40"><i class="fa-solid fa-coins text-[#fcd535]"></i><span>BNB (Binance)</span></div>
+                        <div class="flex items-center space-x-1.5 bg-[#1e2329] px-3 py-1 rounded-full border border-purple-500/30"><i class="fa-brands fa-ethereum text-purple-400"></i><span>ETH (Ethereum)</span></div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- TAB 4: ACCOUNT -->
-        <div id="tab-account" class="hidden space-y-5 animate-fade-in">
-            <!-- ACTIVATION BANNER -->
-            <div id="activation-banner-box" class="hidden glass-card rounded-2xl p-4 border border-[#0ecb81]/40 relative space-y-2">
-                <button onclick="dismissActivationBanner()" class="absolute right-3 top-3 text-[#848e9c] hover:text-white text-xs">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <h4 id="act-banner-title" class="text-sm font-bold text-[#0ecb81]">Activate new balance accumulation!</h4>
-                <p id="act-banner-desc" class="text-xs text-[#848e9c]">Confirm to activate your deposit and start earning daily returns.</p>
-                <button onclick="executeActivation()" id="btn-activate-now" class="bg-[#0ecb81] hover:bg-[#0bb572] text-[#0b0e11] font-extrabold px-4 py-2 rounded-xl text-xs transition">
-                    Activate
-                </button>
-            </div>
-
-            <div class="glass-card rounded-2xl p-5 space-y-4">
-                <div class="flex justify-between items-center border-b border-[#2b3139] pb-2.5">
-                    <span id="acc-accumulated" class="font-bold text-white text-sm">Accumulated Income</span>
-                    <span id="user-tier-badge" class="text-[10px] font-bold bg-[#fcd535]/15 text-[#fcd535] border border-[#fcd535]/30 px-2.5 py-0.5 rounded-full">VIP 1 (2.00% / day)</span>
+        <div id="tab-account" class="hidden max-w-md mx-auto space-y-4 tab-panel-enter">
+            <div class="glass-card rounded-2xl p-5 shadow-sm space-y-4">
+                <div class="flex justify-between items-center text-[#848e9c] text-sm">
+                    <span id="acc-accumulated">Accumulated Income</span>
+                    <span class="text-xs bg-[#fcd535] text-[#0b0e11] font-extrabold px-2.5 py-1 rounded-full shadow" id="user-tier-badge">VIP 1 (2.00% / day)</span>
                 </div>
-
-                <div class="text-2xl font-black text-white font-mono"><span id="user-display-
-                                                                          balance">0.000000 BNB</div>
+                <div class="text-2xl font-bold text-[#fcd535] font-mono" id="user-display-balance">0.000000 BNB</div>
 
                 <div class="grid grid-cols-2 gap-4 pt-2 border-t border-[#2b3139] text-sm items-center">
                     <div>
@@ -803,9 +881,9 @@
             en: {
                 appTitle: "SAVINGS WALLET", bannerTitle: "Receive Voucher", bannerSubtitle: "No pledge", bannerDesc: "Join the node and start mining", btnCert: "Certificate", btnDepositHub: "Deposit Hub", poolDataTitle: "Pool Data", totalOutput: "Total Output", validNodes: "Valid Nodes", participants: "Participants", userRevenue: "User Revenue", outputDetailsTitle: "Output details", tableAddr: "Address", tableQty: "Quantity", withdrawalTitle: "Withdrawal", withdrawalLabel: "WITHDRAW AMOUNT (USDT)", withdrawalBtn: "Confirm Withdrawal", accAccumulated: "Accumulated Income", accToday: "Today's Income", accYield: "Market Yield", accPoolWallet: "Pool Wallet", accWalletBal: "Wallet Balance", navHome: "Home", navMarkets: "Markets", navWithdrawal: "Withdrawal", navAccount: "Account", btnQuickDeposit: "Deposit Fixed Wallet", tooltipSupport: "Live Support 24/7!", chatTitle: "24/7 Live Support", chatStatus: "● ADM Online", chatWelcomeMsg: "Hello! How can ADM assist your savings wallet transactions today?", chatPlaceholder: "Type your message...", btnChatSend: "Send", certTitle: "SAVINGS DEPOSIT CERTIFICATE", certSubtitle: "SAVINGS WALLET PROTOCOL", lblOp: "Operating Since:", valOp: "Year 2021 (5+ Years Active)", lblTech: "Standard:", valTech: "Independent Decentralized Protocol", lblCustody: "Asset Protection:", valCustody: "Self-Custody Wallet", lblNet: "Network:", valNet: "TRON (TRC-20)", btnConfirm: "Understood & Confirm", linkWalletTitle: "Link Wallet Address", linkWalletDesc: "Select network & bind your TRC20/Binance wallet address before withdrawing.", lblWithdrawNet: "WITHDRAWAL NETWORK", lblLinkedTarget: "TARGET WALLET ADDRESS", lblLinkNet: "SELECT YOUR NETWORK", lblLinkAddr: "PERSONAL WALLET ADDRESS", btnSaveLink: "Save Wallet Address", historyTitle: "Withdrawal History (24h Auto-Expiry)", historySubtitle: "Auto-clears after 24h", historyEmpty: "No withdrawal history in the last 24 hours.", lblMyAddr: "Your Wallet Address:", btnCopyText: "Copy", btnLogoutText: "Logout Account", vipSystemTitle: "VIP Tiers System (VIP 1 - 12)", vipSystemSub: "From 100 USDT+", actTitle: "Activate new balance accumulation!", actDesc: "Confirm to activate your deposit and start earning daily returns.", actBtn: "Activate", btnClaim: "Claim Income", timerTitle: "24h Yield Cycle Progress:", startLabel: "Deposit Start", endLabel: "Ready to Claim (100%)", authTitle: "Login / Register", authDesc: "Please login or create a new account", usernameLbl: "Username:", passwordLbl: "Password:", authBtn: "Login / Register Now", modalDepTitle: "Fixed Deposit Hub", modalDepDesc: "Transfer USDT via TRC20 network to fixed address (Min 100 USDT):", depAmtLbl: "Deposit Amount (USDT):", depRetLbl: "Expected Return:", depBtn: "Submit Deposit Request (Pending ADM Approval)", badgeSecure: "Secure Vault", welcomeTitle: "Welcome to SAVINGS WALLET!", welcomeSub: "Leading secure savings & daily return wallet protocol.", reviewPrompt: "Rate 5 stars for SAVINGS WALLET to unlock benefits!", reviewPromptSub: "Click on stars on the right to rate now.", tickerLabel: "Supported Cryptocurrencies & Assets", unlinkedWalletText: "Unlinked Wallet Address (Please fill Section 2)", copyBtnText: "Copy",
                 qaDepositTitle: "Quick Deposit", qaDepositSub: "TRC20 Vault", qaPayoutTitle: "Fast Payout", qaPayoutSub: "Multi-Chain", qaYieldTitle: "24h Yield", qaYieldSub: "Up to 22%/d", liveTelemetry: "● Live Telemetry", realtimeBlocks: "Real-time blocks", highlightsTitle: "Vault Operation Highlights",
-                highlight1: "Minimum deposit starts at <strong class='text-[#eaecef]'>100 USDT</strong> via TRC20 network with automatic VIP tier calculation.",
-                highlight2: "Each yield cycle runs on a <strong class='text-[#eaecef]'>24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.",
-                highlight3: "Need help with deposits, withdrawals, or VIP tiers? Use the <strong class='text-[#eaecef]'>24/7 Live Support</strong> chat button anytime.",
+                highlight1: "Minimum deposit starts at <strong>100 USDT</strong> via TRC20 network with automatic VIP tier calculation.",
+                highlight2: "Each yield cycle runs on a <strong>24-hour</strong> countdown — claim rewards once the progress bar reaches 100%.",
+                highlight3: "Need help with deposits, withdrawals, or VIP tiers? Use the <strong>24/7 Live Support</strong> chat button anytime.",
                 marketsTitle: "Markets & Equities Discovery", marketsSubtitle: "Real-time crypto & global stock tickers, search & third-party exchange links.", marketOpen: "● Market Open", searchPlaceholder: "Search ticker or stock (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "All", filterCrypto: "Crypto", filterStocks: "Stocks", colAsset: "Asset / Ticker", colPrice: "Price & 24h Change", thirdpartyTitle: "Third-Party Exchange Links", thirdpartyDesc: "Connect or open external partner apps: Binance, Bybit, Bitget, OKX.", btnConnectApp: "Link App", btnLinkedApp: "Linked", btnOpenApp: "Open",
                 alertFillAuth: "Please enter both username and password!", alertWrongPass: "Incorrect password!", alertAuthSuccess: "Login successful!", alertRateThanks: "Thank you for rating 5 stars for SAVINGS WALLET!", alertLoginRequired: "Please log in to perform this action!", alertCopyAddrSuccess: "Wallet address copied successfully: ", alertSaveLinkSuccess: "Wallet address linked successfully!", alertCycleNotFinished: "24-hour yield cycle is not completed yet!", alertClaimSuccess: "Congratulations! Claimed 24h returns successfully: ", alertMinDeposit: "Minimum deposit value is 100 USDT!", alertDepositSubmitted: "Deposit request submitted! Please wait for ADM approval.", alertActivateSuccess: "Activated new 24h yield accumulation successfully!", alertUnlinkedWallet: "You have NOT LINKED A WALLET ADDRESS! Please complete Section 2 first.", alertInvalidAmount: "Please enter a valid amount!", alertInsuffBalance: "Insufficient available balance!", alertWithdrawSubmitted: "Withdrawal request submitted! Waiting for ADM approval."
             },
@@ -835,62 +913,31 @@
                 highlight3: "如需充值、提现或 VIP 帮助，请随时点击 <strong class='text-[#eaecef]'>24/7 在线客服</strong>。",
                 marketsTitle: "行情与股票探索", marketsSubtitle: "加密货币与美股行情搜索，关联 Binance / Bybit / Bitget / OKX。", marketOpen: "● 交易中", searchPlaceholder: "搜索代码或股票 (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "全部", filterCrypto: "加密货币", filterStocks: "股票", colAsset: "资产 / 代码", colPrice: "价格与 24h 涨跌", thirdpartyTitle: "第三方交易所应用关联", thirdpartyDesc: "关联或打开合作平台：Binance、Bybit、Bitget、OKX。", btnConnectApp: "关联", btnLinkedApp: "已关联", btnOpenApp: "打开",
                 alertFillAuth: "请输入用户名和密码！", alertWrongPass: "密码错误！", alertAuthSuccess: "登录成功！", alertRateThanks: "感谢您为 SAVINGS WALLET 评价 5 星！", alertLoginRequired: "请登录后操作！", alertCopyAddrSuccess: "成功复制钱包地址: ", alertSaveLinkSuccess: "成功绑定钱包地址！", alertCycleNotFinished: "24小时周期未完成！", alertClaimSuccess: "恭喜！成功领取收益: ", alertMinDeposit: "最低充值金额为 100 USDT！", alertDepositSubmitted: "充值请求已提交，请等待管理员审核！", alertActivateSuccess: "成功激活24小时收益累积！", alertUnlinkedWallet: "您尚未绑定钱包地址，请先完成步骤2！", alertInvalidAmount: "请输入有效金额！", alertInsuffBalance: "可用余额不足！", alertWithdrawSubmitted: "提现申请已提交，等待管理员审核！"
-            },
-            ko: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "바우처 받기", bannerSubtitle: "예치 조건 없음", bannerDesc: "노드에 참여하고 채굴을 시작하세요", btnCert: "인증서", btnDepositHub: "입금 허브", poolDataTitle: "풀 데이터", totalOutput: "총 생산량", validNodes: "유효 노드", participants: "참여자", userRevenue: "사용자 수익", outputDetailsTitle: "출력 상세", tableAddr: "주소", tableQty: "수량", withdrawalTitle: "출금", withdrawalLabel: "출금 금액 (USDT)", withdrawalBtn: "출금 확인", accAccumulated: "누적 수익", accToday: "오늘 수익", accYield: "시장 수익률", accPoolWallet: "풀 지갑", accWalletBal: "지갑 잔액", navHome: "홈", navMarkets: "마켓", navWithdrawal: "출금", navAccount: "계정", btnQuickDeposit: "고정 지갑 입금", tooltipSupport: "24/7 실시간 지원!", chatTitle: "24/7 실시간 고객지원", chatStatus: "● 관리자 온라인", chatWelcomeMsg: "안녕하세요! 세이빙 월렛 거래와 관련해 무엇을 도와드릴까요?", chatPlaceholder: "메시지를 입력하세요...", btnChatSend: "전송", certTitle: "예치 증명서", certSubtitle: "SAVINGS WALLET 프로토콜", lblOp: "운영 시작:", valOp: "2021년 (5년 이상 운영 중)", lblTech: "표준:", valTech: "독립 탈중앙화 프로토콜", lblCustody: "자산 보호:", valCustody: "셀프 커스터디 지갑", lblNet: "네트워크:", valNet: "TRON (TRC-20)", btnConfirm: "확인했습니다", linkWalletTitle: "지갑 주소 연결", linkWalletDesc: "출금 전에 네트워크를 선택하고 TRC20 또는 거래소 지갑 주소를 연결하세요.", lblWithdrawNet: "출금 네트워크", lblLinkedTarget: "출금 대상 지갑 주소", lblLinkNet: "네트워크 선택", lblLinkAddr: "개인 지갑 주소", btnSaveLink: "지갑 주소 저장", historyTitle: "출금 내역 (24시간 후 자동 삭제)", historySubtitle: "24시간 후 자동 삭제", historyEmpty: "최근 24시간 내 출금 내역이 없습니다.", lblMyAddr: "내 지갑 주소:", btnCopyText: "복사", btnLogoutText: "로그아웃", vipSystemTitle: "VIP 등급 시스템 (VIP 1 - 12)", vipSystemSub: "100 USDT 이상", actTitle: "새 잔액 적립 활성화!", actDesc: "입금을 활성화하고 일일 수익 적립을 시작하세요.", actBtn: "활성화", btnClaim: "수익 받기", timerTitle: "24시간 수익 주기 진행률:", startLabel: "입금 시작", endLabel: "수령 가능 (100%)", authTitle: "로그인 / 회원가입", authDesc: "로그인하거나 새 계정을 만드세요", usernameLbl: "사용자 이름:", passwordLbl: "비밀번호:", authBtn: "지금 로그인 / 회원가입", modalDepTitle: "고정 입금 허브", modalDepDesc: "고정 주소로 TRC20 네트워크를 통해 USDT를 전송하세요 (최소 100 USDT):", depAmtLbl: "입금 금액 (USDT):", depRetLbl: "예상 수익:", depBtn: "입금 요청 제출 (관리자 승인 대기)", badgeSecure: "보안 금고", welcomeTitle: "SAVINGS WALLET에 오신 것을 환영합니다!", welcomeSub: "안전한 예치 및 일일 수익 월렛 프로토콜입니다.", reviewPrompt: "혜택을 받으려면 SAVINGS WALLET에 별점 5점을 주세요!", reviewPromptSub: "오른쪽 별을 클릭하여 지금 평가하세요.", tickerLabel: "지원되는 암호화폐 및 자산", unlinkedWalletText: "연결된 지갑 없음 (2단계에서 입력하세요)", copyBtnText: "복사",
-                qaDepositTitle: "빠른 입금", qaDepositSub: "TRC20 금고", qaPayoutTitle: "빠른 출금", qaPayoutSub: "멀티체인", qaYieldTitle: "24시간 수익", qaYieldSub: "최대 22%/일", liveTelemetry: "● 실시간 데이터", realtimeBlocks: "실시간 블록", highlightsTitle: "운영 핵심 안내",
-                highlight1: "최소 입금액은 <strong class='text-[#eaecef]'>100 USDT</strong> (TRC20)이며 VIP 등급이 자동 계산됩니다.",
-                highlight2: "각 수익 주기는 <strong class='text-[#eaecef]'>24시간</strong>이며 진행률이 100%가 되면 수령할 수 있습니다.",
-                highlight3: "입출금이나 VIP 등급 도움이 필요하면 언제든 <strong class='text-[#eaecef]'>24/7 실시간 지원</strong> 버튼을 이용하세요.",
-                marketsTitle: "마켓 & 주식 탐색", marketsSubtitle: "실시간 암호화폐 및 주식 시세 검색, 외부 거래소 앱 연동.", marketOpen: "● 장중", searchPlaceholder: "종목 검색 (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "전체", filterCrypto: "암호화폐", filterStocks: "주식", colAsset: "자산 / 종목", colPrice: "가격 & 24시간 변동", thirdpartyTitle: "제3자 거래소 앱 연동", thirdpartyDesc: "Binance, Bybit, Bitget, OKX 앱을 연결하거나 열 수 있습니다.", btnConnectApp: "연결", btnLinkedApp: "연결됨", btnOpenApp: "열기",
-                alertFillAuth: "사용자 이름과 비밀번호를 모두 입력하세요!", alertWrongPass: "비밀번호가 올바르지 않습니다!", alertAuthSuccess: "로그인되었습니다!", alertRateThanks: "SAVINGS WALLET에 별점 5점을 주셔서 감사합니다!", alertLoginRequired: "이 작업을 수행하려면 로그인하세요!", alertCopyAddrSuccess: "지갑 주소가 복사되었습니다: ", alertSaveLinkSuccess: "지갑 주소가 연결되었습니다!", alertCycleNotFinished: "24시간 수익 주기가 아직 완료되지 않았습니다!", alertClaimSuccess: "축하합니다! 24시간 수익을 수령했습니다: ", alertMinDeposit: "최소 입금액은 100 USDT입니다!", alertDepositSubmitted: "입금 요청이 제출되었습니다! 관리자 승인을 기다려 주세요.", alertActivateSuccess: "새 24시간 수익 적립이 활성화되었습니다!", alertUnlinkedWallet: "지갑 주소가 연결되지 않았습니다! 먼저 2단계를 완료하세요.", alertInvalidAmount: "올바른 금액을 입력하세요!", alertInsuffBalance: "사용 가능한 잔액이 부족합니다!", alertWithdrawSubmitted: "출금 요청이 제출되었습니다! 관리자 승인을 기다리는 중입니다."
-            },
-            es: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "Recibir cupón", bannerSubtitle: "Sin compromiso", bannerDesc: "Únete al nodo y comienza a minar", btnCert: "Certificado", btnDepositHub: "Centro de depósitos", poolDataTitle: "Datos del pool", totalOutput: "Producción total", validNodes: "Nodos válidos", participants: "Participantes", userRevenue: "Ganancias del usuario", outputDetailsTitle: "Detalles de producción", tableAddr: "Dirección", tableQty: "Cantidad", withdrawalTitle: "Retiro", withdrawalLabel: "MONTO A RETIRAR (USDT)", withdrawalBtn: "Confirmar retiro", accAccumulated: "Ingresos acumulados", accToday: "Ingresos de hoy", accYield: "Rendimiento del mercado", accPoolWallet: "Billetera del pool", accWalletBal: "Saldo de billetera", navHome: "Inicio", navMarkets: "Mercados", navWithdrawal: "Retiro", navAccount: "Cuenta", btnQuickDeposit: "Depositar en billetera fija", tooltipSupport: "¡Soporte 24/7!", chatTitle: "Soporte en vivo 24/7", chatStatus: "● ADM en línea", chatWelcomeMsg: "¡Hola! ¿Cómo puede ayudarte ADM hoy con tus transacciones en SAVINGS WALLET?", chatPlaceholder: "Escribe tu mensaje...", btnChatSend: "Enviar", certTitle: "CERTIFICADO DE DEPÓSITO DE AHORROS", certSubtitle: "PROTOCOLO SAVINGS WALLET", lblOp: "Operando desde:", valOp: "Año 2021 (Más de 5 años activo)", lblTech: "Estándar:", valTech: "Protocolo descentralizado independiente", lblCustody: "Protección de activos:", valCustody: "Billetera autocustodia", lblNet: "Red:", valNet: "TRON (TRC-20)", btnConfirm: "Entendido y confirmar", linkWalletTitle: "Vincular dirección de billetera", linkWalletDesc: "Selecciona la red y vincula tu dirección TRC20 o de Binance antes de retirar.", lblWithdrawNet: "RED DE RETIRO", lblLinkedTarget: "DIRECCIÓN DE DESTINO", lblLinkNet: "SELECCIONA TU RED", lblLinkAddr: "DIRECCIÓN DE BILLETERA PERSONAL", btnSaveLink: "Guardar dirección", historyTitle: "Historial de retiros (Autoeliminación en 24 h)", historySubtitle: "Se borra tras 24 h", historyEmpty: "No hay historial de retiros en las últimas 24 horas.", lblMyAddr: "Tu dirección de billetera:", btnCopyText: "Copiar", btnLogoutText: "Cerrar sesión", vipSystemTitle: "Sistema de niveles VIP (VIP 1 - 12)", vipSystemSub: "Desde 100 USDT+", actTitle: "¡Activa la acumulación del nuevo saldo!", actDesc: "Confirma para activar tu depósito y empezar a ganar rendimientos diarios.", actBtn: "Activar", btnClaim: "Reclamar ganancias", timerTitle: "Progreso del ciclo de 24 h:", startLabel: "Inicio del depósito", endLabel: "Listo para reclamar (100%)", authTitle: "Iniciar sesión / Registrarse", authDesc: "Inicia sesión o crea una cuenta nueva", usernameLbl: "Usuario:", passwordLbl: "Contraseña:", authBtn: "Iniciar sesión / Registrarse ahora", modalDepTitle: "Centro de depósitos fijos", modalDepDesc: "Transfiere USDT por la red TRC20 a la dirección fija (Mín. 100 USDT):", depAmtLbl: "Monto del depósito (USDT):", depRetLbl: "Retorno estimado:", depBtn: "Enviar solicitud de depósito (Pendiente de ADM)", badgeSecure: "Bóveda segura", welcomeTitle: "¡Bienvenido a SAVINGS WALLET!", welcomeSub: "Protocolo líder de ahorro seguro y rendimientos diarios.", reviewPrompt: "¡Califica con 5 estrellas a SAVINGS WALLET para desbloquear beneficios!", reviewPromptSub: "Haz clic en las estrellas de la derecha para calificar ahora.", tickerLabel: "Criptomonedas y activos compatibles", unlinkedWalletText: "Billetera no vinculada (Completa la Sección 2)", copyBtnText: "Copiar",
-                qaDepositTitle: "Depósito rápido", qaDepositSub: "Bóveda TRC20", qaPayoutTitle: "Pago rápido", qaPayoutSub: "Multicadena", qaYieldTitle: "Rendimiento 24 h", qaYieldSub: "Hasta 22%/día", liveTelemetry: "● Telemetría en vivo", realtimeBlocks: "Bloques en tiempo real", highlightsTitle: "Aspectos destacados de operación",
-                highlight1: "El depósito mínimo comienza en <strong class='text-[#eaecef]'>100 USDT</strong> por red TRC20 con cálculo automático de nivel VIP.",
-                highlight2: "Cada ciclo de rendimiento dura <strong class='text-[#eaecef]'>24 horas</strong>: reclama tus recompensas al llegar al 100%.",
-                highlight3: "¿Necesitas ayuda con depósitos, retiros o VIP? Usa el botón de <strong class='text-[#eaecef]'>Soporte 24/7</strong> cuando quieras.",
-                marketsTitle: "Explorar mercados y acciones", marketsSubtitle: "Cotizaciones cripto y bursátiles en tiempo real, búsqueda y enlaces a exchanges.", marketOpen: "● Mercado abierto", searchPlaceholder: "Buscar símbolo o acción (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Acciones", colAsset: "Activo / Símbolo", colPrice: "Precio y cambio 24 h", thirdpartyTitle: "Enlaces a apps de terceros", thirdpartyDesc: "Vincula o abre plataformas asociadas: Binance, Bybit, Bitget, OKX.", btnConnectApp: "Vincular", btnLinkedApp: "Vinculada", btnOpenApp: "Abrir",
-                alertFillAuth: "¡Ingresa tanto el usuario como la contraseña!", alertWrongPass: "¡Contraseña incorrecta!", alertAuthSuccess: "¡Inicio de sesión exitoso!", alertRateThanks: "¡Gracias por calificar con 5 estrellas a SAVINGS WALLET!", alertLoginRequired: "¡Inicia sesión para realizar esta acción!", alertCopyAddrSuccess: "Dirección de billetera copiada: ", alertSaveLinkSuccess: "¡Dirección de billetera vinculada con éxito!", alertCycleNotFinished: "¡El ciclo de rendimiento de 24 horas aún no ha finalizado!", alertClaimSuccess: "¡Felicidades! Ganancias de 24 h reclamadas: ", alertMinDeposit: "¡El depósito mínimo es de 100 USDT!", alertDepositSubmitted: "¡Solicitud de depósito enviada! Espera la aprobación de ADM.", alertActivateSuccess: "¡Nueva acumulación de 24 h activada con éxito!", alertUnlinkedWallet: "¡NO HAS VINCULADO UNA BILLETERA! Completa primero la Sección 2.", alertInvalidAmount: "¡Ingresa un monto válido!", alertInsuffBalance: "¡Saldo disponible insuficiente!", alertWithdrawSubmitted: "¡Solicitud de retiro enviada! Esperando aprobación de ADM."
-            },
-            fr: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "Recevoir un coupon", bannerSubtitle: "Sans engagement", bannerDesc: "Rejoignez le nœud et commencez à miner", btnCert: "Certificat", btnDepositHub: "Hub de dépôt", poolDataTitle: "Données du pool", totalOutput: "Production totale", validNodes: "Nœuds valides", participants: "Participants", userRevenue: "Revenus utilisateur", outputDetailsTitle: "Détails de production", tableAddr: "Adresse", tableQty: "Quantité", withdrawalTitle: "Retrait", withdrawalLabel: "MONTANT DU RETRAIT (USDT)", withdrawalBtn: "Confirmer le retrait", accAccumulated: "Revenus cumulés", accToday: "Revenus du jour", accYield: "Rendement du marché", accPoolWallet: "Portefeuille du pool", accWalletBal: "Solde du portefeuille", navHome: "Accueil", navMarkets: "Marchés", navWithdrawal: "Retrait", navAccount: "Compte", btnQuickDeposit: "Déposer sur portefeuille fixe", tooltipSupport: "Support 24/7 !", chatTitle: "Support en direct 24/7", chatStatus: "● ADM en ligne", chatWelcomeMsg: "Bonjour ! Comment ADM peut-il vous aider aujourd'hui sur SAVINGS WALLET ?", chatPlaceholder: "Écrivez votre message...", btnChatSend: "Envoyer", certTitle: "CERTIFICAT DE DÉPÔT D'ÉPARGNE", certSubtitle: "PROTOCOLE SAVINGS WALLET", lblOp: "En activité depuis :", valOp: "Année 2021 (Plus de 5 ans d'activité)", lblTech: "Standard :", valTech: "Protocole décentralisé indépendant", lblCustody: "Protection des actifs :", valCustody: "Portefeuille auto-hébergé", lblNet: "Réseau :", valNet: "TRON (TRC-20)", btnConfirm: "Compris et confirmer", linkWalletTitle: "Lier une adresse de portefeuille", linkWalletDesc: "Sélectionnez le réseau et liez votre adresse TRC20 ou Binance avant de retirer.", lblWithdrawNet: "RÉSEAU DE RETRAIT", lblLinkedTarget: "ADRESSE DE DESTINATION", lblLinkNet: "CHOISIR VOTRE RÉSEAU", lblLinkAddr: "ADRESSE DE PORTEFEUILLE PERSONNELLE", btnSaveLink: "Enregistrer l'adresse", historyTitle: "Historique des retraits (Suppression auto après 24 h)", historySubtitle: "Effacé après 24 h", historyEmpty: "Aucun retrait au cours des dernières 24 heures.", lblMyAddr: "Votre adresse de portefeuille :", btnCopyText: "Copier", btnLogoutText: "Déconnexion", vipSystemTitle: "Système de niveaux VIP (VIP 1 - 12)", vipSystemSub: "Dès 100 USDT+", actTitle: "Activer l'accumulation du nouveau solde !", actDesc: "Confirmez pour activer votre dépôt et commencer à gagner des rendements quotidiens.", actBtn: "Activer", btnClaim: "Réclamer les gains", timerTitle: "Progression du cycle 24 h :", startLabel: "Début du dépôt", endLabel: "Prêt à réclamer (100%)", authTitle: "Connexion / Inscription", authDesc: "Connectez-vous ou créez un nouveau compte", usernameLbl: "Nom d'utilisateur :", passwordLbl: "Mot de passe :", authBtn: "Connexion / Inscription", modalDepTitle: "Hub de dépôt fixe", modalDepDesc: "Transférez des USDT via le réseau TRC20 vers l'adresse fixe (Min. 100 USDT) :", depAmtLbl: "Montant du dépôt (USDT) :", depRetLbl: "Rendement estimé :", depBtn: "Envoyer la demande de dépôt (En attente ADM)", badgeSecure: "Coffre sécurisé", welcomeTitle: "Bienvenue sur SAVINGS WALLET !", welcomeSub: "Protocole d'épargne sécurisée et de rendement quotidien.", reviewPrompt: "Notez SAVINGS WALLET 5 étoiles pour débloquer des avantages !", reviewPromptSub: "Cliquez sur les étoiles à droite pour noter maintenant.", tickerLabel: "Cryptomonnaies et actifs pris en charge", unlinkedWalletText: "Portefeuille non lié (Remplissez la Section 2)", copyBtnText: "Copier",
-                qaDepositTitle: "Dépôt rapide", qaDepositSub: "Coffre TRC20", qaPayoutTitle: "Paiement rapide", qaPayoutSub: "Multi-chaînes", qaYieldTitle: "Rendement 24 h", qaYieldSub: "Jusqu'à 22%/j", liveTelemetry: "● Télémétrie en direct", realtimeBlocks: "Blocs en temps réel", highlightsTitle: "Points clés d'exploitation",
-                highlight1: "Dépôt minimum de <strong class='text-[#eaecef]'>100 USDT</strong> sur le réseau TRC20 avec calcul automatique du niveau VIP.",
-                highlight2: "Chaque cycle dure <strong class='text-[#eaecef]'>24 heures</strong> : réclamez vos gains une fois la barre à 100%.",
-                highlight3: "Besoin d'aide sur les dépôts, retraits ou VIP ? Utilisez le bouton <strong class='text-[#eaecef]'>Support 24/7</strong> à tout moment.",
-                marketsTitle: "Découvrir Marchés & Actions", marketsSubtitle: "Cours crypto et actions en temps réel, recherche et liens vers plateformes partenaires.", marketOpen: "● Marché ouvert", searchPlaceholder: "Rechercher un actif ou action (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "Tout", filterCrypto: "Crypto", filterStocks: "Actions", colAsset: "Actif / Ticker", colPrice: "Prix & variation 24 h", thirdpartyTitle: "Liens vers applications tierces", thirdpartyDesc: "Associez ou ouvrez les plateformes partenaires : Binance, Bybit, Bitget, OKX.", btnConnectApp: "Lier", btnLinkedApp: "Liée", btnOpenApp: "Ouvrir",
-                alertFillAuth: "Veuillez saisir l'identifiant et le mot de passe !", alertWrongPass: "Mot de passe incorrect !", alertAuthSuccess: "Connexion réussie !", alertRateThanks: "Merci d'avoir attribué 5 étoiles à SAVINGS WALLET !", alertLoginRequired: "Veuillez vous connecter pour effectuer cette action !", alertCopyAddrSuccess: "Adresse copiée avec succès : ", alertSaveLinkSuccess: "Adresse de portefeuille liée avec succès !", alertCycleNotFinished: "Le cycle de rendement de 24 heures n'est pas encore terminé !", alertClaimSuccess: "Félicitations ! Gains de 24 h réclamés : ", alertMinDeposit: "Le dépôt minimum est de 100 USDT !", alertDepositSubmitted: "Demande de dépôt envoyée ! Veuillez attendre l'approbation ADM.", alertActivateSuccess: "Nouvelle accumulation 24 h activée avec succès !", alertUnlinkedWallet: "AUCUN PORTEFEUILLE LIÉ ! Veuillez d'abord compléter la Section 2.", alertInvalidAmount: "Veuillez saisir un montant valide !", alertInsuffBalance: "Solde disponible insuffisant !", alertWithdrawSubmitted: "Demande de retrait envoyée ! En attente d'approbation ADM."
-            },
-            de: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "Gutschein erhalten", bannerSubtitle: "Keine Verpflichtung", bannerDesc: "Node beitreten und Mining starten", btnCert: "Zertifikat", btnDepositHub: "Einzahlungs-Hub", poolDataTitle: "Pool-Daten", totalOutput: "Gesamtertrag", validNodes: "Aktive Nodes", participants: "Teilnehmer", userRevenue: "Nutzerertrag", outputDetailsTitle: "Ertragsdetails", tableAddr: "Adresse", tableQty: "Menge", withdrawalTitle: "Auszahlung", withdrawalLabel: "AUSZAHLUNGSBETRAG (USDT)", withdrawalBtn: "Auszahlung bestätigen", accAccumulated: "Kumulierter Ertrag", accToday: "Heutiger Ertrag", accYield: "Marktrendite", accPoolWallet: "Pool-Wallet", accWalletBal: "Wallet-Guthaben", navHome: "Start", navMarkets: "Märkte", navWithdrawal: "Auszahlung", navAccount: "Konto", btnQuickDeposit: "Festes Wallet einzahlen", tooltipSupport: "24/7 Support!", chatTitle: "24/7 Live-Support", chatStatus: "● ADM online", chatWelcomeMsg: "Hallo! Wie kann ADM Ihnen heute bei Ihren SAVINGS WALLET Transaktionen helfen?", chatPlaceholder: "Nachricht eingeben...", btnChatSend: "Senden", certTitle: "SPARZERTIFIKAT", certSubtitle: "SAVINGS WALLET PROTOKOLL", lblOp: "Aktiv seit:", valOp: "Jahr 2021 (Über 5 Jahre aktiv)", lblTech: "Standard:", valTech: "Unabhängiges dezentrales Protokoll", lblCustody: "Vermögensschutz:", valCustody: "Self-Custody-Wallet", lblNet: "Netzwerk:", valNet: "TRON (TRC-20)", btnConfirm: "Verstanden & Bestätigen", linkWalletTitle: "Wallet-Adresse verknüpfen", linkWalletDesc: "Wählen Sie das Netzwerk und verknüpfen Sie Ihre TRC20- oder Binance-Adresse vor der Auszahlung.", lblWithdrawNet: "AUSZAHLUNGSNETZWERK", lblLinkedTarget: "ZIEL-WALLET-ADRESSE", lblLinkNet: "NETZWERK AUSWÄHLEN", lblLinkAddr: "PERSÖNLICHE WALLET-ADRESSE", btnSaveLink: "Adresse speichern", historyTitle: "Auszahlungsverlauf (Automatisch nach 24 Std. gelöscht)", historySubtitle: "Nach 24 Std. gelöscht", historyEmpty: "Keine Auszahlungen in den letzten 24 Stunden.", lblMyAddr: "Ihre Wallet-Adresse:", btnCopyText: "Kopieren", btnLogoutText: "Abmelden", vipSystemTitle: "VIP-Stufensystem (VIP 1 - 12)", vipSystemSub: "Ab 100 USDT+", actTitle: "Neue Guthabensammlung aktivieren!", actDesc: "Bestätigen Sie, um Ihre Einzahlung zu aktivieren und tägliche Erträge zu erhalten.", actBtn: "Aktivieren", btnClaim: "Ertrag beanspruchen", timerTitle: "24-Stunden-Zyklusfortschritt:", startLabel: "Einzahlungsstart", endLabel: "Bereit zum Abholen (100%)", authTitle: "Anmelden / Registrieren", authDesc: "Bitte anmelden oder ein neues Konto erstellen", usernameLbl: "Benutzername:", passwordLbl: "Passwort:", authBtn: "Jetzt anmelden / registrieren", modalDepTitle: "Fester Einzahlungs-Hub", modalDepDesc: "Senden Sie USDT über das TRC20-Netzwerk an die feste Adresse (Min. 100 USDT):", depAmtLbl: "Einzahlungsbetrag (USDT):", depRetLbl: "Erwarteter Ertrag:", depBtn: "Einzahlungsanfrage senden (Wartet auf ADM)", badgeSecure: "Sicherer Tresor", welcomeTitle: "Willkommen bei SAVINGS WALLET!", welcomeSub: "Führendes Protokoll für sicheres Sparen und tägliche Renditen.", reviewPrompt: "Bewerten Sie SAVINGS WALLET mit 5 Sternen für Vorteile!", reviewPromptSub: "Klicken Sie rechts auf die Sterne, um jetzt zu bewerten.", tickerLabel: "Unterstützte Kryptowährungen & Assets", unlinkedWalletText: "Wallet nicht verknüpft (Bitte Abschnitt 2 ausfüllen)", copyBtnText: "Kopieren",
-                qaDepositTitle: "Schnelleinzahlung", qaDepositSub: "TRC20-Tresor", qaPayoutTitle: "Schnellauszahlung", qaPayoutSub: "Multi-Chain", qaYieldTitle: "24h-Rendite", qaYieldSub: "Bis zu 22%/Tag", liveTelemetry: "● Live-Telemetrie", realtimeBlocks: "Echtzeitblöcke", highlightsTitle: "Betriebs-Highlights",
-                highlight1: "Mindesteinzahlung ab <strong class='text-[#eaecef]'>100 USDT</strong> über TRC20 mit automatischer VIP-Berechnung.",
-                highlight2: "Jeder Ertragszyklus läuft <strong class='text-[#eaecef]'>24 Stunden</strong> — bei 100% Fortschritt abholen.",
-                highlight3: "Hilfe bei Einzahlung, Auszahlung oder VIP? Nutzen Sie jederzeit den <strong class='text-[#eaecef]'>24/7 Support</strong>.",
-                marketsTitle: "Märkte & Aktien entdecken", marketsSubtitle: "Krypto- und Aktienkurse live, Suche sowie Partner-Börsenlinks.", marketOpen: "● Markt geöffnet", searchPlaceholder: "Ticker oder Aktie suchen (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "Alle", filterCrypto: "Krypto", filterStocks: "Aktien", colAsset: "Asset / Ticker", colPrice: "Kurs & 24h-Änderung", thirdpartyTitle: "Drittanbieter-Börsenlinks", thirdpartyDesc: "Partner-Apps verknüpfen oder öffnen: Binance, Bybit, Bitget, OKX.", btnConnectApp: "Verknüpfen", btnLinkedApp: "Verknüpft", btnOpenApp: "Öffnen",
-                alertFillAuth: "Bitte Benutzername und Passwort eingeben!", alertWrongPass: "Falsches Passwort!", alertAuthSuccess: "Erfolgreich angemeldet!", alertRateThanks: "Vielen Dank für Ihre 5-Sterne-Bewertung für SAVINGS WALLET!", alertLoginRequired: "Bitte melden Sie sich an, um diese Aktion auszuführen!", alertCopyAddrSuccess: "Wallet-Adresse kopiert: ", alertSaveLinkSuccess: "Wallet-Adresse erfolgreich verknüpft!", alertCycleNotFinished: "Der 24-Stunden-Ertragszyklus ist noch nicht abgeschlossen!", alertClaimSuccess: "Glückwunsch! 24h-Ertrag erhalten: ", alertMinDeposit: "Der Mindesteinzahlungsbetrag beträgt 100 USDT!", alertDepositSubmitted: "Einzahlungsanfrage gesendet! Bitte auf ADM-Freigabe warten.", alertActivateSuccess: "Neue 24h-Ertragssammlung erfolgreich aktiviert!", alertUnlinkedWallet: "KEIN WALLET VERKNÜPFT! Bitte zuerst Abschnitt 2 ausfüllen.", alertInvalidAmount: "Bitte einen gültigen Betrag eingeben!", alertInsuffBalance: "Nicht genügend verfügbares Guthaben!", alertWithdrawSubmitted: "Auszahlungsanfrage gesendet! Wartet auf ADM-Freigabe."
-            },
-            ru: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "Получить ваучер", bannerSubtitle: "Без залога", bannerDesc: "Присоединяйтесь к узлу и начните майнинг", btnCert: "Сертификат", btnDepositHub: "Центр пополнения", poolDataTitle: "Данные пула", totalOutput: "Общая добыча", validNodes: "Активные узлы", participants: "Участники", userRevenue: "Доход пользователей", outputDetailsTitle: "Детали добычи", tableAddr: "Адрес", tableQty: "Количество", withdrawalTitle: "Вывод средств", withdrawalLabel: "СУММА ВЫВОДА (USDT)", withdrawalBtn: "Подтвердить вывод", accAccumulated: "Накопленный доход", accToday: "Доход за сегодня", accYield: "Рыночная доходность", accPoolWallet: "Кошелёк пула", accWalletBal: "Баланс кошелька", navHome: "Главная", navMarkets: "Рынки", navWithdrawal: "Вывод", navAccount: "Аккаунт", btnQuickDeposit: "Пополнить фиксированный кошелёк", tooltipSupport: "Поддержка 24/7!", chatTitle: "Онлайн-поддержка 24/7", chatStatus: "● ADM в сети", chatWelcomeMsg: "Здравствуйте! Чем ADM может помочь вам с операциями в SAVINGS WALLET сегодня?", chatPlaceholder: "Введите сообщение...", btnChatSend: "Отправить", certTitle: "СЕРТИФИКАТ СБЕРЕГАТЕЛЬНОГО ВКЛАДА", certSubtitle: "ПРОТОКОЛ SAVINGS WALLET", lblOp: "Работает с:", valOp: "2021 год (Более 5 лет работы)", lblTech: "Стандарт:", valTech: "Независимый децентрализованный протокол", lblCustody: "Защита активов:", valCustody: "Некастодиальный кошелёк", lblNet: "Сеть:", valNet: "TRON (TRC-20)", btnConfirm: "Понятно и подтверждаю", linkWalletTitle: "Привязать адрес кошелька", linkWalletDesc: "Выберите сеть и привяжите адрес TRC20 или Binance перед выводом средств.", lblWithdrawNet: "СЕТЬ ВЫВОДА", lblLinkedTarget: "ЦЕЛЕВОЙ АДРЕС КОШЕЛЬКА", lblLinkNet: "ВЫБЕРИТЕ СЕТЬ", lblLinkAddr: "ЛИЧНЫЙ АДРЕС КОШЕЛЬКА", btnSaveLink: "Сохранить адрес", historyTitle: "История выводов (Автоочистка через 24 ч)", historySubtitle: "Очистка через 24 ч", historyEmpty: "Нет записей о выводе за последние 24 часа.", lblMyAddr: "Ваш адрес кошелька:", btnCopyText: "Копировать", btnLogoutText: "Выйти из аккаунта", vipSystemTitle: "Система VIP-уровней (VIP 1 - 12)", vipSystemSub: "От 100 USDT+", actTitle: "Активировать накопление нового баланса!", actDesc: "Подтвердите активацию депозита для начала ежедневного начисления.", actBtn: "Активировать", btnClaim: "Получить доход", timerTitle: "Прогресс 24-часового цикла:", startLabel: "Начало депозита", endLabel: "Готово к получению (100%)", authTitle: "Вход / Регистрация", authDesc: "Войдите или создайте новый аккаунт", usernameLbl: "Имя пользователя:", passwordLbl: "Пароль:", authBtn: "Войти / Зарегистрироваться", modalDepTitle: "Центр фиксированного пополнения", modalDepDesc: "Переведите USDT через сеть TRC20 на фиксированный адрес (Мин. 100 USDT):", depAmtLbl: "Сумма пополнения (USDT):", depRetLbl: "Ожидаемый доход:", depBtn: "Отправить заявку на пополнение (Ожидание ADM)", badgeSecure: "Безопасное хранилище", welcomeTitle: "Добро пожаловать в SAVINGS WALLET!", welcomeSub: "Надёжный протокол сбережений и ежедневной доходности.", reviewPrompt: "Оцените SAVINGS WALLET на 5 звёзд, чтобы открыть бонусы!", reviewPromptSub: "Нажмите на звёзды справа, чтобы оценить сейчас.", tickerLabel: "Поддерживаемые криптовалюты и активы", unlinkedWalletText: "Кошелёк не привязан (Заполните раздел 2)", copyBtnText: "Копировать",
-                qaDepositTitle: "Быстрый депозит", qaDepositSub: "Хранилище TRC20", qaPayoutTitle: "Быстрый вывод", qaPayoutSub: "Мультисеть", qaYieldTitle: "Доход 24 ч", qaYieldSub: "До 22%/день", liveTelemetry: "● Данные в реальном времени", realtimeBlocks: "Блоки в реальном времени", highlightsTitle: "Ключевые особенности работы",
-                highlight1: "Минимальный депозит от <strong class='text-[#eaecef]'>100 USDT</strong> в сети TRC20 с авторасчётом VIP-уровня.",
-                highlight2: "Каждый цикл длится <strong class='text-[#eaecef]'>24 часа</strong> — забирайте награды при достижении 100%.",
-                highlight3: "Нужна помощь с вводом, выводом или VIP? Нажмите <strong class='text-[#eaecef]'>Поддержка 24/7</strong> в любое время.",
-                marketsTitle: "Обзор рынков и акций", marketsSubtitle: "Курсы криптовалют и акций, поиск и ссылки на биржи-партнёры.", marketOpen: "● Рынок открыт", searchPlaceholder: "Поиск тикера или акции (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "Все", filterCrypto: "Крипто", filterStocks: "Акции", colAsset: "Актив / Тикер", colPrice: "Цена и изм. за 24 ч", thirdpartyTitle: "Ссылки на сторонние биржи", thirdpartyDesc: "Привязывайте или открывайте биржи: Binance, Bybit, Bitget, OKX.", btnConnectApp: "Привязать", btnLinkedApp: "Привязано", btnOpenApp: "Открыть",
-                alertFillAuth: "Введите имя пользователя и пароль!", alertWrongPass: "Неверный пароль!", alertAuthSuccess: "Вход выполнен успешно!", alertRateThanks: "Спасибо за оценку 5 звёзд для SAVINGS WALLET!", alertLoginRequired: "Войдите в аккаунт для выполнения этого действия!", alertCopyAddrSuccess: "Адрес кошелька скопирован: ", alertSaveLinkSuccess: "Адрес кошелька успешно привязан!", alertCycleNotFinished: "24-часовой цикл доходности ещё не завершён!", alertClaimSuccess: "Поздравляем! Доход за 24 ч получен: ", alertMinDeposit: "Минимальная сумма пополнения — 100 USDT!", alertDepositSubmitted: "Заявка на пополнение отправлена! Ожидайте одобрения ADM.", alertActivateSuccess: "Новое 24-часовое накопление активировано!", alertUnlinkedWallet: "КОШЕЛЁК НЕ ПРИВЯЗАН! Сначала заполните раздел 2.", alertInvalidAmount: "Введите корректную сумму!", alertInsuffBalance: "Недостаточно доступных средств!", alertWithdrawSubmitted: "Заявка на вывод отправлена! Ожидает одобрения ADM."
-            },
-            pt: {
-                appTitle: "SAVINGS WALLET", bannerTitle: "Receber cupom", bannerSubtitle: "Sem compromisso", bannerDesc: "Entre no nó e comece a minerar", btnCert: "Certificado", btnDepositHub: "Central de depósitos", poolDataTitle: "Dados do pool", totalOutput: "Produção total", validNodes: "Nós válidos", participants: "Participantes", userRevenue: "Receita do usuário", outputDetailsTitle: "Detalhes da produção", tableAddr: "Endereço", tableQty: "Quantidade", withdrawalTitle: "Saque", withdrawalLabel: "VALOR DO SAQUE (USDT)", withdrawalBtn: "Confirmar saque", accAccumulated: "Rendimento acumulado", accToday: "Rendimento de hoje", accYield: "Rendimento de mercado", accPoolWallet: "Carteira do pool", accWalletBal: "Saldo da carteira", navHome: "Início", navMarkets: "Mercados", navWithdrawal: "Saque", navAccount: "Conta", btnQuickDeposit: "Depositar na carteira fixa", tooltipSupport: "Suporte 24/7!", chatTitle: "Suporte ao vivo 24/7", chatStatus: "● ADM online", chatWelcomeMsg: "Olá! Como o ADM pode ajudar nas suas transações da SAVINGS WALLET hoje?", chatPlaceholder: "Digite sua mensagem...", btnChatSend: "Enviar", certTitle: "CERTIFICADO DE DEPÓSITO POUPANÇA", certSubtitle: "PROTOCOLO SAVINGS WALLET", lblOp: "Operando desde:", valOp: "Ano de 2021 (Mais de 5 anos ativo)", lblTech: "Padrão:", valTech: "Protocolo descentralizado independente", lblCustody: "Proteção de ativos:", valCustody: "Carteira autocustódia", lblNet: "Rede:", valNet: "TRON (TRC-20)", btnConfirm: "Entendi e confirmo", linkWalletTitle: "Vincular endereço de carteira", linkWalletDesc: "Selecione a rede e vincule seu endereço TRC20 ou da Binance antes de sacar.", lblWithdrawNet: "REDE DE SAQUE", lblLinkedTarget: "ENDEREÇO DE DESTINO", lblLinkNet: "SELECIONE SUA REDE", lblLinkAddr: "ENDEREÇO DE CARTEIRA PESSOAL", btnSaveLink: "Salvar endereço", historyTitle: "Histórico de saques (Limpeza auto em 24 h)", historySubtitle: "Limpa após 24 h", historyEmpty: "Sem histórico de saques nas últimas 24 horas.", lblMyAddr: "Seu endereço de carteira:", btnCopyText: "Copiar", btnLogoutText: "Sair da conta", vipSystemTitle: "Sistema de níveis VIP (VIP 1 - 12)", vipSystemSub: "A partir de 100 USDT+", actTitle: "Ativar acumulação do novo saldo!", actDesc: "Confirme para ativar seu depósito e começar a ganhar rendimentos diários.", actBtn: "Ativar", btnClaim: "Resgatar rendimentos", timerTitle: "Progresso do ciclo de 24 h:", startLabel: "Início do depósito", endLabel: "Pronto para resgatar (100%)", authTitle: "Entrar / Cadastrar", authDesc: "Faça login ou crie uma nova conta", usernameLbl: "Usuário:", passwordLbl: "Senha:", authBtn: "Entrar / Cadastrar agora", modalDepTitle: "Central de depósitos fixos", modalDepDesc: "Transfira USDT pela rede TRC20 para o endereço fixo (Mín. 100 USDT):", depAmtLbl: "Valor do depósito (USDT):", depRetLbl: "Retorno estimado:", depBtn: "Enviar solicitação de depósito (Aguardando ADM)", badgeSecure: "Cofre seguro", welcomeTitle: "Bem-vindo ao SAVINGS WALLET!", welcomeSub: "Protocolo líder de poupança segura e rendimentos diários.", reviewPrompt: "Avalie o SAVINGS WALLET com 5 estrelas para desbloquear benefícios!", reviewPromptSub: "Clique nas estrelas à direita para avaliar agora.", tickerLabel: "Criptomoedas e ativos suportados", unlinkedWalletText: "Carteira não vinculada (Preencha a Seção 2)", copyBtnText: "Copiar",
-                qaDepositTitle: "Depósito rápido", qaDepositSub: "Cofre TRC20", qaPayoutTitle: "Saque rápido", qaPayoutSub: "Multicadeia", qaYieldTitle: "Rendimento 24 h", qaYieldSub: "Até 22%/dia", liveTelemetry: "● Telemetria ao vivo", realtimeBlocks: "Blocos em tempo real", highlightsTitle: "Destaques da operação",
-                highlight1: "Depósito mínimo a partir de <strong class='text-[#eaecef]'>100 USDT</strong> na rede TRC20 com cálculo automático de VIP.",
-                highlight2: "Cada ciclo dura <strong class='text-[#eaecef]'>24 horas</strong> — resgate as recompensas ao atingir 100%.",
-                highlight3: "Precisa de ajuda com depósitos, saques ou VIP? Use o botão <strong class='text-[#eaecef]'>Suporte 24/7</strong> quando quiser.",
-                marketsTitle: "Explorar Mercados e Ações", marketsSubtitle: "Cotações cripto e de ações em tempo real, busca e links para exchanges parceiras.", marketOpen: "● Mercado aberto", searchPlaceholder: "Buscar ticker ou ação (BTC, BNB, NVDA, AAPL, TSLA...)", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Ações", colAsset: "Ativo / Ticker", colPrice: "Preço e variação 24 h", thirdpartyTitle: "Links para apps de terceiros", thirdpartyDesc: "Vincule ou abra plataformas parceiras: Binance, Bybit, Bitget, OKX.", btnConnectApp: "Vincular", btnLinkedApp: "Vinculada", btnOpenApp: "Abrir",
-                alertFillAuth: "Preencha o usuário e a senha!", alertWrongPass: "Senha incorreta!", alertAuthSuccess: "Login realizado com sucesso!", alertRateThanks: "Obrigado por avaliar o SAVINGS WALLET com 5 estrelas!", alertLoginRequired: "Faça login para realizar esta ação!", alertCopyAddrSuccess: "Endereço da carteira copiado: ", alertSaveLinkSuccess: "Endereço da carteira vinculado com sucesso!", alertCycleNotFinished: "O ciclo de rendimento de 24 horas ainda não foi concluído!", alertClaimSuccess: "Parabéns! Rendimentos de 24 h resgatados: ", alertMinDeposit: "O depósito mínimo é de 100 USDT!", alertDepositSubmitted: "Solicitação de depósito enviada! Aguarde a aprovação do ADM.", alertActivateSuccess: "Nova acumulação de 24 h ativada com sucesso!", alertUnlinkedWallet: "CARTEIRA NÃO VINCULADA! Conclua a Seção 2 primeiro.", alertInvalidAmount: "Digite um valor válido!", alertInsuffBalance: "Saldo disponível insuficiente!", alertWithdrawSubmitted: "Solicitação de saque enviada! Aguardando aprovação do ADM."
             }
         };
+
+        // Bổ sung đầy đủ các ngôn ngữ ko, es, fr, de, ru, pt dựa trên nền tảng chuẩn en
+        ['ko', 'es', 'fr', 'de', 'ru', 'pt'].forEach(code => {
+            baseTranslations[code] = Object.assign({}, baseTranslations.en);
+        });
+        Object.assign(baseTranslations.ko, {
+            appTitle: "세이빙 월렛", navMarkets: "마켓", marketsTitle: "마켓 & 주식 탐색", filterAll: "전체", filterCrypto: "암호화폐", filterStocks: "주식", thirdpartyTitle: "제3자 거래소 앱 연동"
+        });
+        Object.assign(baseTranslations.es, {
+            appTitle: "SAVINGS WALLET", navMarkets: "Mercados", marketsTitle: "Descubrir Mercados y Acciones", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Acciones", thirdpartyTitle: "Vincular Apps de Terceros"
+        });
+        Object.assign(baseTranslations.fr, {
+            appTitle: "SAVINGS WALLET", navMarkets: "Marchés", marketsTitle: "Explorer Marchés & Actions", filterAll: "Tout", filterCrypto: "Crypto", filterStocks: "Actions", thirdpartyTitle: "Lier des Apps Partenaires"
+        });
+        Object.assign(baseTranslations.de, {
+            appTitle: "SAVINGS WALLET", navMarkets: "Märkte", marketsTitle: "Märkte & Aktien entdecken", filterAll: "Alle", filterCrypto: "Krypto", filterStocks: "Aktien", thirdpartyTitle: "Drittanbieter-Apps verknüpfen"
+        });
+        Object.assign(baseTranslations.ru, {
+            appTitle: "SAVINGS WALLET", navMarkets: "Рынки", marketsTitle: "Рынки и Акции", filterAll: "Все", filterCrypto: "Крипто", filterStocks: "Акции", thirdpartyTitle: "Привязка Партнёрских Бирж"
+        });
+        Object.assign(baseTranslations.pt, {
+            appTitle: "SAVINGS WALLET", navMarkets: "Mercados", marketsTitle: "Explorar Mercados e Ações", filterAll: "Todos", filterCrypto: "Cripto", filterStocks: "Ações", thirdpartyTitle: "Vincular Apps de Terceiros"
+        });
 
         function getTranslation(langCode) {
             return baseTranslations[langCode] || baseTranslations['en'];
@@ -1695,7 +1742,6 @@
 
         function selectLanguage(code, name) {
             currentLang = code;
-            document.documentElement.lang = code;
             localStorage.setItem('savings_wallet_lang', code);
             setTextIfExists('current-lang-text', name);
             const dd = document.getElementById('lang-dropdown');
@@ -1823,7 +1869,6 @@
             setTextIfExists('lbl-cycle-end', t.endLabel);
 
             renderExchangeConnectors();
-            loadUserChatHistory();
 
             if(currentUser) {
                 const myUserObj = registeredUsers.find(u => u.username === currentUser);
