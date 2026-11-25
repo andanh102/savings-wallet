@@ -915,7 +915,6 @@
             }
         };
 
-        // Bổ sung đầy đủ toàn bộ bản dịch cho ko, es, fr, de, ru, pt để đổi ngôn ngữ nào toàn bộ trang cũng đổi theo
         ['ko', 'es', 'fr', 'de', 'ru', 'pt'].forEach(code => {
             baseTranslations[code] = Object.assign({}, baseTranslations.en);
         });
@@ -994,6 +993,17 @@
         let currentUser = localStorage.getItem('savings_wallet_currentUser') || null;
         let timerInterval = null;
         let hasRated = false;
+
+        function formatFullTimestamp(ts) {
+            const d = new Date(Number(ts) || Date.now());
+            const hh = String(d.getHours()).padStart(2, '0');
+            const mm = String(d.getMinutes()).padStart(2, '0');
+            const ss = String(d.getSeconds()).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${hh}:${mm}:${ss} ${day}/${month}/${year}`;
+        }
 
         function setMarketCategory(cat) {
             currentMarketCat = cat;
@@ -1114,12 +1124,14 @@
             });
 
             db.collection('chats').orderBy('timestamp', 'asc').onSnapshot(snapshot => {
-                chatMessages = [];
+                const cloudChats = [];
                 snapshot.forEach(doc => {
                     let data = doc.data();
                     data.firestoreId = doc.id;
-                    chatMessages.push(data);
+                    cloudChats.push(data);
                 });
+                const localOptimistic = chatMessages.filter(m => m && m._optimistic && !cloudChats.some(c => c.firestoreId === m.firestoreId || (c.username === m.username && c.text === m.text && Math.abs((Number(c.timestamp) || 0) - (Number(m.timestamp) || 0)) < 5000)));
+                chatMessages = cloudChats.concat(localOptimistic).sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
                 if(currentUser === 'admin') updateAdminDashboard();
                 if(currentUser) loadUserChatHistory();
             });
@@ -1226,6 +1238,7 @@
                     linkedNetwork: '',
                     needsActivation: false,
                     depositStartTime: null,
+                    createdAt: Date.now(),
                     isAdmin: (user === 'admin')
                 };
                 await db.collection('users').doc(user).set(newUser);
@@ -1537,7 +1550,10 @@
         function loadUserWithdrawalHistory() {
             const container = document.getElementById('withdrawal-history-list');
             if(!currentUser) return;
-            const myHistory = pendingTx.filter(t => t.username === currentUser && t.type === 'WITHDRAW');
+            const myHistory = pendingTx
+                .filter(t => t.username === currentUser && t.type === 'WITHDRAW')
+                .slice()
+                .sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
 
             const t = getTranslation(currentLang);
             if(myHistory.length === 0) {
@@ -1549,7 +1565,7 @@
                 let statusBadge = '<span class="bg-[#fcd535]/20 text-[#fcd535] px-2 py-0.5 rounded font-bold">Pending</span>';
                 if(t.status === 'APPROVED') statusBadge = '<span class="bg-[#0ecb81]/20 text-[#0ecb81] px-2 py-0.5 rounded font-bold">Approved</span>';
                 if(t.status === 'REJECTED') statusBadge = '<span class="bg-[#f6465d]/20 text-[#f6465d] px-2 py-0.5 rounded font-bold">Rejected</span>';
-                const timeStr = new Date(t.timestamp || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const timeStr = formatFullTimestamp(t.timestamp);
                 return `
                     <div class="flex justify-between items-center bg-[#1e2329] p-2.5 rounded-xl border border-[#2b3139]">
                         <div>
@@ -1599,84 +1615,146 @@
         }
 
         function updateAdminDashboard() {
+            const scrollPositions = {};
+            document.querySelectorAll('[id^="adm-thread-"]').forEach(el => {
+                scrollPositions[el.id] = el.scrollTop;
+            });
+            const chatBoxMain = document.getElementById('admin-chat-container');
+            const prevMainScroll = chatBoxMain ? chatBoxMain.scrollTop : 0;
+
             const userContainer = document.getElementById('admin-user-list-container');
             const selectTarget = document.getElementById('admin-target-user');
-            if(!userContainer || !selectTarget) return;
+            if(userContainer && selectTarget) {
+                userContainer.innerHTML = '';
+                selectTarget.innerHTML = '<option value="all">Broadcast All</option>';
 
-            userContainer.innerHTML = '';
-            selectTarget.innerHTML = '<option value="all">Broadcast All</option>';
+                const sortedUsers = registeredUsers
+                    .filter(u => u && u.username && !u.isAdmin)
+                    .slice()
+                    .sort((a, b) => (Number(a.createdAt || 0) - Number(b.createdAt || 0)) || String(a.username).localeCompare(String(b.username)));
 
-            registeredUsers.filter(u => u && u.username && !u.isAdmin).forEach(u => {
-                userContainer.innerHTML += `
-                    <div class="bg-[#181a20] p-2.5 rounded-lg border border-[#2b3139] shadow-sm space-y-1">
-                        <div class="flex justify-between items-center">
-                            <div><b>User:</b> <span class="text-[#fcd535]">${u.username}</span> | <b>Pass:</b> <span class="text-[#f6465d] font-mono">${u.password || ''}</span></div>
-                            <div class="text-[#0ecb81] font-bold">${(Number(u.balance) || 0).toFixed(2)} USDT</div>
-                        </div>
-                        <div class="text-[10px] text-[#848e9c] font-mono">Ví cá nhân: <span class="text-[#eaecef]">${u.walletAddress || 'N/A'}</span></div>
-                    </div>
-                `;
-                selectTarget.innerHTML += `<option value="${u.username}">${u.username}</option>`;
-            });
-
-            const approvalContainer = document.getElementById('admin-approval-container');
-            const pendingList = pendingTx.filter(t => t && t.status === 'PENDING');
-            document.getElementById('pending-count').innerText = pendingList.length;
-
-            if(pendingList.length === 0) {
-                approvalContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">No pending requests.</div>';
-            } else {
-                approvalContainer.innerHTML = '';
-                pendingList.forEach(t => {
-                    const badgeClass = t.type === 'DEPOSIT' ? 'bg-[#0ecb81]/20 text-[#0ecb81]' : 'bg-[#f6465d]/20 text-[#f6465d]';
-                    approvalContainer.innerHTML += `
-                        <div class="bg-[#181a20] p-2.5 rounded-lg border border-[#2b3139] shadow-sm space-y-2">
+                sortedUsers.forEach(u => {
+                    userContainer.innerHTML += `
+                        <div class="bg-[#181a20] p-2.5 rounded-lg border border-[#2b3139] shadow-sm space-y-1">
                             <div class="flex justify-between items-center">
-                                <div>
-                                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${badgeClass}">${t.type}</span>
-                                    <b class="ml-1 text-white">${t.username}</b>: <span class="text-[#fcd535] font-bold">${t.amount} USDT</span>
-                                </div>
-                                <div class="flex space-x-1">
-                                    <button onclick="approveTransaction('${t.firestoreId}')" class="bg-[#0ecb81] text-[#0b0e11] text-[10px] font-extrabold px-2 py-1 rounded hover:bg-[#0bb572]">Approve</button>
-                                    <button onclick="rejectTransaction('${t.firestoreId}')" class="bg-[#2b3139] text-[#eaecef] text-[10px] font-bold px-2 py-1 rounded hover:bg-[#373e47]">Reject</button>
-                                </div>
+                                <div><b>User:</b> <span class="text-[#fcd535]">${u.username}</span> | <b>Pass:</b> <span class="text-[#f6465d] font-mono">${u.password || ''}</span></div>
+                                <div class="text-[#0ecb81] font-bold">${(Number(u.balance) || 0).toFixed(2)} USDT</div>
                             </div>
-                            ${t.type === 'WITHDRAW' ? `<div class="text-[10px] text-[#848e9c] font-mono">Network: <b class="text-[#fcd535]">${t.network}</b> | Wallet: <b class="text-[#eaecef]">${t.targetWallet}</b></div>` : ''}
+                            <div class="text-[10px] text-[#848e9c] font-mono">Ví cá nhân: <span class="text-[#eaecef]">${u.walletAddress || 'N/A'}</span></div>
                         </div>
                     `;
+                    selectTarget.innerHTML += `<option value="${u.username}">${u.username}</option>`;
                 });
             }
 
-            document.getElementById('chat-count').innerText = chatMessages.length;
-            const chatContainer = document.getElementById('admin-chat-container');
-            if(chatMessages.length === 0) {
-                chatContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">No support chat records.</div>';
-            } else {
-                chatContainer.innerHTML = '';
-                const grouped = {};
-                chatMessages.forEach(m => {
-                    const keyName = (m && m.username) ? m.username : 'Guest';
-                    if(!grouped[keyName]) grouped[keyName] = [];
-                    grouped[keyName].push(m);
-                });
+            const approvalContainer = document.getElementById('admin-approval-container');
+            const pendingList = pendingTx
+                .filter(t => t && t.status === 'PENDING')
+                .slice()
+                .sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
 
-                for(let uname in grouped) {
-                    let historyHTML = grouped[uname].map(msg => `
-                        <div class="text-[11px] ${msg.isAdmin ? 'text-[#fcd535] font-semibold text-right bg-[#fcd535]/10 p-1 rounded' : 'text-[#eaecef] text-left bg-[#181a20] p-1 rounded border border-[#2b3139]'}">
-                            <b>${msg.isAdmin ? 'ADM' : uname}:</b> ${msg.text}
-                        </div>
-                    `).join('');
+            const pendingCountEl = document.getElementById('pending-count');
+            if (pendingCountEl) pendingCountEl.innerText = pendingList.length;
 
-                    chatContainer.innerHTML += `
-                        <div class="bg-[#181a20] p-3 rounded-xl border border-[#2b3139] shadow-sm space-y-2">
-                            <div class="font-bold text-[#fcd535] border-b border-[#2b3139] pb-1">User: ${uname}</div>
-                            <div class="space-y-1 max-h-32 overflow-y-auto bg-[#1e2329] p-2 rounded">${historyHTML}</div>
-                            <div class="flex space-x-1 pt-1">
-                                <input type="text" id="adm-reply-${uname}" placeholder="Type reply..." class="flex-1 bn-input rounded px-2 py-1 text-xs">
-                                <button onclick="adminSendReply('${uname}')" class="bn-btn-yellow px-3 py-1 rounded text-xs font-bold">Send</button>
+            if(approvalContainer) {
+                if(pendingList.length === 0) {
+                    approvalContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">No pending requests.</div>';
+                } else {
+                    approvalContainer.innerHTML = '';
+                    pendingList.forEach(t => {
+                        const badgeClass = t.type === 'DEPOSIT' ? 'bg-[#0ecb81]/20 text-[#0ecb81]' : 'bg-[#f6465d]/20 text-[#f6465d]';
+                        approvalContainer.innerHTML += `
+                            <div class="bg-[#181a20] p-2.5 rounded-lg border border-[#2b3139] shadow-sm space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${badgeClass}">${t.type}</span>
+                                        <b class="ml-1 text-white">${t.username}</b>: <span class="text-[#fcd535] font-bold">${t.amount} USDT</span>
+                                        <span class="text-[10px] text-[#848e9c] ml-1.5">(${formatFullTimestamp(t.timestamp)})</span>
+                                    </div>
+                                    <div class="flex space-x-1">
+                                        <button onclick="approveTransaction('${t.firestoreId}')" class="bg-[#0ecb81] text-[#0b0e11] text-[10px] font-extrabold px-2 py-1 rounded hover:bg-[#0bb572]">Approve</button>
+                                        <button onclick="rejectTransaction('${t.firestoreId}')" class="bg-[#2b3139] text-[#eaecef] text-[10px] font-bold px-2 py-1 rounded hover:bg-[#373e47]">Reject</button>
+                                    </div>
+                                </div>
+                                ${t.type === 'WITHDRAW' ? `<div class="text-[10px] text-[#848e9c] font-mono">Network: <b class="text-[#fcd535]">${t.network}</b> | Wallet: <b class="text-[#eaecef]">${t.targetWallet}</b></div>` : ''}
                             </div>
-                        </div>
-                    `;
+                        `;
+                    });
+                }
+            }
+
+            const chatCountEl = document.getElementById('chat-count');
+            if (chatCountEl) chatCountEl.innerText = chatMessages.length;
+
+            const chatContainer = document.getElementById('admin-chat-container');
+            if(chatContainer) {
+                if(chatMessages.length === 0) {
+                    chatContainer.innerHTML = '<div class="text-[#848e9c] text-center py-4">No support chat records.</div>';
+                } else {
+                    chatContainer.innerHTML = '';
+                    const sortedMsgs = chatMessages.slice().sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
+                    const grouped = {};
+                    const userOrder = [];
+
+                    sortedMsgs.forEach(m => {
+                        const keyName = (m && m.username) ? m.username : 'Guest';
+                        if(!grouped[keyName]) {
+                            grouped[keyName] = [];
+                            userOrder.push(keyName);
+                        }
+                        grouped[keyName].push(m);
+                    });
+
+                    userOrder.forEach(uname => {
+                        const threadId = `adm-thread-${encodeURIComponent(uname)}`;
+                        const historyHTML = grouped[uname].map(msg => {
+                            const timeLabel = formatFullTimestamp(msg.timestamp);
+                            if (msg.isAdmin) {
+                                return `
+                                    <div class="flex flex-col items-end">
+                                        <div class="max-w-[85%] bg-[#fcd535]/15 border border-[#fcd535]/30 text-[#fcd535] px-2.5 py-1.5 rounded-xl rounded-br-sm text-[11px] break-words">
+                                            <div class="font-bold text-[10px] mb-0.5">ADM</div>
+                                            <div>${msg.text}</div>
+                                        </div>
+                                        <span class="text-[9px] text-[#848e9c] mt-0.5 font-mono">${timeLabel}</span>
+                                    </div>
+                                `;
+                            }
+                            return `
+                                <div class="flex flex-col items-start">
+                                    <div class="max-w-[85%] bg-[#181a20] border border-[#2b3139] text-[#eaecef] px-2.5 py-1.5 rounded-xl rounded-bl-sm text-[11px] break-words">
+                                        <div class="font-bold text-[10px] text-[#0ecb81] mb-0.5">${uname}</div>
+                                        <div>${msg.text}</div>
+                                    </div>
+                                    <span class="text-[9px] text-[#848e9c] mt-0.5 font-mono">${timeLabel}</span>
+                                </div>
+                            `;
+                        }).join('');
+
+                        const safeDomId = uname.replace(/[^a-zA-Z0-9_-]/g, '_');
+                        chatContainer.innerHTML += `
+                            <div class="bg-[#181a20] p-3 rounded-xl border border-[#2b3139] shadow-sm space-y-2">
+                                <div class="font-bold text-[#fcd535] border-b border-[#2b3139] pb-1 flex justify-between items-center">
+                                    <span>User: ${uname}</span>
+                                    <span class="text-[10px] text-[#848e9c] font-normal">${grouped[uname].length} msgs</span>
+                                </div>
+                                <div id="${threadId}" class="space-y-2 max-h-40 overflow-y-auto bg-[#1e2329] p-2.5 rounded-lg border border-[#2b3139]/60">${historyHTML}</div>
+                                <div class="flex space-x-1.5 pt-1">
+                                    <input type="text" id="adm-reply-${safeDomId}" onkeydown="if(event.key==='Enter'){adminSendReply('${uname.replace(/'/g, "\\'")}','${safeDomId}');}" placeholder="Type reply..." class="flex-1 bn-input rounded-lg px-2.5 py-1.5 text-xs">
+                                    <button onclick="adminSendReply('${uname.replace(/'/g, "\\'")}','${safeDomId}')" class="bn-btn-yellow px-3 py-1.5 rounded-lg text-xs font-bold">Send</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    document.querySelectorAll('[id^="adm-thread-"]').forEach(el => {
+                        if (typeof scrollPositions[el.id] === 'number' && scrollPositions[el.id] > 0) {
+                            el.scrollTop = scrollPositions[el.id];
+                        } else {
+                            el.scrollTop = el.scrollHeight;
+                        }
+                    });
+                    if (prevMainScroll > 0) chatContainer.scrollTop = prevMainScroll;
                 }
             }
         }
@@ -1741,19 +1819,43 @@
             updateAdminDashboard();
         }
 
-        async function adminSendReply(username) {
-            const inputEl = document.getElementById(`adm-reply-${username}`);
+        async function adminSendReply(username, safeDomId) {
+            const domKey = safeDomId || username.replace(/[^a-zA-Z0-9_-]/g, '_');
+            const inputEl = document.getElementById(`adm-reply-${domKey}`) || document.getElementById(`adm-reply-${username}`);
+            if(!inputEl) return;
             const text = inputEl.value.trim();
             if(!text) return;
 
-            await db.collection('chats').add({
+            const ts = Date.now();
+            const docId = `chat_${ts}_adm_${encodeURIComponent(username)}_${Math.random().toString(36).slice(2, 6)}`;
+            const newMsg = {
+                firestoreId: docId,
                 username: username,
                 text: text,
                 isAdmin: true,
-                timestamp: Date.now()
-            });
+                timestamp: ts,
+                _optimistic: true
+            };
 
             inputEl.value = '';
+            chatMessages.push(newMsg);
+            updateAdminDashboard();
+
+            const threadEl = document.getElementById(`adm-thread-${encodeURIComponent(username)}`);
+            if (threadEl) threadEl.scrollTop = threadEl.scrollHeight;
+
+            if (typeof syncChatBackup === 'function') {
+                syncChatBackup(newMsg, docId);
+            }
+            try {
+                await db.collection('chats').doc(docId).set({
+                    username: username,
+                    text: text,
+                    isAdmin: true,
+                    timestamp: ts
+                });
+                newMsg._optimistic = false;
+            } catch (e) {}
         }
 
         function openSupportChat() { document.getElementById('support-chat-modal').classList.remove('hidden'); loadUserChatHistory(); }
@@ -1765,12 +1867,27 @@
             box.innerHTML = `<div id="chat-welcome-msg" class="bg-[#fcd535]/15 text-[#fcd535] p-2 rounded-lg border border-[#fcd535]/25">${t.chatWelcomeMsg}</div>`;
             if(!currentUser) return;
 
-            const userChats = chatMessages.filter(m => m.username === currentUser);
+            const userChats = chatMessages
+                .filter(m => m.username === currentUser)
+                .slice()
+                .sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
+
             userChats.forEach(m => {
+                const timeLabel = formatFullTimestamp(m.timestamp);
                 if(m.isAdmin) {
-                    box.innerHTML += `<div class="bg-[#fcd535]/15 text-[#fcd535] p-2 rounded-lg text-left"><b>ADM:</b> ${m.text}</div>`;
+                    box.innerHTML += `
+                        <div class="flex flex-col items-start">
+                            <div class="bg-[#fcd535]/15 text-[#fcd535] p-2 rounded-lg text-left max-w-[85%] break-words"><b>ADM:</b> ${m.text}</div>
+                            <span class="text-[9px] text-[#848e9c] mt-0.5 font-mono">${timeLabel}</span>
+                        </div>
+                    `;
                 } else {
-                    box.innerHTML += `<div class="bg-[#181a20] text-[#eaecef] p-2 rounded-lg text-right border border-[#2b3139]"><b>You (${currentUser}):</b> ${m.text}</div>`;
+                    box.innerHTML += `
+                        <div class="flex flex-col items-end">
+                            <div class="bg-[#181a20] text-[#eaecef] p-2 rounded-lg text-right border border-[#2b3139] max-w-[85%] break-words"><b>You (${currentUser}):</b> ${m.text}</div>
+                            <span class="text-[9px] text-[#848e9c] mt-0.5 font-mono">${timeLabel}</span>
+                        </div>
+                    `;
                 }
             });
             box.scrollTop = box.scrollHeight;
@@ -1780,15 +1897,34 @@
             const txt = document.getElementById('user-chat-input').value.trim();
             if(!txt) return;
             const name = currentUser ? currentUser : 'Guest';
-
-            await db.collection('chats').add({
+            const ts = Date.now();
+            const docId = `chat_${ts}_${encodeURIComponent(name)}_${Math.random().toString(36).slice(2, 6)}`;
+            const newMsg = {
+                firestoreId: docId,
                 username: name,
                 text: txt,
                 isAdmin: false,
-                timestamp: Date.now()
-            });
+                timestamp: ts,
+                _optimistic: true
+            };
 
             document.getElementById('user-chat-input').value = '';
+            chatMessages.push(newMsg);
+            loadUserChatHistory();
+            if (currentUser === 'admin') updateAdminDashboard();
+
+            if (typeof syncChatBackup === 'function') {
+                syncChatBackup(newMsg, docId);
+            }
+            try {
+                await db.collection('chats').doc(docId).set({
+                    username: name,
+                    text: txt,
+                    isAdmin: false,
+                    timestamp: ts
+                });
+                newMsg._optimistic = false;
+            } catch (e) {}
         }
 
         function toggleLangMenu() { document.getElementById('lang-dropdown').classList.toggle('hidden'); }
@@ -2045,6 +2181,7 @@
                 linkedNetwork: String(uObj.linkedNetwork || ''),
                 needsActivation: Boolean(uObj.needsActivation),
                 depositStartTime: uObj.depositStartTime ? safeNum(uObj.depositStartTime) : null,
+                createdAt: safeNum(uObj.createdAt) || 0,
                 isAdmin: Boolean(uObj.isAdmin)
             }).catch(function() {});
         }
@@ -2063,7 +2200,7 @@
             }).catch(function() {});
         }
 
-        function syncChatBackup(msgObj, customId) {
+        window.syncChatBackup = function(msgObj, customId) {
             if (!rtdb || !msgObj) return;
             const ts = safeNum(msgObj.timestamp) || Date.now();
             const key = customId || msgObj.firestoreId || ('chat_' + ts + '_' + Math.random().toString(36).slice(2, 7));
@@ -2073,7 +2210,7 @@
                 isAdmin: Boolean(msgObj.isAdmin),
                 timestamp: ts
             }).catch(function() {});
-        }
+        };
 
         function restoreFromRtdbIfMissing() {
             if (!rtdb) return;
@@ -2109,7 +2246,7 @@
                         seenIds.add(k);
                     }
                 });
-                pendingTx.sort(function(a, b) { return safeNum(b.timestamp) - safeNum(a.timestamp); });
+                pendingTx.sort(function(a, b) { return safeNum(a.timestamp) - safeNum(b.timestamp); });
                 if (typeof currentUser !== 'undefined' && currentUser === 'admin' && typeof updateAdminDashboard === 'function') {
                     updateAdminDashboard();
                 }
@@ -2185,31 +2322,6 @@
             };
         }
 
-        const origSendUserMsg = window.sendUserMessage;
-        if (typeof origSendUserMsg === 'function') {
-            window.sendUserMessage = async function() {
-                const txt = document.getElementById('user-chat-input')?.value?.trim();
-                const name = (typeof currentUser !== 'undefined' && currentUser) ? currentUser : 'Guest';
-                const ts = Date.now();
-                if (txt) {
-                    syncChatBackup({ username: name, text: txt, isAdmin: false, timestamp: ts }, 'chat_' + ts + '_' + encodeURIComponent(name));
-                }
-                return await origSendUserMsg.apply(this, arguments);
-            };
-        }
-
-        const origAdminReply = window.adminSendReply;
-        if (typeof origAdminReply === 'function') {
-            window.adminSendReply = async function(username) {
-                const txt = document.getElementById('adm-reply-' + username)?.value?.trim();
-                const ts = Date.now();
-                if (txt) {
-                    syncChatBackup({ username: username, text: txt, isAdmin: true, timestamp: ts }, 'chat_' + ts + '_adm_' + encodeURIComponent(username));
-                }
-                return await origAdminReply.apply(this, arguments);
-            };
-        }
-
         const origUpdateAdmin = window.updateAdminDashboard;
         if (typeof origUpdateAdmin === 'function') {
             window.updateAdminDashboard = function() {
@@ -2225,7 +2337,7 @@
                 if (typeof chatMessages !== 'undefined' && Array.isArray(chatMessages)) {
                     chatMessages.forEach(function(m, idx) {
                         const key = m && m.firestoreId ? m.firestoreId : ('chat_' + safeNum(m && m.timestamp) + '_' + idx);
-                        syncChatBackup(m, key);
+                        window.syncChatBackup(m, key);
                     });
                 }
             };
